@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilingual Quiz: Python Pandas Mastery (50 Questions) | اختبار مكتبة بانداس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #134e4a;
+            --accent: #f59e0b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Inter', sans-serif;
+        }
+
+        code, pre {
+            font-family: 'Fira Code', monospace;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            color: #0f766e;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 26px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.25);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #ccfbf1;
+            direction: ltr;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-val.high {
+            color: var(--accent);
+        }
+
+        /* Index Button */
+        .btn-index {
+            background: #f0fdfa;
+            color: var(--primary);
+            border: 2px solid #99f6e4;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-index:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        /* Question Box */
+        .q-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 20px -3px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .q-badge {
+            background: #f0fdfa;
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .q-text-ar {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .q-text-en {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #475569;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: #f0fdfa;
+            border-color: #5eead4;
+            transform: translateX(-4px);
+        }
+
+        .opt-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-ar {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .opt-en {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #64748b;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .opt-btn.correct .opt-ar, .opt-btn.correct .opt-en {
+            color: #15803d !important;
+        }
+
+        .opt-btn.wrong .opt-ar, .opt-btn.wrong .opt-en {
+            color: #991b1b !important;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            display: none;
+            background: #f1f5f9;
+            border-right: 5px solid var(--primary);
+        }
+
+        .exp-en {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            margin-top: 6px;
+            font-size: 0.92rem;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-nav:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Modal Index */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 26px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            animation: popIn 0.25s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .close-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .grid-index {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .index-pill {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+        }
+
+        .index-pill:hover {
+            border-color: var(--primary);
+            background: #f0fdfa;
+            transform: translateY(-2px);
+        }
+
+        .index-pill.active {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+            font-weight: 900;
+        }
+
+        .index-pill.solved-correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .index-pill.solved-wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        /* Results Card */
+        .results-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .trophy {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #f0fdfa;
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .score-num {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .btn-restart {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 14px 34px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.2s;
+        }
+
+        .btn-restart:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>اختبار مكتبة Pandas الشامل ثنائي اللغة (50 سؤالاً)</h1>
+        <p>Bilingual Quiz: Comprehensive Pandas Library (pandas1.py to pandas7.py)</p>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-label">رقم السؤال / Question</span>
+            <div><span class="stat-val" id="qCurrent">1</span> / 50</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أول محاولة / 1st Score 🎯</span>
+            <span class="stat-val" style="color: #0f766e;" id="firstScore">--</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">الدرجة الحالية / Score</span>
+            <span class="stat-val" id="score">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أعلى نتيجة / High Score 🏆</span>
+            <span class="stat-val high" id="highScore">0</span>
+        </div>
+        <div>
+            <button class="btn-index" onclick="openIndexModal()">
+                <span>📑</span>
+                <span>فهرس الأسئلة (1-50)</span>
+            </button>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Question Box -->
+    <div class="q-card" id="quizCard">
+        <div class="q-header">
+            <span class="q-badge" id="topicBadge">Pandas Topic</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;" id="qStatusIndicator">لم يُجب بعد / Not answered</span>
+        </div>
+        
+        <div class="q-text-ar" id="questionTextAr">جاري تحميل السؤال...</div>
+        <div class="q-text-en" id="questionTextEn">Loading question...</div>
+        
+        <div class="options-list" id="optionsContainer"></div>
+        
+        <div class="explanation" id="explanationText"></div>
+
+        <div class="actions">
+            <button class="btn-nav" id="prevBtn" onclick="prevQuestion()" disabled>➡️ السابق / Prev</button>
+            <button class="btn-nav" id="nextBtn" onclick="nextQuestion()">التالي / Next ⬅️</button>
+        </div>
+    </div>
+
+    <!-- Results Box -->
+    <div class="results-card" id="resultsCard">
+        <div class="trophy" id="trophyIcon">🎉</div>
+        <h2 id="resultMsg" style="font-size: 1.8rem; margin-bottom: 8px;">أحسنت صنعاً!</h2>
+        <p id="resultSubtitle" style="color: var(--text-muted);">You completed all 50 Pandas questions!</p>
+        
+        <div class="score-circle">
+            <div class="score-num" id="finalScore">0</div>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">/ 50</span>
+        </div>
+
+        <p id="highScoreNotice" style="font-weight: 700; font-size: 1.1rem; color: var(--accent); margin-top: 10px;"></p>
+
+        <button class="btn-restart" onclick="restartQuiz()">إعادة الاختبار من البداية 🔄</button>
+    </div>
+</div>
+
+<!-- Modal Index Window -->
+<div class="modal-overlay" id="indexModal" onclick="closeIndexModalOnOutside(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📑 فهرس أسئلة Pandas (Question Index)</h3>
+            <button class="close-btn" onclick="closeIndexModal()">✕</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background: #22c55e;"></div><span>إجابة صحيحة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div><span>إجابة خاطئة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #0f766e;"></div><span>السؤال الحالي</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #e2e8f0; border: 1px solid #cbd5e1;"></div><span>لم يُحل بعد</span></div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">انقر على أي رقم سؤال للانتقال إليه مباشرة:</p>
+        
+        <div class="grid-index" id="gridIndexContainer"></div>
+    </div>
+</div>
+
+<script>
+    // 50 Questions directly tailored to pandas1.py through pandas7.py
+    const questions = [
+        {
+            topic: "pandas1.py - Data Structures",
+            ar_q: "ما هو الهيكل البياني أحادي البعد (1D) في مكتبة Pandas الذي يمثل عموداً واحداً من البيانات؟",
+            en_q: "What is the one-dimensional (1D) data structure in Pandas that represents a single column of data?",
+            options: [
+                { ar: "السلسلة الأحادية", en: "Series" },
+                { ar: "القاموس المجدول", en: "Dictionary" },
+                { ar: "المصفوفة الثنائية", en: "Matrix" },
+                { ar: "جدول البيانات", en: "DataFrame" }
+            ],
+            correct: 0,
+            exp_ar: "السلسلة Series هي مصفوفة أحادية البعد ذات فهرس مخصص (pd.Series) في حين أن DataFrame ثنائي الأبعاد.",
+            exp_en: "A Series is a one-dimensional labeled array in Pandas, whereas DataFrame is two-dimensional."
+        },
+        {
+            topic: "pandas1.py - DataFrame Creation",
+            ar_q: "عند إنشاء DataFrame من قائمة متداخلة (List of Lists)، ما المعامل المستخدم لتحديد أسماء الأعمدة؟",
+            en_q: "When creating a DataFrame from a list of lists, which parameter is used to specify column names?",
+            options: [
+                { ar: "معامل names", en: "names" },
+                { ar: "معامل columns", en: "columns" },
+                { ar: "معامل headers", en: "headers" },
+                { ar: "معامل index", en: "index" }
+            ],
+            correct: 1,
+            exp_ar: "نستخدم المعامل columns كما في: pd.DataFrame(students, columns=['Name', 'Age', 'Grade']).",
+            exp_en: "The 'columns' parameter assigns custom headers to DataFrame columns."
+        },
+        {
+            topic: "pandas1.py - Column Access",
+            ar_q: "للوصول إلى بيانات عمود اسمه 'Name' من جدول data، أي طريقتين صحيحتان تماماً؟",
+            en_q: "To access data in a column named 'Name' from a DataFrame 'data', which two syntaxes are valid?",
+            options: [
+                { ar: "data.get('Name') و data.index('Name')", en: "data.get('Name') and data.index('Name')" },
+                { ar: "data['Name'] و data.Name", en: "data['Name'] and data.Name" },
+                { ar: "data.row('Name') و data.col('Name')", en: "data.row('Name') and data.col('Name')" },
+                { ar: "data.loc('Name') و data.iloc('Name')", en: "data.loc('Name') and data.iloc('Name')" }
+            ],
+            correct: 1,
+            exp_ar: "يمكن استدعاء العمود إما بأقواس الاقتباس data['Name'] أو كخاصية مباشرة data.Name طالما الاسم صالح.",
+            exp_en: "Columns can be accessed using dictionary-style data['Name'] or dot notation data.Name."
+        },
+        {
+            topic: "pandas2.py - Series Indexing",
+            ar_q: "عند إنشاء Series من قاموس بايثون (Dictionary)، ماذا تصبح مفاتيح القاموس تلقائياً؟",
+            en_q: "When creating a Series from a Python dictionary, what do the dictionary keys automatically become?",
+            options: [
+                { ar: "فهرس السلسلة", en: "Series index labels" },
+                { ar: "أنواع البيانات", en: "Data types" },
+                { ar: "أسماء الأعمدة", en: "Column headers" },
+                { ar: "قيم السلسلة", en: "Series values" }
+            ],
+            correct: 0,
+            exp_ar: "تتحول مفاتيح القاموس إلى فهارس (Index labels) للقيم المقابلة لها في الـ Series.",
+            exp_en: "Dictionary keys become the custom index labels of the resulting Series."
+        },
+        {
+            topic: "pandas2.py - Arithmetic Operations",
+            ar_q: "ما نتيجة تنفيذ التعليمة s = s / 2 على سلسلة s تحتوي على درجات عددية؟",
+            en_q: "What is the output of executing s = s / 2 on a numerical Series 's'?",
+            options: [
+                { ar: "قسمة الفهرس فقط على 2", en: "Divides only the index labels by 2" },
+                { ar: "حدوث خطأ برمجي TypeError", en: "Raises a TypeError" },
+                { ar: "حذف نصف عناصر السلسلة", en: "Drops half of the elements in the series" },
+                { ar: "قسمة كل عنصر داخل السلسلة على 2", en: "Divides each element in the series by 2" }
+            ],
+            correct: 3,
+            exp_ar: "تدعم Pandas العمليات المتجهة (Vectorized Operations) حيث تُطبق العملية الحسابية على كل عنصر على حدة.",
+            exp_en: "Pandas applies arithmetic operations element-wise across the entire Series."
+        },
+        {
+            topic: "pandas2.py - Series Properties",
+            ar_q: "ما الخاصية المستخدمة لمعرفة إجمالي عدد العناصر الموجودة داخل الـ Series؟",
+            en_q: "Which property is used to get the total number of elements inside a Series?",
+            options: [
+                { ar: "خاصية length", en: "s.length" },
+                { ar: "خاصية count_all", en: "s.count_all" },
+                { ar: "خاصية total", en: "s.total" },
+                { ar: "خاصية size", en: "s.size" }
+            ],
+            correct: 3,
+            exp_ar: "تعيد s.size عدد عناصر السلسلة الإجمالي.",
+            exp_en: "The .size attribute returns the number of elements in the Series."
+        },
+        {
+            topic: "pandas2.py - DataFrame iloc",
+            ar_q: "ما وظيفة الأمر data.iloc[0] في جدول البيانات؟",
+            en_q: "What is the function of data.iloc[0] in a DataFrame?",
+            options: [
+                { ar: "إرجاع العمود الأول بالكامل", en: "Returns the first column entirely" },
+                { ar: "حذف الصف الأول", en: "Deletes the first row" },
+                { ar: "إرجاع الصف الأول استناداً إلى موقعه الرقمي", en: "Returns the first row based on integer position" },
+                { ar: "تغيير فهرس الصف الأول إلى 0", en: "Resets the first row's index to 0" }
+            ],
+            correct: 2,
+            exp_ar: "تعتمد iloc على الفهرسة بالموقع الرقمي (Integer-location) فتجلب الصف رقم 0 كـ Series.",
+            exp_en: "The .iloc indexer accesses rows by their zero-based integer positional index."
+        },
+        {
+            topic: "pandas2.py - DataFrame Shape",
+            ar_q: "ماذا ترجع الخاصية data.shape لجدول يحتوي على 3 صفوف و 4 أعمدة؟",
+            en_q: "What does data.shape return for a DataFrame with 3 rows and 4 columns?",
+            options: [
+                { ar: "العدد 7", en: "7" },
+                { ar: "زوج مرتب (3, 4)", en: "Tuple (3, 4)" },
+                { ar: "زوج مرتب (4, 3)", en: "Tuple (4, 3)" },
+                { ar: "قائمة [12]", en: "List [12]" }
+            ],
+            correct: 1,
+            exp_ar: "ترجع shape زوجاً مرتباً بصيغة (rows, columns) أي (3, 4).",
+            exp_en: "The .shape attribute returns a tuple representing dimensions as (rows, columns)."
+        },
+        {
+            topic: "pandas2.py - Multiple Columns",
+            ar_q: "كيف نختار عدة أعمدة معاً مثل 'Name' و 'Age' من DataFrame؟",
+            en_q: "How do you select multiple columns like 'Name' and 'Age' together from a DataFrame?",
+            options: [
+                { ar: "data[['Name', 'Age']]", en: "data[['Name', 'Age']]" },
+                { ar: "data.cols('Name', 'Age')", en: "data.cols('Name', 'Age')" },
+                { ar: "data['Name', 'Age']", en: "data['Name', 'Age']" },
+                { ar: "data.get('Name', 'Age')", en: "data.get('Name', 'Age')" }
+            ],
+            correct: 0,
+            exp_ar: "لتحديد عدة أعمدة نمرر قائمة تحتوي على أسماء الأعمدة داخل القوسين: data[['Name', 'Age']].",
+            exp_en: "To select multiple columns, pass a Python list of column names inside the brackets."
+        },
+        {
+            topic: "pandas2.py - Drop from Series",
+            ar_q: "ما الناتج البرمجي لحذف عنصر بفهرس 'Ahmed' من سلسلة بواسطة s.drop('Ahmed')؟",
+            en_q: "What is the result of deleting an element with index 'Ahmed' via s.drop('Ahmed')?",
+            options: [
+                { ar: "حذف جميع العناصر عدا أحمد", en: "Keeps only Ahmed and drops the rest" },
+                { ar: "تصفير قيمة أحمد لتصبح 0", en: "Sets Ahmed's value to 0" },
+                { ar: "إرجاع سلسلة جديدة خالية من هذا العنصر", en: "Returns a new Series without that element" },
+                { ar: "حذف السلسلة بالكامل من الذاكرة", en: "Deletes the entire Series from memory" }
+            ],
+            correct: 2,
+            exp_ar: "ترجع دالة drop افتراضياً نسخة جديدة من السلسلة بعد استبعاد العنصر المحدد.",
+            exp_en: "By default, .drop() returns a new Series with the specified label removed."
+        },
+        {
+            topic: "pandas3.py - Add Column",
+            ar_q: "عند تنفيذ data['Passed'] = True على DataFrame، كيف تتأثر البيانات؟",
+            en_q: "When executing data['Passed'] = True on a DataFrame, how is the data affected?",
+            options: [
+                { ar: "حذف جميع الصفوف التي تحتوي على False", en: "Deletes all rows containing False" },
+                { ar: "حدوث خطأ لعدم تحديد قائمة قيم", en: "Raises an error because a list was not provided" },
+                { ar: "إضافة عمود يمتلك فيه أول صف فقط القيمة True", en: "Adds a column where only the first row is True" },
+                { ar: "إضافة عمود جديد تكون قيمته True لجميع الصفوف", en: "Adds a new column with True assigned to all rows" }
+            ],
+            correct: 3,
+            exp_ar: "إسناد قيمة مفردة ينشئ عموداً جديداً ويبث نفس القيمة (Broadcast) على كافة صفوف الجدول.",
+            exp_en: "Assigning a scalar value broadcasts it to all rows in the newly created column."
+        },
+        {
+            topic: "pandas3.py - Add Row loc",
+            ar_q: "ما الأمر المستخدم لإضافة صف جديد في نهاية DataFrame استناداً إلى طوله الحالي؟",
+            en_q: "Which statement is used to append a new row at the end of a DataFrame based on its current length?",
+            options: [
+                { ar: "data.insert(['adam', 15, 99])", en: "data.insert(['adam', 15, 99])" },
+                { ar: "data.push(['adam', 15, 99])", en: "data.push(['adam', 15, 99])" },
+                { ar: "data.append_row(['adam', 15, 99])", en: "data.append_row(['adam', 15, 99])" },
+                { ar: "data.loc[len(data)] = ['adam', 15, 99]", en: "data.loc[len(data)] = ['adam', 15, 99]" }
+            ],
+            correct: 3,
+            exp_ar: "تتيح data.loc[len(data)] الوصول للفهرس الرقمي التالي وإسناد قائمة بيانات الصف الجديد إليه.",
+            exp_en: "Using .loc[len(data)] sets values at the next sequential index, effectively appending a row."
+        },
+        {
+            topic: "pandas3.py - Drop Row axis",
+            ar_q: "لحذف الصف ذي الفهرس 1 من الجدول، ما الأمر الصحيح؟",
+            en_q: "To drop the row with index label 1 from a DataFrame, which command is correct?",
+            options: [
+                { ar: "data.remove(1)", en: "data.remove(1)" },
+                { ar: "data.drop(1, axis=1)", en: "data.drop(1, axis=1)" },
+                { ar: "data.drop(1, axis=0)", en: "data.drop(1, axis=0)" },
+                { ar: "data.pop(1)", en: "data.pop(1)" }
+            ],
+            correct: 2,
+            exp_ar: "المحور axis=0 يحدد حذف الصفوف بينما axis=1 مخصص للأعمدة.",
+            exp_en: "axis=0 refers to the rows axis in .drop()."
+        },
+        {
+            topic: "pandas3.py - Drop Column axis",
+            ar_q: "لحذف عمود 'Grade' من DataFrame، ما المعامل axis الذي يجب تمريره؟",
+            en_q: "To drop the 'Grade' column from a DataFrame, which axis parameter must be passed?",
+            options: [
+                { ar: "axis=1", en: "axis=1" },
+                { ar: "axis=0", en: "axis=0" },
+                { ar: "axis=-1", en: "axis=-1" },
+                { ar: "axis='rows'", en: "axis='rows'" }
+            ],
+            correct: 0,
+            exp_ar: "axis=1 يوجه دالة drop لحذف عمود بالاسم المحدد: data.drop('Grade', axis=1).",
+            exp_en: "axis=1 instructs Pandas to look along the column axis for the given label."
+        },
+        {
+            topic: "pandas3.py - Modify Cell",
+            ar_q: "لتعديل قيمة خلية في الصف 0 وعمود 'Age' لتصبح 14، نستخدم:",
+            en_q: "To update a specific cell at row index 0 and column 'Age' to 14, you write:",
+            options: [
+                { ar: "data.set(0, 'Age', 14)", en: "data.set(0, 'Age', 14)" },
+                { ar: "data[0, 'Age'] = 14", en: "data[0, 'Age'] = 14" },
+                { ar: "data.update(0, 'Age', 14)", en: "data.update(0, 'Age', 14)" },
+                { ar: "data.loc[0, 'Age'] = 14", en: "data.loc[0, 'Age'] = 14" }
+            ],
+            correct: 3,
+            exp_ar: "تسمح خاصية loc بالوصول المباشر وتعديل قيمة تقاطع الصف والفهرس المحددين.",
+            exp_en: "The syntax data.loc[row_label, col_label] = new_value modifies the specified cell."
+        },
+        {
+            topic: "pandas3.py - Single Condition Filtering",
+            ar_q: "ماذا يرجع التعبير البرمجي: data[data.Age > 12].Name؟",
+            en_q: "What does the expression data[data.Age > 12].Name return?",
+            options: [
+                { ar: "عمود الأسماء فقط للطلاب الذين يزيد عمرهم عن 12", en: "Only the 'Name' column for students older than 12" },
+                { ar: "جميع صفوف الطلاب الذين عمرهم أصغر من 12", en: "All rows of students younger than 12" },
+                { ar: "قيمة بوليانية True أو False", en: "A boolean True or False scalar" },
+                { ar: "عدد الطلاب الذين يزيد عمرهم عن 12", en: "The count of students older than 12" }
+            ],
+            correct: 0,
+            exp_ar: "يقوم بتصفية الصفوف أولاً بشرط Age > 12 ثم يستخرج منها عمود Name فقط.",
+            exp_en: "It filters rows where Age > 12 and then projects solely the 'Name' Series."
+        },
+        {
+            topic: "pandas3.py - Logical AND Filtering",
+            ar_q: "ما العامل المنطقي المستخدم لدمج شرطين معاً (AND) في فلترة بيانات Pandas؟",
+            en_q: "Which logical operator is used for element-wise AND filtering in Pandas?",
+            options: [
+                { ar: "الكلمة and", en: "and" },
+                { ar: "الرمز &&", en: "&&" },
+                { ar: "الرمز &", en: "&" },
+                { ar: "الدالة AND()", en: "AND()" }
+            ],
+            correct: 2,
+            exp_ar: "تتطلب Pandas استخدام العامل الثنائي & بين الشروط المحاطة بأقواس: (c1) & (c2).",
+            exp_en: "Bitwise '&' must be used for element-wise boolean AND operations in Pandas."
+        },
+        {
+            topic: "pandas3.py - Logical OR Filtering",
+            ar_q: "ما العامل المنطقي المستخدم للتعبير عن الشرط البديل (OR) في فلترة Pandas؟",
+            en_q: "Which operator represents element-wise OR filtering in Pandas?",
+            options: [
+                { ar: "الكلمة or", en: "or" },
+                { ar: "الرمز |", en: "|" },
+                { ar: "الرمز ||", en: "||" },
+                { ar: "الرمز !", en: "!" }
+            ],
+            correct: 1,
+            exp_ar: "نستخدم الرمز | مع وضع كل شرط بين قوسين مثل: (data.Age > 10) | (data.Grade >= 90).",
+            exp_en: "Bitwise '|' is required for element-wise boolean OR filtering."
+        },
+        {
+            topic: "pandas3.py - read_csv",
+            ar_q: "ما الدالة المستخدمة لقراءة وتحميل ملف بيانات بامتداد CSV إلى DataFrame؟",
+            en_q: "Which function loads a CSV file directly into a Pandas DataFrame?",
+            options: [
+                { ar: "pd.open_csv()", en: "pd.open_csv()" },
+                { ar: "pd.read_csv()", en: "pd.read_csv()" },
+                { ar: "pd.load_csv()", en: "pd.load_csv()" },
+                { ar: "pd.import_csv()", en: "pd.import_csv()" }
+            ],
+            correct: 1,
+            exp_ar: "الدالة الرسمية المعتمدة هي pd.read_csv('path/file.csv').",
+            exp_en: "pd.read_csv() is the standard Pandas function to import CSV datasets."
+        },
+        {
+            topic: "pandas3.py - head & tail",
+            ar_q: "ما الأمر المستخدم لعرض آخر صف واحد فقط من نهاية جدول البيانات؟",
+            en_q: "Which method is used to display only the single last row of a DataFrame?",
+            options: [
+                { ar: "data.last()", en: "data.last()" },
+                { ar: "data.head(1)", en: "data.head(1)" },
+                { ar: "data.tail(1)", en: "data.tail(1)" },
+                { ar: "data.end(1)", en: "data.end(1)" }
+            ],
+            correct: 2,
+            exp_ar: "تعرض data.tail(1) آخر صف من الجدول بينما head تعرض الصفوف الأولى.",
+            exp_en: "The .tail(1) method returns the last 1 row from the bottom of the DataFrame."
+        },
+        {
+            topic: "pandas4.py - read_excel",
+            ar_q: "لقراءة ملف جدول بيانات من إكسيل بامتداد .xlsx نستخدم:",
+            en_q: "To read an Excel spreadsheet file with extension .xlsx, we use:",
+            options: [
+                { ar: "pd.read_sheet()", en: "pd.read_sheet()" },
+                { ar: "pd.open_excel()", en: "pd.open_excel()" },
+                { ar: "pd.from_excel()", en: "pd.from_excel()" },
+                { ar: "pd.read_excel()", en: "pd.read_excel()" }
+            ],
+            correct: 3,
+            exp_ar: "تُستخدم الدالة pd.read_excel('file.xlsx') لتحميل جداول إكسيل.",
+            exp_en: "pd.read_excel() reads Excel workbooks into a DataFrame."
+        },
+        {
+            topic: "pandas4.py - Column Names",
+            ar_q: "ما الخاصية التي تُرجع قائمة بجميع أسماء وعناوين الأعمدة في الجدول؟",
+            en_q: "Which attribute returns an Index object containing all column headers of a DataFrame?",
+            options: [
+                { ar: "data.headers", en: "data.headers" },
+                { ar: "data.columns", en: "data.columns" },
+                { ar: "data.col_names", en: "data.col_names" },
+                { ar: "data.fields", en: "data.fields" }
+            ],
+            correct: 1,
+            exp_ar: "ترجع data.columns كائن فهرس يحتوي على كافة عناوين الأعمدة.",
+            exp_en: "The .columns attribute outputs the column labels of the DataFrame."
+        },
+        {
+            topic: "pandas4.py - info method",
+            ar_q: "ما الدالة التي توفر تقريراً عن عدد الصفوف وأنواع بيانات الأعمدة وعدد القيم غير الفارغة؟",
+            en_q: "Which method prints a concise summary of non-null counts, dtypes, and memory usage?",
+            options: [
+                { ar: "data.structure()", en: "data.structure()" },
+                { ar: "data.dtypes_all()", en: "data.dtypes_all()" },
+                { ar: "data.summary()", en: "data.summary()" },
+                { ar: "data.info()", en: "data.info()" }
+            ],
+            correct: 3,
+            exp_ar: "تعرض data.info() تفاصيل شاملة عن كل عمود ونوعه والذاكرة المستهلكة.",
+            exp_en: ".info() displays column data types, non-null value counts, and memory footprint."
+        },
+        {
+            topic: "pandas4.py - Data Types",
+            ar_q: "ما نوع البيانات (dtype) الذي تستخدمه Pandas عادة لتخزين النصوص والسلاسل النصية؟",
+            en_q: "Which data type (dtype) is typically assigned by Pandas to text and string columns?",
+            options: [
+                { ar: "bool", en: "bool" },
+                { ar: "int64", en: "int64" },
+                { ar: "object", en: "object" },
+                { ar: "float64", en: "float64" }
+            ],
+            correct: 2,
+            exp_ar: "تخزن الأعمدة النصية في Pandas تحت نوع البيانات 'object'.",
+            exp_en: "Text strings are typically stored as 'object' dtype in Pandas."
+        },
+        {
+            topic: "pandas4.py - describe method",
+            ar_q: "ما الوظيفة الأساسية لدالة data.describe() عند تطبيقها على الأعمدة العددية؟",
+            en_q: "What is the primary function of data.describe() on numerical columns?",
+            options: [
+                { ar: "توليد إحصاءات وصفية تشمل المتوسط والانحراف والحد الأدنى والأقصى", en: "Generating descriptive statistics like count, mean, std, min, max" },
+                { ar: "رسم بياني تلقائي", en: "Plotting an automatic graph" },
+                { ar: "تعديل أسماء الأعمدة", en: "Renaming columns" },
+                { ar: "حذف الأعمدة غير العددية نهائياً", en: "Deleting non-numeric columns permanently" }
+            ],
+            correct: 0,
+            exp_ar: "تنتج describe ملخصاً إحصائياً شاملاً (المتوسط، الوسيط، الربيعيات، القيم القصوى).",
+            exp_en: ".describe() generates statistical summaries (mean, std, quartiles, min, max)."
+        },
+        {
+            topic: "pandas4.py - Mean vs Median",
+            ar_q: "ما المصطلح الإحصائي الذي يمثل 'الوسيط' (القيمة التي تقسم البيانات المرتبة إلى نصفين متساويين)؟",
+            en_q: "Which statistical term represents the middle value in a sorted distribution of numbers?",
+            options: [
+                { ar: "Median", en: "Median" },
+                { ar: "Mean", en: "Mean" },
+                { ar: "Mode", en: "Mode" },
+                { ar: "Variance", en: "Variance" }
+            ],
+            correct: 0,
+            exp_ar: "الـ Median هو الوسيط الإحصائي بينما Mean هو المتوسط الحسابي.",
+            exp_en: "Median represents the middle value of sorted numerical data."
+        },
+        {
+            topic: "pandas4.py - unique values",
+            ar_q: "إذا طبقنا data['Name'].unique() على عمود يحتوي على: ['Ali', 'omar', 'Ahmed', 'omar']، فما الناتج؟",
+            en_q: "Applying data['Name'].unique() on ['Ali', 'omar', 'Ahmed', 'omar'] yields:",
+            options: [
+                { ar: "الاسم المكرر فقط: ['omar']", en: "Only the duplicate name: ['omar']" },
+                { ar: "جميع الأسماء مع التكرار", en: "All names including duplicates" },
+                { ar: "مصفوفة بالقيم الفريدة: ['Ali', 'omar', 'Ahmed']", en: "Array of unique values: ['Ali', 'omar', 'Ahmed']" },
+                { ar: "العدد 3 فقط", en: "The integer 3 only" }
+            ],
+            correct: 2,
+            exp_ar: "تعيد دالة unique مصفوفة تحتوي على القيم الفريدة فقط مستبعدة التكرار.",
+            exp_en: ".unique() returns an array containing distinct values with duplicates omitted."
+        },
+        {
+            topic: "pandas4.py - Mode",
+            ar_q: "ما الدالة المستخدمة لحساب 'المنوال' (القيمة الأكثر تكراراً في العمود)؟",
+            en_q: "Which method computes the 'Mode' (the most frequently occurring value in a column)?",
+            options: [
+                { ar: "data['Grade'].mode()", en: "data['Grade'].mode()" },
+                { ar: "data['Grade'].top()", en: "data['Grade'].top()" },
+                { ar: "data['Grade'].freq()", en: "data['Grade'].freq()" },
+                { ar: "data['Grade'].common()", en: "data['Grade'].common()" }
+            ],
+            correct: 0,
+            exp_ar: "تُستخدم دالة mode() لحساب المنوال الأكثر تكراراً في العمود.",
+            exp_en: "The .mode() method finds the most recurring value(s) in a Series."
+        },
+        {
+            topic: "pandas4.py - Numeric Aggregation",
+            ar_q: "ما الأمر الصحيح لإيجاد أعلى درجة في عمود الدرجات 'Grade'؟",
+            en_q: "What is the correct method to find the maximum grade in column 'Grade'?",
+            options: [
+                { ar: "data['Grade'].highest()", en: "data['Grade'].highest()" },
+                { ar: "data['Grade'].max()", en: "data['Grade'].max()" },
+                { ar: "data['Grade'].peak()", en: "data['Grade'].peak()" },
+                { ar: "data['Grade'].largest()", en: "data['Grade'].largest()" }
+            ],
+            correct: 1,
+            exp_ar: "دالة max() تحسب أعلى قيمة عددية في السلسلة أو العمود.",
+            exp_en: "The .max() method computes the maximum value in a Series."
+        },
+        {
+            topic: "pandas4.py - Numeric Aggregation",
+            ar_q: "ما الأمر الصحيح لحساب أصغر قيمة في عمود 'Age'؟",
+            en_q: "What is the correct method to find the lowest age in column 'Age'?",
+            options: [
+                { ar: "data['Age'].bottom()", en: "data['Age'].bottom()" },
+                { ar: "data['Age'].min()", en: "data['Age'].min()" },
+                { ar: "data['Age'].lowest()", en: "data['Age'].lowest()" },
+                { ar: "data['Age'].first()", en: "data['Age'].first()" }
+            ],
+            correct: 1,
+            exp_ar: "تُرجع دالة min() أصغر قيمة عددية في العمود.",
+            exp_en: "The .min() method returns the minimum scalar value."
+        },
+        {
+            topic: "pandas5.py - isnull detection",
+            ar_q: "ماذا يرجع الأمر data.isnull() عند تطبيقه على DataFrame؟",
+            en_q: "What does data.isnull() return when applied to a DataFrame?",
+            options: [
+                { ar: "قائمة بأسماء الأعمدة المكتملة", en: "A list of complete columns" },
+                { ar: "عدد إجمالي الخلايا الفارغة كرقم مفرد", en: "A single scalar count of all null cells" },
+                { ar: "جدول جديد محذوفة منه القيم الفارغة", en: "A new DataFrame with empty values removed" },
+                { ar: "جدول بولياني يحمل True للقيم الفارغة و False للقيم السليمة", en: "A boolean DataFrame with True for missing values and False otherwise" }
+            ],
+            correct: 3,
+            exp_ar: "تنتج isnull() جدولاً من القيم البوليانية يبين موقع كل قيمة مفقودة (NaN أو None).",
+            exp_en: ".isnull() yields a boolean mask DataFrame indicating True for missing values."
+        },
+        {
+            topic: "pandas5.py - isnull sum",
+            ar_q: "لمعرفة عدد القيم المفقودة في كل عمود داخل الجدول، ما التعليمة الأنسب؟",
+            en_q: "To get the count of missing values in each column, which command is most suitable?",
+            options: [
+                { ar: "data.has_na()", en: "data.has_na()" },
+                { ar: "data.isnull().sum()", en: "data.isnull().sum()" },
+                { ar: "data.empty_cells()", en: "data.empty_cells()" },
+                { ar: "data.count_null()", en: "data.count_null()" }
+            ],
+            correct: 1,
+            exp_ar: "تقوم isnull().sum() بجمع قيم True في كل عمود لتعطي عدد القيم الفارغة فيه بدقة.",
+            exp_en: "Combining .isnull().sum() tallies the total missing entries for every column."
+        },
+        {
+            topic: "pandas5.py - isnull any",
+            ar_q: "ماذا تفعل التعليمة: data.isnull().any()؟",
+            en_q: "What does the statement data.isnull().any() evaluate?",
+            options: [
+                { ar: "تحذف أي عمود فارغ", en: "Deletes any empty column" },
+                { ar: "تستبدل القيم المفقودة", en: "Replaces missing values" },
+                { ar: "تبين ما إذا كان كل عمود يحتوي على قيمة مفقودة واحدة على الأقل (True/False)", en: "Returns True/False for each column indicating if at least one null exists" },
+                { ar: "تحسب متوسط القيم المفقودة", en: "Calculates average of null values" }
+            ],
+            correct: 2,
+            exp_ar: "تعيد any() قيمة بوليانية لكل عمود توضح وجود أي قيمة مفقودة فيه.",
+            exp_en: ".isnull().any() returns a boolean Series checking if any nulls exist per column."
+        },
+        {
+            topic: "pandas5.py - dropna default",
+            ar_q: "ما السلوك الافتراضي لدالة data.dropna() إذا تم استدعاؤها دون معاملات؟",
+            en_q: "What is the default behavior of data.dropna() when called without arguments?",
+            options: [
+                { ar: "ملء الفراغات بأصفار", en: "Fills empty cells with zeros" },
+                { ar: "حذف الأعمدة التي تحتوي على قيم مفقودة", en: "Drops columns containing any missing values" },
+                { ar: "حذف أي صف يحتوي على قيمة مفقودة واحدة على الأقل", en: "Drops any row containing at least one missing value" },
+                { ar: "حذف الصفوف إذا كانت جميع خلاياها فارغة فقط", en: "Drops rows only if all of their cells are empty" }
+            ],
+            correct: 2,
+            exp_ar: "الوضع الافتراضي هو how='any' و axis=0 أي حذف الصف بمجرد احتوائه على أي قيمة مفقودة.",
+            exp_en: "By default, dropna() removes any row with at least one missing value (how='any')."
+        },
+        {
+            topic: "pandas5.py - dropna how all",
+            ar_q: "ما وظيفة المعامل how='all' في دالة data.dropna(how='all')؟",
+            en_q: "What does the parameter how='all' do in data.dropna(how='all')?",
+            options: [
+                { ar: "حذف الأعمدة والصفوف معاً", en: "Drops both columns and rows simultaneously" },
+                { ar: "حذف الصف فقط إذا كانت جميع قيمه مفقودة وفارغة بالكامل", en: "Drops a row only if all its values are missing" },
+                { ar: "حذف الصف إذا وُجدت فيه قيمة واحدة فارغة", en: "Drops a row if any single value is missing" },
+                { ar: "حذف جميع صفوف الجدول فوراً", en: "Drops all rows in the DataFrame unconditionally" }
+            ],
+            correct: 1,
+            exp_ar: "يشترط how='all' أن تكون جميع خلايا الصف NaN ليتم استبعاده وحذفه.",
+            exp_en: "how='all' removes rows exclusively when every column entry in that row is NaN."
+        },
+        {
+            topic: "pandas5.py - fillna scalar",
+            ar_q: "ما وظيفة التعليمة: data.fillna(0, inplace=True)؟",
+            en_q: "What does data.fillna(0, inplace=True) accomplish?",
+            options: [
+                { ar: "فلترة الصفوف التي قيمتها صفر", en: "Filters rows whose values equal zero" },
+                { ar: "استبدال كافة القيم المفقودة في الجدول بالرقم 0 مباشرة في نفس الكائن", en: "Replaces all missing values with 0 directly in the existing DataFrame" },
+                { ar: "حذف جميع الأصفار من الجدول", en: "Removes all zero values from the table" },
+                { ar: "إنشاء عمود جديد اسمه 0", en: "Creates a new column named 0" }
+            ],
+            correct: 1,
+            exp_ar: "تستبدل fillna(0) القيم المفقودة بصفر، و inplace=True تطبق التعديل مباشرة على الجدول الأصلي.",
+            exp_en: "It fills all NaN cells with 0 and modifies the caller DataFrame in-place."
+        },
+        {
+            topic: "pandas5.py - fillna with Mean",
+            ar_q: "لملء القيم المفقودة في عمود 'Age' بالمتوسط الحسابي لأعمار الطلاب، نكتب:",
+            en_q: "To impute missing entries in 'Age' with the mean age of students, which code is used?",
+            options: [
+                { ar: "data['Age'].fillna(data['Age'].mean())", en: "data['Age'].fillna(data['Age'].mean())" },
+                { ar: "data['Age'].replace_na('average')", en: "data['Age'].replace_na('average')" },
+                { ar: "data['Age'].mean().fillna()", en: "data['Age'].mean().fillna()" },
+                { ar: "data['Age'].fill_mean()", en: "data['Age'].fill_mean()" }
+            ],
+            correct: 0,
+            exp_ar: "نمرر ناتج دالة data['Age'].mean() كقيمة تعويضية داخل دالة fillna().",
+            exp_en: "Passing data['Age'].mean() inside fillna() replaces NaNs with the column average."
+        },
+        {
+            topic: "pandas5.py - fillna with Mode",
+            ar_q: "عند استخدام المنوال لملء الفراغات: data['Age'].fillna(data['Age'].mode()[0])، لماذا نضع [0]؟",
+            en_q: "When filling with mode: data['Age'].fillna(data['Age'].mode()[0]), why is [0] appended?",
+            options: [
+                { ar: "لحذف الصف رقم صفر", en: "To delete row number 0" },
+                { ar: "لأن المنوال يجب أن يكون صفراً", en: "Because the mode must always evaluate to zero" },
+                { ar: "لأن دالة mode() ترجع سلسلة Series فنحتاج أخذ أول قيمة منوال منها", en: "Because .mode() returns a Series, so [0] extracts the first modal value" },
+                { ar: "لمنع حدوث خطأ في الذاكرة فقط", en: "Purely to prevent an out-of-memory error" }
+            ],
+            correct: 2,
+            exp_ar: "دالة mode() تعيد كائن Series (قد يكون هناك أكثر من منوال)، لذا نأخذ القيمة الأولى بالفهرس [0].",
+            exp_en: "The .mode() method outputs a Series; indexing [0] grabs the primary modal scalar."
+        },
+        {
+            topic: "pandas5.py - Forward & Backward Fill",
+            ar_q: "ماذا تعني التعليمة: data.ffill().bfill()؟",
+            en_q: "What does the method chain data.ffill().bfill() perform?",
+            options: [
+                { ar: "عكس ترتيب الجدول", en: "Reverses DataFrame order" },
+                { ar: "ملء الفراغات بالقيم السابقة (forward) ثم اللاحقة (backward)", en: "Forward-fills missing values with preceding entries, then backward-fills remainder" },
+                { ar: "تكرار الصفوف مرتين", en: "Duplicates rows twice" },
+                { ar: "حذف القيم من الأمام والخلف", en: "Drops values from front and back" }
+            ],
+            correct: 1,
+            exp_ar: "تقوم ffill بنسخ القيمة السابقة للأمام، بينما bfill تعوض ما تبقى بالقيمة اللاحقة من الخلف.",
+            exp_en: "ffill propagates prior valid values forward; bfill propagates subsequent values backward."
+        },
+        {
+            topic: "pandas5.py - fillna with Median",
+            ar_q: "متى يفضل ملء القيم المفقودة بـ median() بدلاً من mean()؟",
+            en_q: "When is it statistically preferred to fill NaNs with median() instead of mean()?",
+            options: [
+                { ar: "في البيانات النصية فقط", en: "Exclusively in text columns" },
+                { ar: "عندما لا توجد أي قيم مفقودة", en: "When no null values exist" },
+                { ar: "عندما تكون جميع القيم متساوية", en: "When all values are strictly equal" },
+                { ar: "عند وجود قيم شاذة ومتطرفة (Outliers) تؤثر سلباً على المتوسط", en: "When extreme outliers exist that skew the calculated arithmetic mean" }
+            ],
+            correct: 3,
+            exp_ar: "الوسيط (Median) لا يتأثر بالقيم الشاذة والمتطرفة (كما لو كان لدينا راتب 5000 بين رواتب 1000).",
+            exp_en: "The median is robust against extreme outliers, unlike the mean."
+        },
+        {
+            topic: "pandas6.py - duplicated method",
+            ar_q: "ماذا يرجع الأمر: data.duplicated()؟",
+            en_q: "What does data.duplicated() return?",
+            options: [
+                { ar: "حذف فوري للصفوف المكررة", en: "Immediate deletion of duplicated rows" },
+                { ar: "سلسلة بوليانية (Boolean Series) توضح ما إذا كان كل صف مكرراً أم لا", en: "A boolean Series indicating whether each row is a duplicate" },
+                { ar: "إجمالي عدد التكرارات كرقم صحيح", en: "The integer sum of duplicates" },
+                { ar: "جدول بالصفوف المكررة فقط", en: "A DataFrame containing duplicate rows only" }
+            ],
+            correct: 1,
+            exp_ar: "تُرجع duplicated() قيماً بوليانية True للصف المكرر (الذي سبق ظهوره) و False للصف الفريد.",
+            exp_en: ".duplicated() returns a boolean Series marking repeated occurrences as True."
+        },
+        {
+            topic: "pandas6.py - duplicated sum",
+            ar_q: "لمعرفة العدد الإجمالي للصفوف المكررة بالكامل داخل الجدول، نكتب:",
+            en_q: "To calculate the total number of duplicate rows in a DataFrame, we execute:",
+            options: [
+                { ar: "data.is_unique().count()", en: "data.is_unique().count()" },
+                { ar: "data.count_duplicates()", en: "data.count_duplicates()" },
+                { ar: "data.duplicated().sum()", en: "data.duplicated().sum()" },
+                { ar: "data.repeat_total()", en: "data.repeat_total()" }
+            ],
+            correct: 2,
+            exp_ar: "جمع السلسلة البوليانية الناتجة من duplicated() يعطي العدد الفعلي للصفوف المكررة.",
+            exp_en: "Summing .duplicated() counts the total True flags for repeated rows."
+        },
+        {
+            topic: "pandas6.py - drop_duplicates",
+            ar_q: "ما وظيفة الأمر new = data.drop_duplicates()؟",
+            en_q: "What does the statement new = data.drop_duplicates() do?",
+            options: [
+                { ar: "حذف جميع الصفوف من الجدول", en: "Deletes all rows from the table" },
+                { ar: "مضاعفة الصفوف غير المكررة", en: "Doubles unique rows" },
+                { ar: "إرجاع جدول جديد بعد حذف الصفوف المكررة والإبقاء على النسخة الأولى", en: "Returns a new DataFrame with duplicate rows removed, keeping first occurrences" },
+                { ar: "حذف القيم الفارغة فقط", en: "Drops missing values only" }
+            ],
+            correct: 2,
+            exp_ar: "تستبعد drop_duplicates() الصفوف المتطابقة مع الإبقاء على الظهور الأول افتراضياً.",
+            exp_en: ".drop_duplicates() removes duplicate rows, preserving first occurrences by default."
+        },
+        {
+            topic: "pandas6.py - drop_duplicates subset",
+            ar_q: "لحذف التكرار استناداً إلى عمود محدد فقط مثل 'Name'، ما المعامل المستخدم؟",
+            en_q: "To remove duplicates based on a specific column like 'Name', which argument is passed?",
+            options: [
+                { ar: "subset=['Name']", en: "subset=['Name']" },
+                { ar: "target=['Name']", en: "target=['Name']" },
+                { ar: "by=['Name']", en: "by=['Name']" },
+                { ar: "column=['Name']", en: "column=['Name']" }
+            ],
+            correct: 0,
+            exp_ar: "نحدد المعامل subset لتطبيق فحص التكرار على أعمدة معينة: data.drop_duplicates(subset=['Name']).",
+            exp_en: "The 'subset' parameter specifies the subset of columns to evaluate for duplicates."
+        },
+        {
+            topic: "pandas6.py - keep parameter",
+            ar_q: "ماذا يحدث عند تنفيذ: data.drop_duplicates(subset=['Name'], keep=False)؟",
+            en_q: "What happens when running: data.drop_duplicates(subset=['Name'], keep=False)?",
+            options: [
+                { ar: "حذف جميع الصفوف التي تكرر فيها الاسم دون الإبقاء على أي منها", en: "Drops all rows that have duplicate names, keeping none" },
+                { ar: "الإبقاء على النسخة الأولى فقط من الاسم", en: "Keeps only the first occurrence of the name" },
+                { ar: "الإبقاء على النسخة الأخيرة من الاسم", en: "Keeps only the last occurrence of the name" },
+                { ar: "عدم حذف أي شيء", en: "Drops nothing" }
+            ],
+            correct: 0,
+            exp_ar: "الخيار keep=False يحذف كل صف له تكرار بالكامل دون استبقاء أي نسخة منه.",
+            exp_en: "Setting keep=False drops all occurrences of duplicates entirely."
+        },
+        {
+            topic: "pandas6.py - str accessor",
+            ar_q: "لتطبيق دوال النصوص في بايثون على عمود داخل Pandas، ما الخاصية التي تسبق الدالة؟",
+            en_q: "To apply string methods to a column in Pandas, which accessor precedes the method name?",
+            options: [
+                { ar: "الخاصية .str", en: ".str" },
+                { ar: "الخاصية .text", en: ".text" },
+                { ar: "الخاصية .chr", en: ".chr" },
+                { ar: "الخاصية .string", en: ".string" }
+            ],
+            correct: 0,
+            exp_ar: "يُستخدم الموصل .str لتطبيق عمليات النصوص مثل: data['Name'].str.lower().",
+            exp_en: "The .str accessor allows vectorised string operations on Pandas Series."
+        },
+        {
+            topic: "pandas6.py - str lower & upper",
+            ar_q: "ما نتيجة تطبيق data['Name'].str.lower() على عمود الأسماء؟",
+            en_q: "What is the output of data['Name'].str.lower() on a column of names?",
+            options: [
+                { ar: "تحويل الحرف الأول فقط إلى صغير", en: "Converts only the initial character to lowercase" },
+                { ar: "حساب طول الكلمات", en: "Calculates character length" },
+                { ar: "حذف الحروف الكبيرة من النص", en: "Removes uppercase characters completely" },
+                { ar: "تحويل جميع أحرف النصوص في العمود إلى أحرف صغيرة (lowercase)", en: "Converts all text characters across the column to lowercase" }
+            ],
+            correct: 3,
+            exp_ar: "تقوم str.lower() بتحويل كامل الأحرف إلى صغيرة.",
+            exp_en: ".str.lower() turns all characters in the Series into lowercase."
+        },
+        {
+            topic: "pandas6.py - str title vs capitalize",
+            ar_q: "ما وظيفة الدالة data['Name'].str.capitalize()؟",
+            en_q: "What does data['Name'].str.capitalize() do?",
+            options: [
+                { ar: "عكس ترتيب حروف الكلمة", en: "Reverses character sequence" },
+                { ar: "حذف المسافات البادئة", en: "Strips leading whitespace" },
+                { ar: "جعل كل حروف الكلمة كبيرة UPPERCASE", en: "Makes all letters in the word uppercase" },
+                { ar: "جعل الحرف الأول من الكلمة كبيراً وباقي الحروف صغيرة", en: "Capitalizes the first character and lowers the rest" }
+            ],
+            correct: 3,
+            exp_ar: "تجعل capitalize الحرف الأول Capital وبقية الأحرف Small.",
+            exp_en: ".str.capitalize() capitalizes the initial character while lowercasing the remainder."
+        },
+        {
+            topic: "pandas6.py - str strip",
+            ar_q: "إذا كانت الخلية تحتوي على نص محاط بفراغات مثل '  Ali  '، كيف نحذف المسافات من الجانبين؟",
+            en_q: "If a cell contains padded whitespace like '  Ali  ', how do you trim spaces from both sides?",
+            options: [
+                { ar: "data['Name'].str.strip()", en: "data['Name'].str.strip()" },
+                { ar: "data['Name'].str.remove_spaces()", en: "data['Name'].str.remove_spaces()" },
+                { ar: "data['Name'].str.trim()", en: "data['Name'].str.trim()" },
+                { ar: "data['Name'].str.clean()", en: "data['Name'].str.clean()" }
+            ],
+            correct: 0,
+            exp_ar: "تقوم دالة strip() بحذف المسافات البيضاء من بداية ونهاية النصوص.",
+            exp_en: ".str.strip() removes whitespace from both leading and trailing ends."
+        },
+        {
+            topic: "pandas6.py - str rstrip",
+            ar_q: "لحذف المسافات البيضاء الزائدة من الجهة اليمنى (نهاية النص) فقط، نستخدم:",
+            en_q: "To strip trailing whitespace solely from the right side of strings, we use:",
+            options: [
+                { ar: "data['Name'].str.end_clean()", en: "data['Name'].str.end_clean()" },
+                { ar: "data['Name'].str.lstrip()", en: "data['Name'].str.lstrip()" },
+                { ar: "data['Name'].str.rstrip()", en: "data['Name'].str.rstrip()" },
+                { ar: "data['Name'].str.right_trim()", en: "data['Name'].str.right_trim()" }
+            ],
+            correct: 2,
+            exp_ar: "الدالة rstrip تختص بحذف الفراغات من اليمين (Trailing spaces).",
+            exp_en: ".str.rstrip() strips whitespace specifically from the right/trailing end."
+        }
+    ];
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadScores() {
+        const storedHigh = localStorage.getItem('pandas_mastery_highscore');
+        const high = storedHigh ? parseInt(storedHigh) : 0;
+        document.getElementById('highScore').innerText = high;
+
+        const storedFirst = localStorage.getItem('pandas_mastery_first_score');
+        if (storedFirst !== null) {
+            document.getElementById('firstScore').innerText = storedFirst;
+        } else {
+            document.getElementById('firstScore').innerText = "--";
+        }
+        return { high, first: storedFirst };
+    }
+
+    function saveScores(finalScore) {
+        let isFirstTime = false;
+        if (localStorage.getItem('pandas_mastery_first_score') === null) {
+            localStorage.setItem('pandas_mastery_first_score', finalScore);
+            document.getElementById('firstScore').innerText = finalScore;
+            isFirstTime = true;
+        }
+
+        const currentHigh = parseInt(localStorage.getItem('pandas_mastery_highscore') || '0');
+        let isNewHigh = false;
+        if (finalScore > currentHigh) {
+            localStorage.setItem('pandas_mastery_highscore', finalScore);
+            document.getElementById('highScore').innerText = finalScore;
+            isNewHigh = true;
+        }
+
+        return { isFirstTime, isNewHigh };
+    }
+
+    function calculateScore() {
+        let s = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === questions[i].correct) {
+                s++;
+            }
+        }
+        score = s;
+        document.getElementById('score').innerText = score;
+        return score;
+    }
+
+    function displayQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('qCurrent').innerText = currentIdx + 1;
+        document.getElementById('topicBadge').innerText = q.topic;
+        document.getElementById('questionTextAr').innerText = (currentIdx + 1) + ". " + q.ar_q;
+        document.getElementById('questionTextEn').innerText = "Q" + (currentIdx + 1) + ": " + q.en_q;
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const pct = (answeredCount / questions.length) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        const expBox = document.getElementById('explanationText');
+        const statusIndicator = document.getElementById('qStatusIndicator');
+
+        const prevAns = userAnswers[currentIdx];
+
+        if (prevAns === null) {
+            statusIndicator.innerText = "لم يُجب بعد / Not answered";
+            statusIndicator.style.color = "var(--text-muted)";
+            expBox.style.display = 'none';
+        } else {
+            statusIndicator.innerText = prevAns === q.correct ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+            statusIndicator.style.color = prevAns === q.correct ? "var(--success)" : "var(--danger)";
+            showExplanation(prevAns === q.correct, prevAns);
+        }
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = `
+                <div class="opt-ar">${['أ', 'ب', 'ج', 'د'][idx]}) ${opt.ar}</div>
+                <div class="opt-en">${['A', 'B', 'C', 'D'][idx]}) ${opt.en}</div>
+            `;
+
+            if (prevAns !== null) {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === prevAns) {
+                    btn.classList.add('wrong');
+                }
+            } else {
+                btn.onclick = () => selectAnswer(idx);
+            }
+            container.appendChild(btn);
+        });
+
+        document.getElementById('prevBtn').disabled = (currentIdx === 0);
+        document.getElementById('nextBtn').innerText = (currentIdx === questions.length - 1) ? "إنهاء الاختبار / Finish 🏁" : "التالي / Next ⬅️";
+    }
+
+    function selectAnswer(chosenIdx) {
+        if (userAnswers[currentIdx] !== null) return;
+
+        userAnswers[currentIdx] = chosenIdx;
+        calculateScore();
+
+        const q = questions[currentIdx];
+        const isCorrect = (chosenIdx === q.correct);
+
+        const buttons = document.querySelectorAll('.opt-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+            buttons[chosenIdx].classList.add('correct');
+        } else {
+            buttons[chosenIdx].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+        }
+
+        showExplanation(isCorrect, chosenIdx);
+
+        const statusIndicator = document.getElementById('qStatusIndicator');
+        statusIndicator.innerText = isCorrect ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+        statusIndicator.style.color = isCorrect ? "var(--success)" : "var(--danger)";
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        document.getElementById('progressBar').style.width = ((answeredCount / questions.length) * 100) + '%';
+    }
+
+    function showExplanation(isCorrect, chosenIdx) {
+        const q = questions[currentIdx];
+        const expBox = document.getElementById('explanationText');
+
+        if (isCorrect) {
+            expBox.innerHTML = `
+                <b>✅ إجابة صحيحة / Correct!</b><br>
+                <div>${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--success)';
+        } else {
+            expBox.innerHTML = `
+                <b>❌ إجابة غير دقيقة / Incorrect!</b><br>
+                <div>الإجابة الصحيحة هي: <b>${q.options[q.correct].ar}</b></div>
+                <div class="exp-en">Correct choice: <b>${q.options[q.correct].en}</b></div>
+                <div style="margin-top: 6px;">${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--danger)';
+        }
+        expBox.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            displayQuestion();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            displayQuestion();
+        }
+    }
+
+    function openIndexModal() {
+        buildIndexGrid();
+        document.getElementById('indexModal').style.display = 'flex';
+    }
+
+    function closeIndexModal() {
+        document.getElementById('indexModal').style.display = 'none';
+    }
+
+    function closeIndexModalOnOutside(e) {
+        if (e.target.id === 'indexModal') {
+            closeIndexModal();
+        }
+    }
+
+    function buildIndexGrid() {
+        const grid = document.getElementById('gridIndexContainer');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < questions.length; i++) {
+            const pill = document.createElement('div');
+            pill.className = 'index-pill';
+            pill.innerText = (i + 1);
+
+            if (i === currentIdx) {
+                pill.classList.add('active');
+            }
+
+            if (userAnswers[i] !== null) {
+                if (userAnswers[i] === questions[i].correct) {
+                    pill.classList.add('solved-correct');
+                } else {
+                    pill.classList.add('solved-wrong');
+                }
+            }
+
+            pill.onclick = () => {
+                currentIdx = i;
+                displayQuestion();
+                closeIndexModal();
+            };
+
+            grid.appendChild(pill);
+        }
+    }
+
+    function showFinalResults() {
+        document.getElementById('quizCard').style.display = 'none';
+        document.getElementById('progressBar').style.width = '100%';
+
+        const resultsCard = document.getElementById('resultsCard');
+        resultsCard.style.display = 'block';
+
+        calculateScore();
+        document.getElementById('finalScore').innerText = score;
+        const res = saveScores(score);
+        const scores = loadScores();
+
+        const notice = document.getElementById('highScoreNotice');
+        const msg = document.getElementById('resultMsg');
+        const icon = document.getElementById('trophyIcon');
+
+        let textDetails = `🎯 أول محاولة مسجلة (First Attempt): ${scores.first} من 50<br>`;
+        if (res.isNewHigh && score > 0) {
+            textDetails += `🏆 مبروك! حققت رقماً قياسياً جديداً (New High Score): ${score} من 50!`;
+        } else {
+            textDetails += `🏆 أعلى نتيجة على هذا الجهاز (Best Score): ${scores.high} من 50`;
+        }
+        notice.innerHTML = textDetails;
+
+        if (score >= 45) {
+            msg.innerText = "ممتاز وفوق العادة! خبير حقيقي في مكتبة Pandas 🌟";
+            icon.innerText = "👑";
+        } else if (score >= 35) {
+            msg.innerText = "جيد جداً! إتقان متقدم لأساسيات المعالجة والتنظيف 👏";
+            icon.innerText = "🎉";
+        } else if (score >= 25) {
+            msg.innerText = "مستوى متوسط! راجع دوال isnull و drop_duplicates 📖";
+            icon.innerText = "👍";
+        } else {
+            msg.innerText = "يُنصح بإعادة دراسة الملفات والتدرب عليها عملياً ⚠️";
+            icon.innerText = "💡";
+        }
+    }
+
+    function restartQuiz() {
+        userAnswers = new Array(questions.length).fill(null);
+        currentIdx = 0;
+        score = 0;
+        document.getElementById('score').innerText = '0';
+        document.getElementById('resultsCard').style.display = 'none';
+        document.getElementById('quizCard').style.display = 'block';
+        displayQuestion();
+    }
+
+    window.onload = function() {
+        loadScores();
+        displayQuestion();
+    };
+</script>
+</body>
+</html>
