@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار مكتبة NumPy والعمليات على المصفوفات (20 سؤالاً)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #f59e0b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 28px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.25);
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #e0f2fe;
+            direction: ltr;
+        }
+
+        .stats-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-val.high {
+            color: var(--accent);
+        }
+
+        .btn-index {
+            background: #f0f9ff;
+            color: var(--primary);
+            border: 2px solid #bae6fd;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-index:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        .q-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 20px -3px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .q-badge {
+            background: #f0f9ff;
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .q-text-ar {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .q-text-en {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #475569;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: #f0f9ff;
+            border-color: #7dd3fc;
+            transform: translateX(-4px);
+        }
+
+        .opt-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-ar {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .opt-en {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #64748b;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .opt-btn.correct .opt-ar, .opt-btn.correct .opt-en {
+            color: #15803d !important;
+        }
+
+        .opt-btn.wrong .opt-ar, .opt-btn.wrong .opt-en {
+            color: #991b1b !important;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            display: none;
+            background: #f1f5f9;
+            border-right: 5px solid var(--primary);
+        }
+
+        .exp-en {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            margin-top: 6px;
+            font-size: 0.92rem;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-nav:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 26px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            animation: popIn 0.25s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+
+        .grid-index {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .index-pill {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+        }
+
+        .index-pill:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+            transform: translateY(-2px);
+        }
+
+        .index-pill.active {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+            font-weight: 900;
+        }
+
+        .index-pill.solved-correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .index-pill.solved-wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        .results-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .trophy { font-size: 4rem; margin-bottom: 15px; }
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #f0f9ff;
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .score-num { font-size: 2.4rem; font-weight: 900; color: var(--primary); }
+        .btn-restart {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 14px 34px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>اختبار مكتبة NumPy والعمليات على المصفوفات (20 سؤالاً)</h1>
+        <p>Bilingual Quiz: NumPy Arrays, Vectorization, Built-in Initializers & Dimensions</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-label">رقم السؤال / Question</span>
+            <div><span class="stat-val" id="qCurrent">1</span> / 20</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أول محاولة / 1st Score 🎯</span>
+            <span class="stat-val" style="color: #0284c7;" id="firstScore">--</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">الدرجة الحالية / Score</span>
+            <span class="stat-val" id="score">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أعلى نتيجة / High Score 🏆</span>
+            <span class="stat-val high" id="highScore">0</span>
+        </div>
+        <div>
+            <button class="btn-index" onclick="openIndexModal()">
+                <span>📑</span>
+                <span>فهرس الأسئلة (1-20)</span>
+            </button>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="q-card" id="quizCard">
+        <div class="q-header">
+            <span class="q-badge" id="topicBadge">Topic</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;" id="qStatusIndicator">لم يُجب بعد / Not answered</span>
+        </div>
+        
+        <div class="q-text-ar" id="questionTextAr">جاري تحميل السؤال...</div>
+        <div class="q-text-en" id="questionTextEn">Loading question...</div>
+        
+        <div class="options-list" id="optionsContainer"></div>
+        <div class="explanation" id="explanationText"></div>
+
+        <div class="actions">
+            <button class="btn-nav" id="prevBtn" onclick="prevQuestion()" disabled>➡️ السابق / Prev</button>
+            <button class="btn-nav" id="nextBtn" onclick="nextQuestion()">التالي / Next ⬅️</button>
+        </div>
+    </div>
+
+    <div class="results-card" id="resultsCard">
+        <div class="trophy" id="trophyIcon">🎉</div>
+        <h2 id="resultMsg" style="font-size: 1.8rem; margin-bottom: 8px;">أحسنت صنعاً!</h2>
+        <p id="resultSubtitle" style="color: var(--text-muted);">أتممت جميع أسئلة مكتبة NumPy بنجاح!</p>
+        
+        <div class="score-circle">
+            <div class="score-num" id="finalScore">0</div>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">/ 20</span>
+        </div>
+
+        <p id="highScoreNotice" style="font-weight: 700; font-size: 1.1rem; color: var(--accent); margin-top: 10px;"></p>
+        <button class="btn-restart" onclick="restartQuiz()">إعادة الاختبار من البداية 🔄</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="indexModal" onclick="closeIndexModalOnOutside(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📑 فهرس أسئلة NumPy (Question Index)</h3>
+            <button class="close-btn" onclick="closeIndexModal()">✕</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background: #22c55e;"></div><span>إجابة صحيحة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div><span>إجابة خاطئة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #0284c7;"></div><span>السؤال المفتوح حالياً</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #e2e8f0; border: 1px solid #cbd5e1;"></div><span>لم يُحل بعد</span></div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">انقر على أي رقم سؤال للانتقال إليه مباشرة:</p>
+        <div class="grid-index" id="gridIndexContainer"></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            topic: "العمليات الشعاعية / Vectorized Multiplication",
+            ar_q: "عند تنفيذ print(numbers * 2) حيث numbers = np.array([10, 20, 30, 40])، ما الناتج؟",
+            en_q: "When executing print(numbers * 2) where numbers = np.array([10, 20, 30, 40]), what is the output?",
+            options: [
+                { ar: "تكرار القائمة [10, 20, 30, 40, 10, 20, 30, 40]", en: "Replicating list: [10, 20, 30, 40, 10, 20, 30, 40]" },
+                { ar: "ضرب كل عنصر في 2: [20 40 60 80]", en: "Multiplying each item by 2: [20 40 60 80]" },
+                { ar: "ضرب العنصر الأول فقط: [20, 20, 30, 40]", en: "Multiplying first item only: [20, 20, 30, 40]" },
+                { ar: "حدوث خطأ في العمليات الحسابية TypeError", en: "Triggering a runtime arithmetic TypeError" }
+            ],
+            correct: 1,
+            exp_ar: "تطبق مصفوفات NumPy العمليات الحسابية عنصراً بعنصر (Element-wise / Vectorized)، فيضرب كل رقم في 2.",
+            exp_en: "NumPy arrays perform element-wise arithmetic operations, multiplying each individual item by 2."
+        },
+        {
+            topic: "تكرار القوائم / Python List Replication",
+            ar_q: "ما هو الناتج البرمجي للأمر print([10, 20, 30, 40] * 2) في بايثون العادية؟",
+            en_q: "What is the output of print([10, 20, 30, 40] * 2) using standard Python lists?",
+            options: [
+                { ar: "ضرب كل قيمة حسابياً: [20, 40, 60, 80]", en: "Multiplying values numerically: [20, 40, 60, 80]" },
+                { ar: "إضافة العدد 2 لكل عنصر: [12, 22, 32, 42]", en: "Adding 2 to each element: [12, 22, 32, 42]" },
+                { ar: "تكرار عناصر القائمة مرتين في قائمة واحدة", en: "Replicating list elements twice in one list" },
+                { ar: "حدوث استثناء في أنواع البيانات ValueError", en: "Throwing a data type ValueError exception" }
+            ],
+            correct: 2,
+            exp_ar: "عامل الضرب (*) مع قوائم بايثون القياسية يكرر عناصر القائمة مرتين بدلاً من ضرب الأرقام حسابياً.",
+            exp_en: "Multiplying a standard Python list replicates its elements rather than multiplying them mathematically."
+        },
+        {
+            topic: "البث وجمع الأعداد / Array Broadcasting Addition",
+            ar_q: "ما ناتج تنفيذ print(numbers + 5) مع مصفوفة np.array([10, 20, 30, 40])؟",
+            en_q: "What is the output of print(numbers + 5) on np.array([10, 20, 30, 40])?",
+            options: [
+                { ar: "إضافة القيمة 5 لكل عنصر: [15 25 35 45]", en: "Adding 5 to each element: [15 25 35 45]" },
+                { ar: "إضافة الرقم 5 في نهاية المصفوفة فقط", en: "Appending number 5 at the end of array" },
+                { ar: "حدوث خطأ لعدم تطابق الأبعاد الإنشائية", en: "Throwing an error due to dimension mismatch" },
+                { ar: "تعديل طول المصفوفة لتصبح بطول خمس خانات", en: "Resizing array length to five positions" }
+            ],
+            correct: 0,
+            exp_ar: "بفضل خاصية البث (Broadcasting) في NumPy، يُجمع العدد 5 إلى كل عنصر داخل المصفوفة بشكل فردي.",
+            exp_en: "NumPy uses broadcasting to add the scalar 5 to each individual element of the array."
+        },
+        {
+            topic: "دالة الأصفار / The zeros() Function",
+            ar_q: "ما هو الناتج الدقيق لاستدعاء الدالة np.zeros(5) في بايثون؟",
+            en_q: "What is the exact output of calling np.zeros(5) in Python?",
+            options: [
+                { ar: "مصفوفة أعداد صحيحة: array([0, 0, 0, 0, 0])", en: "Integer array: array([0, 0, 0, 0, 0])" },
+                { ar: "مصفوفة أعداد فارغة دون تحديد القيم الداخلية", en: "Empty array with uninitialized inner values" },
+                { ar: "مصفوفة ثنائية الأبعاد تحتوي على خمسة أصفار", en: "Two-dimensional array containing five zeros" },
+                { ar: "مصفوفة أعداد عشرية: [0. 0. 0. 0. 0.]", en: "Floating-point array: [0. 0. 0. 0. 0.]" }
+            ],
+            correct: 3,
+            exp_ar: "تنشئ دالة np.zeros افتراضياً مصفوفة من أرقام عشرية نوعها float64، فتظهر الأصفار بنقطة عشرية [0. 0. 0. 0. 0.].",
+            exp_en: "np.zeros creates an array of float64 by default, printing elements with a trailing dot: [0. 0. 0. 0. 0.]."
+        },
+        {
+            topic: "دالة الآحاد / The ones() Function",
+            ar_q: "ما هو نوع البيانات الافتراضي (dtype) للمصفوفة الناتجة عن np.ones(5)؟",
+            en_q: "What is the default data type (dtype) of the array created by np.ones(5)?",
+            options: [
+                { ar: "نوع الأعداد الصحيحة القياسي int32", en: "Standard integer format int32" },
+                { ar: "نوع الأعداد العشرية العائمة float64", en: "Standard floating-point type float64" },
+                { ar: "نوع القيم المنطقية الثنائية bool", en: "Binary boolean flag type bool" },
+                { ar: "نوع النصوص وسلاسل المحارف string", en: "Text string character type string" }
+            ],
+            correct: 1,
+            exp_ar: "النوع الافتراضي لمعظم دوال بناء مصفوفات NumPy (مثل ones و zeros) هو أعداد عشرية float64.",
+            exp_en: "The default data type for array initializers like np.ones and np.zeros is float64."
+        },
+        {
+            topic: "دالة المصفوفة غير المهيأة / The empty() Function",
+            ar_q: "ماذا تحتوي مصفوفة np.empty(5) عند طباعتها فور إنشائها؟",
+            en_q: "What does an np.empty(5) array contain immediately upon creation?",
+            options: [
+                { ar: "أصفاراً عشرية مضبوطة بدقة تامة", en: "Precisely calibrated floating zeros" },
+                { ar: "آحاداً صحيحة تملأ جميع الخانات", en: "Integer ones occupying all items" },
+                { ar: "قيماً عشوائية متبقية في مساحة الذاكرة", en: "Arbitrary values remaining in memory" },
+                { ar: "نصوصاً فارغة بطول خمس خانات", en: "Empty text strings of length five" }
+            ],
+            correct: 2,
+            exp_ar: "لا تقوم np.empty بتهيئة القيم، بل تخصص مساحة بالذاكرة فتكون محتوياتها قيماً عشوائية عابرة (Garbage values).",
+            exp_en: "np.empty allocates memory without initializing values, leaving arbitrary garbage data."
+        },
+        {
+            topic: "دالة المدى / The arange() Function",
+            ar_q: "ما هي عناصر المصفوفة الناتجة عن الأمر np.arange(1, 20, 4)؟",
+            en_q: "What elements are generated by the call np.arange(1, 20, 4)?",
+            options: [
+                { ar: "المصفوفة: [1, 5, 9, 13, 17, 21]", en: "The array: [1, 5, 9, 13, 17, 21]" },
+                { ar: "المصفوفة: [1, 5, 9, 13, 17]", en: "The array: [1, 5, 9, 13, 17]" },
+                { ar: "المصفوفة: [4, 8, 12, 16, 20]", en: "The array: [4, 8, 12, 16, 20]" },
+                { ar: "المصفوفة: [1, 4, 8, 12, 16]", en: "The array: [1, 4, 8, 12, 16]" }
+            ],
+            correct: 1,
+            exp_ar: "تبدأ من 1 وتزيد بمقدار الخطوة 4، وتتوقف قبل الوصول للنهاية 20: [1, 5, 9, 13, 17].",
+            exp_en: "Starts at 1, steps by 4, and stops before the exclusive upper bound 20: [1, 5, 9, 13, 17]."
+        },
+        {
+            topic: "التوزيع الخطي / The linspace() Function",
+            ar_q: "في الأمر np.linspace(4, 30, 6)، ماذا يمثل الرقم 6 الممرر كمعامل ثالث؟",
+            en_q: "In np.linspace(4, 30, 6), what does the third parameter 6 represent?",
+            options: [
+                { ar: "قيمة الخطوة الرياضية بين كل عنصرين", en: "Step distance between two items" },
+                { ar: "عدد أبعاد المصفوفة الإنشائية الكلي", en: "Total dimensions of created array" },
+                { ar: "الحد النهائي الأقصى لإنهاء التوليد", en: "Upper boundary for ending sequence" },
+                { ar: "عدد العناصر المطلوبة متساوية الأبعاد", en: "Total count of evenly spaced samples" }
+            ],
+            correct: 3,
+            exp_ar: "في linspace، المعامل الثالث هو عدد القيم (samples) المطلوب توليدها وتوزيعها بالتساوي بين البداية والنهاية.",
+            exp_en: "In np.linspace, the third argument specifies the number of evenly spaced samples to generate."
+        },
+        {
+            topic: "تضمين النهاية / linspace Endpoint Inclusion",
+            ar_q: "ما هو العنصر الأخير في المصفوفة الناتجة عن np.linspace(4, 30, 6)؟",
+            en_q: "What is the final element in the array produced by np.linspace(4, 30, 6)?",
+            options: [
+                { ar: "العدد 30.0 متضمناً في الناتج", en: "The value 30.0 included in output" },
+                { ar: "العدد 29.0 بتخطي نقطة النهاية", en: "The value 29.0 excluding endpoint" },
+                { ar: "العدد 24.0 وفق حساب الخطوة", en: "The value 24.0 by step spacing" },
+                { ar: "العدد 36.0 بزيادة خطوة كاملة", en: "The value 36.0 with extra step" }
+            ],
+            correct: 0,
+            exp_ar: "تقوم np.linspace افتراضياً بتضمين قيمة النهاية (endpoint=True)، فيكون العنصر الأخير هو 30.0 تماماً.",
+            exp_en: "By default, np.linspace includes the stop value (endpoint=True), making 30.0 the last item."
+        },
+        {
+            topic: "مصفوفة الوحدة / The eye() Identity Matrix",
+            ar_q: "ما هو شكل المصفوفة الناتجة عن استدعاء np.eye(5)؟",
+            en_q: "What is the structure of the array returned by calling np.eye(5)?",
+            options: [
+                { ar: "مصفوفة أحادية البعد تضم 5 آحاد", en: "One-dimensional array with 5 ones" },
+                { ar: "مصفوفة ثنائية 5x5 قطرها الرئيسي آحاد", en: "2D array 5x5 with ones on diagonal" },
+                { ar: "مصفوفة ثلاثية تضم خمس طبقات متساوية", en: "3D array with five equal matrix layers" },
+                { ar: "مصفوفة أصفار مربعة محاطة بإطار آحاد", en: "Square zero matrix framed with ones" }
+            ],
+            correct: 1,
+            exp_ar: "تنشئ np.eye مصفوفة وحدة ثنائية الأبعاد (Identity matrix) بأبعاد 5x5، تحتوي على آحاد في القطر الرئيسي وأصفار في الباقي.",
+            exp_en: "np.eye(5) produces a 5x5 2D identity matrix with ones along the main diagonal and zeros elsewhere."
+        },
+        {
+            topic: "خاصية عدد الأبعاد / The ndim Attribute",
+            ar_q: "ماذا تخبرنا الخاصية arr.ndim في كائنات مصفوفات NumPy؟",
+            en_q: "What does the arr.ndim attribute indicate in NumPy array objects?",
+            options: [
+                { ar: "إجمالي مساحة الذاكرة بالبايتات", en: "Total memory capacity in bytes" },
+                { ar: "العدد الكلي للعناصر داخل المصفوفة", en: "Total element count in the array" },
+                { ar: "عدد المحاور أو الأبعاد للمصفوفة", en: "Number of array axes or dimensions" },
+                { ar: "نوع البيانات المحفوظة في المصفوفة", en: "Data type format of array values" }
+            ],
+            correct: 2,
+            exp_ar: "تشير الخاصية ndim (Number of dimensions) إلى عدد المحاور أو أبعاد المصفوفة (مثل 1 أو 2 أو 3).",
+            exp_en: "The ndim attribute returns the integer number of array dimensions (axes)."
+        },
+        {
+            topic: "أبعاد المصفوفة الأحادية / 1D Array Dimensions",
+            ar_q: "إذا كانت arr = np.array([10, 20, 30, 40])، فما قيمة arr.ndim؟",
+            en_q: "If arr = np.array([10, 20, 30, 40]), what is the value of arr.ndim?",
+            options: [
+                { ar: "القيمة 4 بعدد العناصر", en: "Value 4 matching element count" },
+                { ar: "القيمة 0 للمصفوفات البسيطة", en: "Value 0 for scalar structures" },
+                { ar: "القيمة 2 بعدد الأقواس الخارجية", en: "Value 2 by outer bracket count" },
+                { ar: "القيمة 1 لمصفوفة أحادية البعد", en: "Value 1 for a 1D vector array" }
+            ],
+            correct: 3,
+            exp_ar: "المصفوفة ذات القوس الواحد [10, 20, 30, 40] هي متجه أحادي البعد (1D array)، لذا ndim تساوي 1.",
+            exp_en: "A single-bracket list creates a 1-dimensional array, so arr.ndim equals 1."
+        },
+        {
+            topic: "أبعاد المصفوفة الثنائية / 2D Array Dimensions",
+            ar_q: "ما قيمة arr.ndim للمصفوفة: arr = np.array([[10, 20, 30], [40, 50, 60]])؟",
+            en_q: "What is arr.ndim for: arr = np.array([[10, 20, 30], [40, 50, 60]])?",
+            options: [
+                { ar: "القيمة 2 لوجود محورين صفوف وأعمدة", en: "Value 2 having row and column axes" },
+                { ar: "القيمة 3 بعدد الأعمدة في كل صف", en: "Value 3 matching column elements" },
+                { ar: "القيمة 6 بالعدد الإجمالي للبيانات", en: "Value 6 matching total elements" },
+                { ar: "القيمة 1 لعدم تداخل مصفوفات أخرى", en: "Value 1 for single outer matrix" }
+            ],
+            correct: 0,
+            exp_ar: "المصفوفة المكونة من صفوف وأعمدة محاطة بقوسين مربعين [[...]] هي مصفوفة ثنائية الأبعاد (2D)، لذا arr.ndim = 2.",
+            exp_en: "A grid structure with rows and columns has two axes, so arr.ndim equals 2."
+        },
+        {
+            topic: "أبعاد المصفوفة الثلاثية / 3D Array Dimensions",
+            ar_q: "في الكود: arr = np.array([[[10, 20], [30, 40]], [[50, 60], [70, 80]]])، ما قيمة arr.ndim؟",
+            en_q: "In: arr = np.array([[[10, 20], [30, 40]], [[50, 60], [70, 80]]]), what is arr.ndim?",
+            options: [
+                { ar: "القيمة 2 بعدد المصفوفات الداخلية", en: "Value 2 by inner matrix blocks" },
+                { ar: "القيمة 3 لأنها مصفوفة ثلاثية الأبعاد", en: "Value 3 since it is a 3D tensor" },
+                { ar: "القيمة 4 بعدد العناصر في كل جزء", en: "Value 4 by items in each slice" },
+                { ar: "القيمة 8 بإجمالي العناصر المخزنة", en: "Value 8 by total stored elements" }
+            ],
+            correct: 1,
+            exp_ar: "هيكل المصفوفة محاط بثلاثة أقواس مربعة متداخلة [[[...]]] مما يجعلها مصفوفة ثلاثية الأبعاد، لذا arr.ndim = 3.",
+            exp_en: "The three nested bracket levels structure a 3-dimensional array, giving arr.ndim = 3."
+        },
+        {
+            topic: "شكل المصفوفة الثلاثية / 3D Array Shape",
+            ar_q: "ما قيمة arr.shape للمصفوفة ثلاثية الأبعاد المعرفة في السؤال السابق؟",
+            en_q: "What is the value of arr.shape for the 3D array defined in the previous question?",
+            options: [
+                { ar: "الشكل (8, 1, 1)", en: "The shape (8, 1, 1)" },
+                { ar: "الشكل (4, 2)", en: "The shape (4, 2)" },
+                { ar: "الشكل (2, 2, 2)", en: "The shape (2, 2, 2)" },
+                { ar: "الشكل (2, 4)", en: "The shape (2, 4)" }
+            ],
+            correct: 2,
+            exp_ar: "تتكون المصفوفة من كتلتين (2)، وكل كتلة بها صفان (2)، وكل صف به عنصران (2)، فيكون الشكل (2, 2, 2).",
+            exp_en: "The array contains 2 blocks, each having 2 rows and 2 columns, resulting in shape (2, 2, 2)."
+        },
+        {
+            topic: "شكل المصفوفة الثنائية / 2D Array Shape",
+            ar_q: "ما قيمة arr.shape للمصفوفة الثنائية: np.array([[10, 20, 30], [40, 50, 60]])؟",
+            en_q: "What is arr.shape for the 2D array: np.array([[10, 20, 30], [40, 50, 60]])?",
+            options: [
+                { ar: "الشكل (6,)", en: "The shape (6,)" },
+                { ar: "الشكل (3, 2)", en: "The shape (3, 2)" },
+                { ar: "الشكل (2, 3, 1)", en: "The shape (2, 3, 1)" },
+                { ar: "الشكل (2, 3)", en: "The shape (2, 3)" }
+            ],
+            correct: 3,
+            exp_ar: "تحتوي المصفوفة على صفين و 3 أعمدة، لذا فإن الخاصية shape تعيد الصفة بصيغة tuple: (2, 3).",
+            exp_en: "The matrix has 2 rows and 3 columns, returning a shape tuple of (2, 3)."
+        },
+        {
+            topic: "شكل المصفوفة الأحادية / 1D Array Shape Tuple",
+            ar_q: "ما ناتج arr.shape للمصفوفة الأحادية: arr = np.array([10, 20, 30, 40])؟",
+            en_q: "What is the output of arr.shape for: arr = np.array([10, 20, 30, 40])?",
+            options: [
+                { ar: "الزوج ذو البعد الأحادي (4,)", en: "One-dimensional tuple (4,)" },
+                { ar: "الزوج المكون من صف وعمود (1, 4)", en: "Row-column pair tuple (1, 4)" },
+                { ar: "العدد الصحيح المنفرد 4", en: "Single standalone integer 4" },
+                { ar: "الزوج ذو العمود الواحد (4, 1)", en: "Column-vector tuple (4, 1)" }
+            ],
+            correct: 0,
+            exp_ar: "في المصفوفات الأحادية 1D، تعيد الخاصية shape زوجاً مرتباً (tuple) ينتهي بفاصلة للدلالة على البعد الواحد: (4,).",
+            exp_en: "For 1D arrays, shape returns a 1-tuple ending with a comma: (4,)."
+        },
+        {
+            topic: "تغيير نوع البيانات / Specifying dtype",
+            ar_q: "كيف يمكن إنشاء مصفوفة من أصفار صحيحة (integers) باستخدام np.zeros(5)؟",
+            en_q: "How can an array of integer zeros be created using np.zeros(5)?",
+            options: [
+                { ar: "استدعاء np.zeros(5).toInt()", en: "Calling np.zeros(5).toInt()" },
+                { ar: "تمرير المعامل np.zeros(5, dtype=int)", en: "Passing parameter np.zeros(5, dtype=int)" },
+                { ar: "استدعاء np.zeros(5, shape=int)", en: "Calling np.zeros(5, shape=int)" },
+                { ar: "كتابة np.zeros(5) + 0", en: "Writing np.zeros(5) + 0" }
+            ],
+            correct: 1,
+            exp_ar: "يتيح المعامل dtype تحديد نوع بيانات العناصر المنشأة، وكتابة dtype=int تنشئ أصفاراً صحيحة [0 0 0 0 0].",
+            exp_en: "Setting dtype=int in array creation functions yields integer elements instead of floats."
+        },
+        {
+            topic: "قيم عناصر arange / arange Fractional Steps",
+            ar_q: "ما الميزة التي تتفوق بها np.arange على دالة range() القياسية في بايثون؟",
+            en_q: "What advantage does np.arange offer over Python's built-in range() function?",
+            options: [
+                { ar: "القدرة على تشفير البيانات تلقائياً", en: "Automatically encrypting array data" },
+                { ar: "حظر الأعداد السالبة من التسلسل", en: "Disallowing negative sequence steps" },
+                { ar: "دعم الخطوات العشرية الكسرية (float steps)", en: "Supporting floating-point step values" },
+                { ar: "إنشاء مصفوفات ثلاثية الأبعاد فوراً", en: "Instantly generating 3D arrays" }
+            ],
+            correct: 2,
+            exp_ar: "دالة range في بايثون تقبل أعداداً صحيحة فقط، بينما np.arange تدعم الخطوات الكسرية العشرية (مثل خطوة 0.5).",
+            exp_en: "Unlike Python's built-in range, np.arange supports non-integer floating-point step increments."
+        },
+        {
+            topic: "إجمالي العناصر / Total Elements and Shape",
+            ar_q: "ما العلاقة الحسابية بين عناصر arr.shape وإجمالي عدد عناصر المصفوفة arr.size؟",
+            en_q: "What is the relationship between the values in arr.shape and arr.size?",
+            options: [
+                { ar: "حاصل جمع أرقام الشكل يعطي الحجم", en: "Sum of shape values equals size" },
+                { ar: "القيمة الأكبر في الشكل تعطي الحجم", en: "Max value in shape equals size" },
+                { ar: "عدد عناصر الشكل يعطي الحجم دائماً", en: "Count of shape elements gives size" },
+                { ar: "حاصل ضرب أبعاد الشكل يساوي الحجم", en: "Product of shape dimensions equals size" }
+            ],
+            correct: 3,
+            exp_ar: "إجمالي عدد العناصر (size) يساوي حاصل ضرب جميع الأبعاد في shape؛ فالمصفوفة ذات الشكل (2, 2, 2) حجمها 2×2×2 = 8.",
+            exp_en: "Total elements (arr.size) equals the mathematical product of dimensions in arr.shape (e.g., 2*2*2 = 8)."
+        }
+    ];
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadScores() {
+        const storedHigh = localStorage.getItem('numpy_quiz_highscore');
+        const high = storedHigh ? parseInt(storedHigh) : 0;
+        document.getElementById('highScore').innerText = high;
+
+        const storedFirst = localStorage.getItem('numpy_quiz_first_score');
+        document.getElementById('firstScore').innerText = (storedFirst !== null) ? storedFirst : "--";
+    }
+
+    function saveScores(finalScore) {
+        let isFirstTime = false;
+        if (localStorage.getItem('numpy_quiz_first_score') === null) {
+            localStorage.setItem('numpy_quiz_first_score', finalScore);
+            document.getElementById('firstScore').innerText = finalScore;
+            isFirstTime = true;
+        }
+
+        const currentHigh = parseInt(localStorage.getItem('numpy_quiz_highscore') || '0');
+        let isNewHigh = false;
+        if (finalScore > currentHigh) {
+            localStorage.setItem('numpy_quiz_highscore', finalScore);
+            document.getElementById('highScore').innerText = finalScore;
+            isNewHigh = true;
+        }
+        return { isFirstTime, isNewHigh };
+    }
+
+    function calculateScore() {
+        let s = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === questions[i].correct) {
+                s++;
+            }
+        }
+        score = s;
+        document.getElementById('score').innerText = score;
+        return score;
+    }
+
+    function displayQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('qCurrent').innerText = currentIdx + 1;
+        document.getElementById('topicBadge').innerText = q.topic;
+        document.getElementById('questionTextAr').innerText = (currentIdx + 1) + ". " + q.ar_q;
+        document.getElementById('questionTextEn').innerText = "Q" + (currentIdx + 1) + ": " + q.en_q;
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const pct = (answeredCount / questions.length) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        const expBox = document.getElementById('explanationText');
+        const statusIndicator = document.getElementById('qStatusIndicator');
+        const prevAns = userAnswers[currentIdx];
+
+        if (prevAns === null) {
+            statusIndicator.innerText = "لم يُجب بعد / Not answered";
+            statusIndicator.style.color = "var(--text-muted)";
+            expBox.style.display = 'none';
+        } else {
+            statusIndicator.innerText = prevAns === q.correct ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+            statusIndicator.style.color = prevAns === q.correct ? "var(--success)" : "var(--danger)";
+            showExplanation(prevAns === q.correct, prevAns);
+        }
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = `
+                <div class="opt-ar">${['أ', 'ب', 'ج', 'د'][idx]}) ${opt.ar}</div>
+                <div class="opt-en">${['A', 'B', 'C', 'D'][idx]}) ${opt.en}</div>
+            `;
+
+            if (prevAns !== null) {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === prevAns) {
+                    btn.classList.add('wrong');
+                }
+            } else {
+                btn.onclick = () => selectAnswer(idx);
+            }
+            container.appendChild(btn);
+        });
+
+        document.getElementById('prevBtn').disabled = (currentIdx === 0);
+        document.getElementById('nextBtn').innerText = (currentIdx === questions.length - 1) ? "إنهاء الاختبار / Finish 🏁" : "التالي / Next ⬅️";
+    }
+
+    function selectAnswer(chosenIdx) {
+        if (userAnswers[currentIdx] !== null) return;
+
+        userAnswers[currentIdx] = chosenIdx;
+        calculateScore();
+
+        const q = questions[currentIdx];
+        const isCorrect = (chosenIdx === q.correct);
+
+        const buttons = document.querySelectorAll('.opt-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+            buttons[chosenIdx].classList.add('correct');
+        } else {
+            buttons[chosenIdx].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+        }
+
+        showExplanation(isCorrect, chosenIdx);
+
+        const statusIndicator = document.getElementById('qStatusIndicator');
+        statusIndicator.innerText = isCorrect ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+        statusIndicator.style.color = isCorrect ? "var(--success)" : "var(--danger)";
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        document.getElementById('progressBar').style.width = ((answeredCount / questions.length) * 100) + '%';
+    }
+
+    function showExplanation(isCorrect, chosenIdx) {
+        const q = questions[currentIdx];
+        const expBox = document.getElementById('explanationText');
+
+        if (isCorrect) {
+            expBox.innerHTML = `
+                <b>✅ إجابة صحيحة / Correct!</b><br>
+                <div>${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--success)';
+        } else {
+            expBox.innerHTML = `
+                <b>❌ إجابة غير دقيقة / Incorrect!</b><br>
+                <div>الإجابة الصحيحة هي: <b>${q.options[q.correct].ar}</b></div>
+                <div class="exp-en">Correct answer: <b>${q.options[q.correct].en}</b></div>
+                <div style="margin-top: 6px;">${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--danger)';
+        }
+        expBox.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            displayQuestion();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            displayQuestion();
+        }
+    }
+
+    function openIndexModal() {
+        buildIndexGrid();
+        document.getElementById('indexModal').style.display = 'flex';
+    }
+
+    function closeIndexModal() {
+        document.getElementById('indexModal').style.display = 'none';
+    }
+
+    function closeIndexModalOnOutside(e) {
+        if (e.target.id === 'indexModal') closeIndexModal();
+    }
+
+    function buildIndexGrid() {
+        const grid = document.getElementById('gridIndexContainer');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < questions.length; i++) {
+            const pill = document.createElement('div');
+            pill.className = 'index-pill';
+            pill.innerText = (i + 1);
+
+            if (i === currentIdx) pill.classList.add('active');
+
+            if (userAnswers[i] !== null) {
+                if (userAnswers[i] === questions[i].correct) {
+                    pill.classList.add('solved-correct');
+                } else {
+                    pill.classList.add('solved-wrong');
+                }
+            }
+
+            pill.onclick = () => {
+                currentIdx = i;
+                displayQuestion();
+                closeIndexModal();
+            };
+            grid.appendChild(pill);
+        }
+    }
+
+    function showFinalResults() {
+        document.getElementById('quizCard').style.display = 'none';
+        document.getElementById('progressBar').style.width = '100%';
+
+        const resultsCard = document.getElementById('resultsCard');
+        resultsCard.style.display = 'block';
+
+        calculateScore();
+        document.getElementById('finalScore').innerText = score;
+        const res = saveScores(score);
+
+        const notice = document.getElementById('highScoreNotice');
+        const storedFirst = localStorage.getItem('numpy_quiz_first_score');
+        const storedHigh = localStorage.getItem('numpy_quiz_highscore');
+
+        let textDetails = `🎯 أول محاولة مسجلة: ${storedFirst} من 20<br>`;
+        if (res.isNewHigh && score > 0) {
+            textDetails += `🏆 رقم قياسي جديد حققته الآن: ${score} من 20!`;
+        } else {
+            textDetails += `🏆 أعلى نتيجة مسجلة على هذا الجهاز: ${storedHigh} من 20`;
+        }
+        notice.innerHTML = textDetails;
+
+        if (score >= 18) {
+            document.getElementById('resultMsg').innerText = "ممتاز ومحترف! إتقان تام لمصفوفات وأبعاد NumPy 🌟";
+        } else if (score >= 14) {
+            document.getElementById('resultMsg').innerText = "جيد جداً! استيعاب قوي لأغلب دوال وأبعاد المصفوفات 👏";
+        } else {
+            document.getElementById('resultMsg').innerText = "يُنصح بمراجعة دوال الإنشاء وخاصية ndim وإعادة المحاولة 💡";
+        }
+    }
+
+    function restartQuiz() {
+        userAnswers = new Array(questions.length).fill(null);
+        currentIdx = 0;
+        score = 0;
+        document.getElementById('score').innerText = '0';
+        document.getElementById('resultsCard').style.display = 'none';
+        document.getElementById('quizCard').style.display = 'block';
+        displayQuestion();
+    }
+
+    window.onload = function() {
+        loadScores();
+        displayQuestion();
+    };
+</script>
+</body>
+</html>
