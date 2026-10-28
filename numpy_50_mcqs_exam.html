@@ -1,0 +1,2956 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بنك أسئلة NumPy الشامل - 50 سؤال اختيارات | NumPy MCQs Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --primary: #3b82f6;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+    --accent: #0ea5e9;
+    --border: #e2e8f0;
+    --success: #10b981;
+    --success-light: #ecfdf5;
+    --danger: #ef4444;
+    --danger-light: #fef2f2;
+    --radius: 14px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Cairo', 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding-bottom: 50px;
+  }
+
+  code, pre {
+    font-family: 'Fira Code', monospace;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  code {
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    border: 1px solid #e2e8f0;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  header p {
+    font-size: 1.05rem;
+    opacity: 0.95;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .meta-badges {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .main-wrapper {
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    align-items: start;
+  }
+
+  @media (max-width: 1024px) {
+    .main-wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Index / Sidebar */
+  .index-panel {
+    background: var(--sidebar-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+
+  .index-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .index-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .index-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .index-btn {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    padding: 8px 4px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .index-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+  }
+
+  .index-btn.answered-correct {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+
+  .index-btn.answered-incorrect {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+  }
+
+  .stats-box {
+    margin-top: 20px;
+    padding: 14px;
+    background: var(--primary-light);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--primary-dark);
+    display: flex;
+    justify-content: space-around;
+    font-weight: 700;
+  }
+
+  /* Questions Feed */
+  .questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .question-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    scroll-margin-top: 30px;
+    transition: box-shadow 0.25s ease;
+  }
+
+  .question-card:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .q-num {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 800;
+    font-size: 1rem;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .q-title-ar {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .q-title-en {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 4px;
+    direction: ltr;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .option-item {
+    background: #f8fafc;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .option-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+
+  .opt-letter {
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: #e2e8f0;
+    color: #475569;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .opt-content {
+    flex-grow: 1;
+  }
+
+  .opt-ar {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .opt-en {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    direction: ltr;
+    text-align: left;
+    margin-top: 4px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* Interaction states */
+  .option-item.correct {
+    background: var(--success-light) !important;
+    border-color: var(--success) !important;
+  }
+  .option-item.correct .opt-letter {
+    background: var(--success) !important;
+    color: white !important;
+  }
+
+  .option-item.incorrect {
+    background: var(--danger-light) !important;
+    border-color: var(--danger) !important;
+  }
+  .option-item.incorrect .opt-letter {
+    background: var(--danger) !important;
+    color: white !important;
+  }
+
+  .option-item.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .answer-feedback {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .answer-feedback.show-correct {
+    display: block;
+    background: var(--success-light);
+    color: #065f46;
+    border-left: 4px solid var(--success);
+  }
+
+  .answer-feedback.show-incorrect {
+    display: block;
+    background: var(--danger-light);
+    color: #991b1b;
+    border-left: 4px solid var(--danger);
+  }
+
+  .actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .btn-reveal {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reveal:hover {
+    background: var(--primary-light);
+  }
+
+  /* Floating Top Button */
+  .back-to-top {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    background: var(--primary-dark);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  .back-to-top:hover {
+    transform: scale(1.1);
+  }
+</style>
+</head>
+<body>
+
+<header id="top">
+  <h1>NumPy Mastery Exam - 50 Questions</h1>
+  <p>بنك أسئلة اختيارات تفاعلي شامل لمكتبة NumPy ومفاهيمها الأساسية والمتقدمة (ثنائي اللغة: عربي / إنجليزي)</p>
+  <div class="meta-badges">
+    <span class="badge">📝 50 سؤال اختيارات (MCQs)</span>
+    <span class="badge">🌐 ثنائي اللغة (عربي / English)</span>
+    <span class="badge">🔀 توزيع عشوائي متوازن للإجابات</span>
+    <span class="badge">⚡ تفاعلي مع تصحيح فوري وفهرس</span>
+  </div>
+</header>
+
+<div class="main-wrapper">
+  <!-- Sidebar / Index -->
+  <aside class="index-panel">
+    <div class="index-header">
+      <h2>فهرس الأسئلة (Index)</h2>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">انقر على رقم السؤال للانتقال إليه مباشرة:</p>
+    <div class="index-grid" id="indexGrid">
+      <a href="#q1" class="index-btn" id="idx-btn-1">Q1</a>
+      <a href="#q2" class="index-btn" id="idx-btn-2">Q2</a>
+      <a href="#q3" class="index-btn" id="idx-btn-3">Q3</a>
+      <a href="#q4" class="index-btn" id="idx-btn-4">Q4</a>
+      <a href="#q5" class="index-btn" id="idx-btn-5">Q5</a>
+      <a href="#q6" class="index-btn" id="idx-btn-6">Q6</a>
+      <a href="#q7" class="index-btn" id="idx-btn-7">Q7</a>
+      <a href="#q8" class="index-btn" id="idx-btn-8">Q8</a>
+      <a href="#q9" class="index-btn" id="idx-btn-9">Q9</a>
+      <a href="#q10" class="index-btn" id="idx-btn-10">Q10</a>
+      <a href="#q11" class="index-btn" id="idx-btn-11">Q11</a>
+      <a href="#q12" class="index-btn" id="idx-btn-12">Q12</a>
+      <a href="#q13" class="index-btn" id="idx-btn-13">Q13</a>
+      <a href="#q14" class="index-btn" id="idx-btn-14">Q14</a>
+      <a href="#q15" class="index-btn" id="idx-btn-15">Q15</a>
+      <a href="#q16" class="index-btn" id="idx-btn-16">Q16</a>
+      <a href="#q17" class="index-btn" id="idx-btn-17">Q17</a>
+      <a href="#q18" class="index-btn" id="idx-btn-18">Q18</a>
+      <a href="#q19" class="index-btn" id="idx-btn-19">Q19</a>
+      <a href="#q20" class="index-btn" id="idx-btn-20">Q20</a>
+      <a href="#q21" class="index-btn" id="idx-btn-21">Q21</a>
+      <a href="#q22" class="index-btn" id="idx-btn-22">Q22</a>
+      <a href="#q23" class="index-btn" id="idx-btn-23">Q23</a>
+      <a href="#q24" class="index-btn" id="idx-btn-24">Q24</a>
+      <a href="#q25" class="index-btn" id="idx-btn-25">Q25</a>
+      <a href="#q26" class="index-btn" id="idx-btn-26">Q26</a>
+      <a href="#q27" class="index-btn" id="idx-btn-27">Q27</a>
+      <a href="#q28" class="index-btn" id="idx-btn-28">Q28</a>
+      <a href="#q29" class="index-btn" id="idx-btn-29">Q29</a>
+      <a href="#q30" class="index-btn" id="idx-btn-30">Q30</a>
+      <a href="#q31" class="index-btn" id="idx-btn-31">Q31</a>
+      <a href="#q32" class="index-btn" id="idx-btn-32">Q32</a>
+      <a href="#q33" class="index-btn" id="idx-btn-33">Q33</a>
+      <a href="#q34" class="index-btn" id="idx-btn-34">Q34</a>
+      <a href="#q35" class="index-btn" id="idx-btn-35">Q35</a>
+      <a href="#q36" class="index-btn" id="idx-btn-36">Q36</a>
+      <a href="#q37" class="index-btn" id="idx-btn-37">Q37</a>
+      <a href="#q38" class="index-btn" id="idx-btn-38">Q38</a>
+      <a href="#q39" class="index-btn" id="idx-btn-39">Q39</a>
+      <a href="#q40" class="index-btn" id="idx-btn-40">Q40</a>
+      <a href="#q41" class="index-btn" id="idx-btn-41">Q41</a>
+      <a href="#q42" class="index-btn" id="idx-btn-42">Q42</a>
+      <a href="#q43" class="index-btn" id="idx-btn-43">Q43</a>
+      <a href="#q44" class="index-btn" id="idx-btn-44">Q44</a>
+      <a href="#q45" class="index-btn" id="idx-btn-45">Q45</a>
+      <a href="#q46" class="index-btn" id="idx-btn-46">Q46</a>
+      <a href="#q47" class="index-btn" id="idx-btn-47">Q47</a>
+      <a href="#q48" class="index-btn" id="idx-btn-48">Q48</a>
+      <a href="#q49" class="index-btn" id="idx-btn-49">Q49</a>
+      <a href="#q50" class="index-btn" id="idx-btn-50">Q50</a>
+    </div>
+
+    <div class="stats-box">
+      <div>صحيح: <span id="correctCount" style="color:var(--success)">0</span></div>
+      <div>خطأ: <span id="incorrectCount" style="color:var(--danger)">0</span></div>
+      <div>المتبقي: <span id="remainingCount">50</span></div>
+    </div>
+  </aside>
+
+  <!-- Questions Container -->
+  <main class="questions-container">
+
+    <!-- Question 1 -->
+    <article class="question-card" id="q1">
+      <div class="q-header">
+        <div class="q-num">1</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو ناتج تنفيذ الكود: <code>[10, 20] * 2</code> في بايثون مقارنة بـ <code>np.array([10, 20]) * 2</code>؟</h3>
+          <div class="q-title-en">What is the output of <code>[10, 20] * 2</code> in Python compared to <code>np.array([10, 20]) * 2</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-1">
+        <div class="option-item" onclick="selectOption(1, 0, false)" id="opt-1-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">الأولى تضرب كل عنصر <code>[20, 40]</code>، والثانية تكرر المصفوفة</div>
+            <div class="opt-en">First multiplies each element <code>[20, 40]</code>, second repeats array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(1, 1, false)" id="opt-1-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">كلاهما يضرب العناصر ينتج <code>[20, 40]</code></div>
+            <div class="opt-en">Both multiply elements resulting in <code>[20, 40]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(1, 2, false)" id="opt-1-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">الأولى تعطي خطأ TypeError والثانية تعطي <code>[20, 40]</code></div>
+            <div class="opt-en">First raises TypeError and second produces <code>[20, 40]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(1, 3, true)" id="opt-1-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">الأولى تكرر القائمة <code>[10, 20, 10, 20]</code>، والثانية تضرب كل عنصر <code>[20, 40]</code></div>
+            <div class="opt-en">First repeats list <code>[10, 20, 10, 20]</code>, second multiplies each element <code>[20, 40]</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-1"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(1, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 2 -->
+    <article class="question-card" id="q2">
+      <div class="q-header">
+        <div class="q-num">2</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند تنفيذ <code>np.array([10, 20, 30]) + 5</code>، ما هي العملية الرياضية التي تحدث؟</h3>
+          <div class="q-title-en">When executing <code>np.array([10, 20, 30]) + 5</code>, what mathematical operation occurs?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-2">
+        <div class="option-item" onclick="selectOption(2, 0, false)" id="opt-2-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يحدث خطأ لعدم توافق الأبعاد بين المصفوفة والرقم المنفرد</div>
+            <div class="opt-en">An error occurs due to shape mismatch between array and scalar</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(2, 1, false)" id="opt-2-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">إضافة 5 فقط إلى العنصر الأول في المصفوفة</div>
+            <div class="opt-en">Adding 5 only to the first element of the array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(2, 2, false)" id="opt-2-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">إضافة الرقم 5 في نهاية المصفوفة كعنصر جديد</div>
+            <div class="opt-en">Appending number 5 at the end of the array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(2, 3, true)" id="opt-2-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">إضافة 5 إلى كل عنصر داخل المصفوفة بشكل متجهي (Vectorized)</div>
+            <div class="opt-en">Adding 5 to every element in the array in a vectorized manner</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-2"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(2, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 3 -->
+    <article class="question-card" id="q3">
+      <div class="q-header">
+        <div class="q-num">3</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ماذا تُرجع الدالة <code>np.zeros(5)</code> بشكل افتراضي؟</h3>
+          <div class="q-title-en">What does <code>np.zeros(5)</code> return by default?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-3">
+        <div class="option-item" onclick="selectOption(3, 0, false)" id="opt-3-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة ثنائية الأبعاد بأبعاد 5x5 مليئة بالأصفار</div>
+            <div class="opt-en">2D array of shape 5x5 filled with zeros</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(3, 1, true)" id="opt-3-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة أحادية البعد تحتوي على 5 أصفار بنوع بيانات عشري <code>float64</code></div>
+            <div class="opt-en">1D array of 5 zeros with floating-point <code>float64</code> data type</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(3, 2, false)" id="opt-3-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">قائمة بايثون قياسية مكونة من خمسة أصفار</div>
+            <div class="opt-en">Standard Python list consisting of five zeros</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(3, 3, false)" id="opt-3-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة أحادية البعد تحتوي على 5 أصفار بنوع بيانات أعداد صحيحة <code>int</code></div>
+            <div class="opt-en">1D array of 5 zeros with integer <code>int</code> data type</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-3"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(3, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 4 -->
+    <article class="question-card" id="q4">
+      <div class="q-header">
+        <div class="q-num">4</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">أي من الأوامر التالية يُنشئ مصفوفة من صفين وثلاثة أعمدة جميع عناصرها الرقم 1؟</h3>
+          <div class="q-title-en">Which command creates a 2-row, 3-column array where all elements are 1?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-4">
+        <div class="option-item" onclick="selectOption(4, 0, false)" id="opt-4-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.ones(2, 3)</code></div>
+            <div class="opt-en"><code>np.ones(2, 3)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(4, 1, false)" id="opt-4-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.eye(2, 3)</code></div>
+            <div class="opt-en"><code>np.eye(2, 3)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(4, 2, true)" id="opt-4-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.ones((2, 3))</code></div>
+            <div class="opt-en"><code>np.ones((2, 3))</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(4, 3, false)" id="opt-4-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.empty((3, 2))</code></div>
+            <div class="opt-en"><code>np.empty((3, 2))</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-4"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(4, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 5 -->
+    <article class="question-card" id="q5">
+      <div class="q-header">
+        <div class="q-num">5</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الفارق الأساسي بين دالة <code>np.empty(5)</code> ودالة <code>np.zeros(5)</code>؟</h3>
+          <div class="q-title-en">What is the primary difference between <code>np.empty(5)</code> and <code>np.zeros(5)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-5">
+        <div class="option-item" onclick="selectOption(5, 0, true)" id="opt-5-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.empty</code> تحجز الذاكرة دون تهيئة قيمها فتترك قيماً عشوائية متبقية بالذاكرة</div>
+            <div class="opt-en"><code>np.empty</code> allocates memory without initializing, leaving uninitialized arbitrary values</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(5, 1, false)" id="opt-5-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.zeros</code> تحجز قيماً عشوائية بينما <code>np.empty</code> تضع أصفاراً دائماً</div>
+            <div class="opt-en"><code>np.zeros</code> keeps random values while <code>np.empty</code> always puts zeros</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(5, 2, false)" id="opt-5-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.empty</code> تدعم المصفوفات أحادية البعد فقط ولا تدعم الأبعاد المتعددة</div>
+            <div class="opt-en"><code>np.empty</code> only supports 1D arrays and not multi-dimensional arrays</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(5, 3, false)" id="opt-5-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.empty</code> تنشئ مصفوفة فارغة بدون حجز ذاكرة على الإطلاق</div>
+            <div class="opt-en"><code>np.empty</code> creates an empty array without allocating any memory</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-5"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(5, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 6 -->
+    <article class="question-card" id="q6">
+      <div class="q-header">
+        <div class="q-num">6</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو ناتج الأمر <code>np.arange(1, 20, 4)</code>؟</h3>
+          <div class="q-title-en">What is the output of <code>np.arange(1, 20, 4)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-6">
+        <div class="option-item" onclick="selectOption(6, 0, false)" id="opt-6-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([4, 8, 12, 16, 20])</code></div>
+            <div class="opt-en"><code>array([4, 8, 12, 16, 20])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(6, 1, false)" id="opt-6-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([1, 4, 8, 12, 16])</code></div>
+            <div class="opt-en"><code>array([1, 4, 8, 12, 16])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(6, 2, true)" id="opt-6-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([1, 5, 9, 13, 17])</code></div>
+            <div class="opt-en"><code>array([1, 5, 9, 13, 17])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(6, 3, false)" id="opt-6-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([1, 5, 9, 13, 17, 20])</code></div>
+            <div class="opt-en"><code>array([1, 5, 9, 13, 17, 20])</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-6"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(6, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 7 -->
+    <article class="question-card" id="q7">
+      <div class="q-header">
+        <div class="q-num">7</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الذي تمثله المعاملات الثلاثة في الأمر <code>np.linspace(4, 30, 6)</code>؟</h3>
+          <div class="q-title-en">What do the three arguments represent in <code>np.linspace(4, 30, 6)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-7">
+        <div class="option-item" onclick="selectOption(7, 0, false)" id="opt-7-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة أبعادها 4 صفوف و30 عمود مكررة 6 مرات</div>
+            <div class="opt-en">Array of 4 rows and 30 columns repeated 6 times</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(7, 1, true)" id="opt-7-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">البداية 4، النهاية 30، وعدد العينات المتساوية البعد هو 6 متضمنة النهاية</div>
+            <div class="opt-en">Start 4, Stop 30, and the number of evenly spaced samples is 6 (inclusive)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(7, 2, false)" id="opt-7-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">البداية 4، النهاية 30، ومقدار الخطوة (Step) هو 6</div>
+            <div class="opt-en">Start 4, Stop 30, and Step size is 6</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(7, 3, false)" id="opt-7-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">أرقام عشوائية بين 4 و30 مقسومة على 6</div>
+            <div class="opt-en">Random numbers between 4 and 30 divided by 6</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-7"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(7, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 8 -->
+    <article class="question-card" id="q8">
+      <div class="q-header">
+        <div class="q-num">8</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما وظيفة الدالة <code>np.eye(5)</code>؟</h3>
+          <div class="q-title-en">What is the function of <code>np.eye(5)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-8">
+        <div class="option-item" onclick="selectOption(8, 0, false)" id="opt-8-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">إنشاء مصفوفة دائرية مكونة من 5 صفوف و5 أعمدة</div>
+            <div class="opt-en">Creates a circular matrix of 5 rows and 5 columns</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(8, 1, false)" id="opt-8-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">إنشاء مصفوفة قيم عشوائية تتراوح بين 0 و 5</div>
+            <div class="opt-en">Creates an array of random values ranging between 0 and 5</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(8, 2, true)" id="opt-8-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">إنشاء مصفوفة وحدة (Identity Matrix) بحجم 5x5 أقطارها 1 وباقي العناصر 0</div>
+            <div class="opt-en">Creates a 5x5 Identity Matrix with 1s on main diagonal and 0s elsewhere</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(8, 3, false)" id="opt-8-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">إنشاء متجه بطول 5 يحتوي على الرقم 1 في المنتصف فقط</div>
+            <div class="opt-en">Creates a 1D vector of length 5 with 1 only in the center</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-8"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(8, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 9 -->
+    <article class="question-card" id="q9">
+      <div class="q-header">
+        <div class="q-num">9</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ماذا تعيد الخاصية <code>.ndim</code> لمصفوفة تم إنشاؤها عبر <code>np.array([[1, 2], [3, 4]])</code>؟</h3>
+          <div class="q-title-en">What does the <code>.ndim</code> attribute return for <code>np.array([[1, 2], [3, 4]])</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-9">
+        <div class="option-item" onclick="selectOption(9, 0, false)" id="opt-9-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">4 (عدد العناصر الإجمالي)</div>
+            <div class="opt-en">4 (total number of elements)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(9, 1, true)" id="opt-9-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">2 (عدد الأبعاد)</div>
+            <div class="opt-en">2 (number of dimensions)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(9, 2, false)" id="opt-9-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">(2, 2) (الشكل)</div>
+            <div class="opt-en">(2, 2) (shape)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(9, 3, false)" id="opt-9-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">1 (الرتبة الأولى)</div>
+            <div class="opt-en">1 (first order)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-9"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(9, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 10 -->
+    <article class="question-card" id="q10">
+      <div class="q-header">
+        <div class="q-num">10</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو شكل (shape) مصفوفة ثلاثية الأبعاد تحتوي على مصفوفتين، كل واحدة منهما بها صفين وعمودين؟</h3>
+          <div class="q-title-en">What is the shape of a 3D array containing 2 matrices, each with 2 rows and 2 columns?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-10">
+        <div class="option-item" onclick="selectOption(10, 0, false)" id="opt-10-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 2)</code></div>
+            <div class="opt-en"><code>(4, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(10, 1, false)" id="opt-10-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 4)</code></div>
+            <div class="opt-en"><code>(2, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(10, 2, true)" id="opt-10-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 2, 2)</code></div>
+            <div class="opt-en"><code>(2, 2, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(10, 3, false)" id="opt-10-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(8,)</code></div>
+            <div class="opt-en"><code>(8,)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-10"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(10, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 11 -->
+    <article class="question-card" id="q11">
+      <div class="q-header">
+        <div class="q-num">11</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كان لدينا المتجه <code>arr = np.arange(12)</code>، ما ناتج <code>arr.reshape(3, 4).shape</code>؟</h3>
+          <div class="q-title-en">If we have <code>arr = np.arange(12)</code>, what is the output of <code>arr.reshape(3, 4).shape</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-11">
+        <div class="option-item" onclick="selectOption(11, 0, false)" id="opt-11-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 3)</code></div>
+            <div class="opt-en"><code>(4, 3)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(11, 1, true)" id="opt-11-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 4)</code></div>
+            <div class="opt-en"><code>(3, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(11, 2, false)" id="opt-11-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 1, 4)</code></div>
+            <div class="opt-en"><code>(3, 1, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(11, 3, false)" id="opt-11-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(12, 1)</code></div>
+            <div class="opt-en"><code>(12, 1)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-11"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(11, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 12 -->
+    <article class="question-card" id="q12">
+      <div class="q-header">
+        <div class="q-num">12</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ماذا يحدث عند محاولة تنفيذ <code>np.arange(10).reshape(3, 4)</code>؟</h3>
+          <div class="q-title-en">What happens when trying to execute <code>np.arange(10).reshape(3, 4)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-12">
+        <div class="option-item" onclick="selectOption(12, 0, false)" id="opt-12-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">تنشأ مصفوفة من النوع NaN في الأماكن الفارغة</div>
+            <div class="opt-en">An array with NaN values in empty spots is created</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(12, 1, true)" id="opt-12-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">يحدث خطأ <code>ValueError</code> لأن عدد العناصر (10) لا يتطابق مع الحجم الجديد (3*4 = 12)</div>
+            <div class="opt-en">A <code>ValueError</code> occurs because total elements (10) doesn&#x27;t match new size (3*4 = 12)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(12, 2, false)" id="opt-12-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم تجاهل آخر عنصرين لتناسب حجم 3x4</div>
+            <div class="opt-en">The last two elements are dropped to fit size 3x4</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(12, 3, false)" id="opt-12-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم إضافة صفرين تلقائياً لإكمال المصفوفة إلى 12 عنصراً</div>
+            <div class="opt-en">Two zeros are automatically appended to reach 12 elements</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-12"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(12, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 13 -->
+    <article class="question-card" id="q13">
+      <div class="q-header">
+        <div class="q-num">13</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كانت المصفوفة <code>M</code> من الحجم <code>(3, 4)</code>، فما هو شكل منقول المصفوفة <code>M.T</code>؟</h3>
+          <div class="q-title-en">If array <code>M</code> has shape <code>(3, 4)</code>, what is the shape of its transpose <code>M.T</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-13">
+        <div class="option-item" onclick="selectOption(13, 0, false)" id="opt-13-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(1, 12)</code></div>
+            <div class="opt-en"><code>(1, 12)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(13, 1, false)" id="opt-13-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 4)</code></div>
+            <div class="opt-en"><code>(3, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(13, 2, true)" id="opt-13-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 3)</code></div>
+            <div class="opt-en"><code>(4, 3)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(13, 3, false)" id="opt-13-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(12,)</code></div>
+            <div class="opt-en"><code>(12,)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-13"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(13, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 14 -->
+    <article class="question-card" id="q14">
+      <div class="q-header">
+        <div class="q-num">14</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">لدينا <code>ages = np.array([12, 18, 25, 30, 15, 40])</code>، ما هو نوع ناتج التعبير <code>ages &gt;= 18</code>؟</h3>
+          <div class="q-title-en">Given <code>ages = np.array([12, 18, 25, 30, 15, 40])</code>, what is the type/content of <code>ages &gt;= 18</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-14">
+        <div class="option-item" onclick="selectOption(14, 0, false)" id="opt-14-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">قيمة بوليانية مفردة <code>True</code> إذا كانت كل الأعمار أكبر من 18</div>
+            <div class="opt-en">A single boolean <code>True</code> if all ages are &gt;= 18</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(14, 1, false)" id="opt-14-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة تحتوي على فهارس (Indices) العناصر المحققة للشرط</div>
+            <div class="opt-en">An array containing indices of elements meeting the condition</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(14, 2, true)" id="opt-14-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة بوليانية (Boolean Array) تحتوي على قيم <code>True</code> و <code>False</code></div>
+            <div class="opt-en">A Boolean array containing <code>True</code> and <code>False</code> values</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(14, 3, false)" id="opt-14-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">قائمة من الأعداد الصحيحة المحققة للشرط فقط</div>
+            <div class="opt-en">A list of integers meeting the condition only</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-14"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(14, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 15 -->
+    <article class="question-card" id="q15">
+      <div class="q-header">
+        <div class="q-num">15</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو ناتج تنفيذ الكود: <code>ages = np.array([12, 18, 25, 30, 15, 40]); print(ages[ages &gt;= 18])</code>؟</h3>
+          <div class="q-title-en">What is the output of: <code>ages = np.array([12, 18, 25, 30, 15, 40]); print(ages[ages &gt;= 18])</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-15">
+        <div class="option-item" onclick="selectOption(15, 0, true)" id="opt-15-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>[18, 25, 30, 40]</code></div>
+            <div class="opt-en"><code>[18, 25, 30, 40]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(15, 1, false)" id="opt-15-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>[12, 15]</code></div>
+            <div class="opt-en"><code>[12, 15]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(15, 2, false)" id="opt-15-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>[1, 2, 3, 5]</code></div>
+            <div class="opt-en"><code>[1, 2, 3, 5]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(15, 3, false)" id="opt-15-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>[False, True, True, True, False, True]</code></div>
+            <div class="opt-en"><code>[False, True, True, True, False, True]</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-15"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(15, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 16 -->
+    <article class="question-card" id="q16">
+      <div class="q-header">
+        <div class="q-num">16</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما المقصود بخاصية الـ Broadcasting في مكتبة NumPy؟</h3>
+          <div class="q-title-en">What does Broadcasting mean in NumPy?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-16">
+        <div class="option-item" onclick="selectOption(16, 0, false)" id="opt-16-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">ضغط مصفوفات البيانات الكبيرة لتقليل استهلاك الذاكرة</div>
+            <div class="opt-en">Compressing large data arrays to reduce memory footprint</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(16, 1, false)" id="opt-16-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">إرسال البيانات عبر الشبكة المحلية بين معالجات متعددة</div>
+            <div class="opt-en">Transmitting data over local network between multiple processors</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(16, 2, true)" id="opt-16-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">قدرة NumPy على تنفيذ العمليات الحسابية بين مصفوفات ذات أشكال مختلفة متوافقة بدون تكرار يدوي للبيانات</div>
+            <div class="opt-en">NumPy&#x27;s ability to perform arithmetic operations on arrays of different compatible shapes without manual data duplication</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(16, 3, false)" id="opt-16-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">تحويل المصفوفة تلقائياً إلى نوع بيانات نصي (String)</div>
+            <div class="opt-en">Automatically converting array elements into strings</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-16"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(16, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 17 -->
+    <article class="question-card" id="q17">
+      <div class="q-header">
+        <div class="q-num">17</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كانت <code>grades</code> مصفوفة بحجم <code>(3, 3)</code> و <code>bonus</code> مصفوفة بحجم <code>(3,)</code>، كيف يتم جمع <code>grades + bonus</code>؟</h3>
+          <div class="q-title-en">If <code>grades</code> has shape <code>(3, 3)</code> and <code>bonus</code> has shape <code>(3,)</code>, how is <code>grades + bonus</code> computed?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-17">
+        <div class="option-item" onclick="selectOption(17, 0, false)" id="opt-17-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم إضافة <code>bonus</code> فقط إلى الصف الأول من <code>grades</code></div>
+            <div class="opt-en"><code>bonus</code> is added only to the first row of <code>grades</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(17, 1, false)" id="opt-17-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم إضافة <code>bonus</code> إلى القطر الرئيسي فقط</div>
+            <div class="opt-en"><code>bonus</code> is added to the main diagonal only</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(17, 2, false)" id="opt-17-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم إرجاع خطأ لعدم تطابق عدد الأبعاد بين (3, 3) و (3,)</div>
+            <div class="opt-en">An error is returned because dimensions (3, 3) and (3,) do not match exactly</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(17, 3, true)" id="opt-17-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم إضافة عناصر <code>bonus</code> لكل صف من صفوف <code>grades</code> عبر الأعمدة بالتوافق</div>
+            <div class="opt-en"><code>bonus</code> elements are added to each row across corresponding columns</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-17"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(17, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 18 -->
+    <article class="question-card" id="q18">
+      <div class="q-header">
+        <div class="q-num">18</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو ناتج دمج <code>s1 = np.array([10, 20])</code> مع <code>s2 = np.array([30, 40])</code> باستخدام <code>np.concatenate((s1, s2))</code>؟</h3>
+          <div class="q-title-en">What is the result of joining <code>s1 = np.array([10, 20])</code> and <code>s2 = np.array([30, 40])</code> using <code>np.concatenate((s1, s2))</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-18">
+        <div class="option-item" onclick="selectOption(18, 0, true)" id="opt-18-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([10, 20, 30, 40])</code></div>
+            <div class="opt-en"><code>array([10, 20, 30, 40])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(18, 1, false)" id="opt-18-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([10, 30, 20, 40])</code></div>
+            <div class="opt-en"><code>array([10, 30, 20, 40])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(18, 2, false)" id="opt-18-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([[10, 20], [30, 40]])</code></div>
+            <div class="opt-en"><code>array([[10, 20], [30, 40]])</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(18, 3, false)" id="opt-18-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>array([40, 60])</code></div>
+            <div class="opt-en"><code>array([40, 60])</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-18"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(18, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 19 -->
+    <article class="question-card" id="q19">
+      <div class="q-header">
+        <div class="q-num">19</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو المحور الافتراضي (default axis) في دالة <code>np.concatenate</code>؟</h3>
+          <div class="q-title-en">What is the default axis in <code>np.concatenate</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-19">
+        <div class="option-item" onclick="selectOption(19, 0, false)" id="opt-19-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>axis=None</code></div>
+            <div class="opt-en"><code>axis=None</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(19, 1, false)" id="opt-19-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>axis=-1</code></div>
+            <div class="opt-en"><code>axis=-1</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(19, 2, false)" id="opt-19-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>axis=1</code></div>
+            <div class="opt-en"><code>axis=1</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(19, 3, true)" id="opt-19-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>axis=0</code></div>
+            <div class="opt-en"><code>axis=0</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-19"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(19, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 20 -->
+    <article class="question-card" id="q20">
+      <div class="q-header">
+        <div class="q-num">20</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند دمج مصفوفتين بحجم <code>(2, 2)</code> باستخدام <code>np.concatenate((arr1, arr2), axis=1)</code>، ما هو شكل الناتج؟</h3>
+          <div class="q-title-en">When concatenating two arrays of shape <code>(2, 2)</code> with <code>np.concatenate((arr1, arr2), axis=1)</code>, what is the output shape?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-20">
+        <div class="option-item" onclick="selectOption(20, 0, false)" id="opt-20-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 2)</code></div>
+            <div class="opt-en"><code>(4, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(20, 1, true)" id="opt-20-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 4)</code></div>
+            <div class="opt-en"><code>(2, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(20, 2, false)" id="opt-20-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 4)</code></div>
+            <div class="opt-en"><code>(4, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(20, 3, false)" id="opt-20-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 2)</code></div>
+            <div class="opt-en"><code>(2, 2)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-20"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(20, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 21 -->
+    <article class="question-card" id="q21">
+      <div class="q-header">
+        <div class="q-num">21</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند دمج مصفوفتين بحجم <code>(2, 2)</code> باستخدام <code>np.concatenate((arr1, arr2), axis=0)</code>، ما هو شكل الناتج؟</h3>
+          <div class="q-title-en">When concatenating two arrays of shape <code>(2, 2)</code> with <code>np.concatenate((arr1, arr2), axis=0)</code>, what is the output shape?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-21">
+        <div class="option-item" onclick="selectOption(21, 0, true)" id="opt-21-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 2)</code></div>
+            <div class="opt-en"><code>(4, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(21, 1, false)" id="opt-21-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 2)</code></div>
+            <div class="opt-en"><code>(2, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(21, 2, false)" id="opt-21-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4, 4)</code></div>
+            <div class="opt-en"><code>(4, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(21, 3, false)" id="opt-21-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(2, 4)</code></div>
+            <div class="opt-en"><code>(2, 4)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-21"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(21, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 22 -->
+    <article class="question-card" id="q22">
+      <div class="q-header">
+        <div class="q-num">22</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الوظيفة الأساسية للدالة <code>np.vstack</code>؟</h3>
+          <div class="q-title-en">What is the primary function of <code>np.vstack</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-22">
+        <div class="option-item" onclick="selectOption(22, 0, true)" id="opt-22-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">رص المصفوفات عمودياً (أفقياً فوق بعضها رأسيًا على طول المحور الرأسي / الصفوف)</div>
+            <div class="opt-en">Stack arrays vertically (row-wise / along vertical axis)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(22, 1, false)" id="opt-22-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">تقسيم المصفوفة إلى أعمدة رأسية منفصلة</div>
+            <div class="opt-en">Split the array into vertical columns</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(22, 2, false)" id="opt-22-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">حساب المتجه العمودي لمصفوفتين</div>
+            <div class="opt-en">Compute vertical vector of two matrices</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(22, 3, false)" id="opt-22-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">رص المصفوفات أفقياً بجانب بعضها (على طول الأعمدة)</div>
+            <div class="opt-en">Stack arrays horizontally (column-wise)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-22"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(22, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 23 -->
+    <article class="question-card" id="q23">
+      <div class="q-header">
+        <div class="q-num">23</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كان <code>age</code> و <code>salary</code> كلاهما بحجم <code>(3, 1)</code>، ما الناتج من <code>np.hstack((age, salary)).shape</code>؟</h3>
+          <div class="q-title-en">If <code>age</code> and <code>salary</code> are both of shape <code>(3, 1)</code>, what is the output shape of <code>np.hstack((age, salary)).shape</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-23">
+        <div class="option-item" onclick="selectOption(23, 0, true)" id="opt-23-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 2)</code></div>
+            <div class="opt-en"><code>(3, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(23, 1, false)" id="opt-23-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(1, 6)</code></div>
+            <div class="opt-en"><code>(1, 6)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(23, 2, false)" id="opt-23-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 1)</code></div>
+            <div class="opt-en"><code>(3, 1)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(23, 3, false)" id="opt-23-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(6, 1)</code></div>
+            <div class="opt-en"><code>(6, 1)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-23"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(23, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 24 -->
+    <article class="question-card" id="q24">
+      <div class="q-header">
+        <div class="q-num">24</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما ناتج <code>np.split(np.array([10, 20, 30, 40, 50, 60]), 3)</code>؟</h3>
+          <div class="q-title-en">What is the result of <code>np.split(np.array([10, 20, 30, 40, 50, 60]), 3)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-24">
+        <div class="option-item" onclick="selectOption(24, 0, false)" id="opt-24-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">قائمة من مصفوفتين تحتوي كل منهما على 3 عناصر</div>
+            <div class="opt-en">A list of two arrays each containing 3 elements</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(24, 1, false)" id="opt-24-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">خطأ لأن 6 لا تقبل القسمة على 3</div>
+            <div class="opt-en">An error because 6 is not divisible by 3</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(24, 2, true)" id="opt-24-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">قائمة تحتوي على 3 مصفوفات متساوية: <code>[array([10, 20]), array([30, 40]), array([50, 60])]</code></div>
+            <div class="opt-en">A list of 3 equal arrays: <code>[array([10, 20]), array([30, 40]), array([50, 60])]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(24, 3, false)" id="opt-24-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة واحدة تحتوي على أول 3 عناصر فقط</div>
+            <div class="opt-en">A single array containing only the first 3 elements</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-24"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(24, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 25 -->
+    <article class="question-card" id="q25">
+      <div class="q-header">
+        <div class="q-num">25</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند تنفيذ <code>np.split(arr, [2, 4])</code> لمصفوفة من 6 عناصر، عند أي فهارس (indices) يحدث القطع؟</h3>
+          <div class="q-title-en">When executing <code>np.split(arr, [2, 4])</code> on a 6-element array, at which indices does splitting occur?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-25">
+        <div class="option-item" onclick="selectOption(25, 0, false)" id="opt-25-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم تقسيم المصفوفة إلى 2 أجزاء ثم إلى 4 أجزاء</div>
+            <div class="opt-en">The array is split into 2 parts then 4 parts</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(25, 1, true)" id="opt-25-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم القطع من البداية إلى 2، ومن 2 إلى 4، ومن 4 إلى النهاية</div>
+            <div class="opt-en">Split from start to 2, 2 to 4, and 4 to the end</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(25, 2, false)" id="opt-25-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم أخذ العنصر الثاني والرابع فقط في مصفوفة جديدة</div>
+            <div class="opt-en">Only element 2 and element 4 are taken into a new array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(25, 3, false)" id="opt-25-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم القطع عند الفهرس 2 فقط وتجاهل الرقم 4</div>
+            <div class="opt-en">Splitting occurs at index 2 only and 4 is ignored</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-25"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(25, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 26 -->
+    <article class="question-card" id="q26">
+      <div class="q-header">
+        <div class="q-num">26</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كانت <code>mat</code> مصفوفة بحجم <code>(2, 4)</code>، فما ناتج <code>np.split(mat, 2, axis=1)</code>؟</h3>
+          <div class="q-title-en">If <code>mat</code> is an array of shape <code>(2, 4)</code>, what is the result of <code>np.split(mat, 2, axis=1)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-26">
+        <div class="option-item" onclick="selectOption(26, 0, true)" id="opt-26-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفتان كل منهما بحجم <code>(2, 2)</code></div>
+            <div class="opt-en">Two arrays each of shape <code>(2, 2)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(26, 1, false)" id="opt-26-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة واحدة بأبعاد منقولة</div>
+            <div class="opt-en">A single array with transposed shape</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(26, 2, false)" id="opt-26-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفتان كل منهما بحجم <code>(1, 4)</code></div>
+            <div class="opt-en">Two arrays each of shape <code>(1, 4)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(26, 3, false)" id="opt-26-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">أربع مصفوفات كل منها بحجم <code>(2, 1)</code></div>
+            <div class="opt-en">Four arrays each of shape <code>(2, 1)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-26"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(26, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 27 -->
+    <article class="question-card" id="q27">
+      <div class="q-header">
+        <div class="q-num">27</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">في الأمر <code>np.random.randint(1, 101, size=10)</code>، هل يمكن أن يظهر الرقم 101 في الناتج؟</h3>
+          <div class="q-title-en">In <code>np.random.randint(1, 101, size=10)</code>, can the number 101 appear in the output?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-27">
+        <div class="option-item" onclick="selectOption(27, 0, false)" id="opt-27-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يعتمد ذلك على نظام التشغيل</div>
+            <div class="opt-en">It depends on the operating system</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(27, 1, false)" id="opt-27-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">نعم، إذا كانت قيمة seed تساوي 7 فقط</div>
+            <div class="opt-en">Yes, only if seed value equals 7</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(27, 2, true)" id="opt-27-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">لا، لأن الحد الأعلى (101) غير مشمول (Exclusive) والنطاق الفعلي حتى 100</div>
+            <div class="opt-en">No, because the upper bound (101) is exclusive and actual range is up to 100</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(27, 3, false)" id="opt-27-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">نعم، لأن الحد الأعلى مشمول دائماً في دوال random في NumPy</div>
+            <div class="opt-en">Yes, because the upper bound is always included in NumPy random functions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-27"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(27, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 28 -->
+    <article class="question-card" id="q28">
+      <div class="q-header">
+        <div class="q-num">28</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو نوع التوزيع الإحصائي للأرقام المولدة بواسطة <code>np.random.randn()</code>؟</h3>
+          <div class="q-title-en">What statistical distribution is generated by <code>np.random.randn()</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-28">
+        <div class="option-item" onclick="selectOption(28, 0, true)" id="opt-28-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">توزيع طبيعي قياسي (Standard Normal Distribution) بمتوسط 0 وانحراف معياري 1</div>
+            <div class="opt-en">Standard Normal distribution with mean 0 and standard deviation 1</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(28, 1, false)" id="opt-28-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">توزيع بواسون (Poisson Distribution)</div>
+            <div class="opt-en">Poisson distribution</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(28, 2, false)" id="opt-28-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">توزيع منتظم (Uniform Distribution) بين 0 و 1</div>
+            <div class="opt-en">Uniform distribution between 0 and 1</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(28, 3, false)" id="opt-28-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">توزيع ذي الحدين (Binomial Distribution)</div>
+            <div class="opt-en">Binomial distribution</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-28"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(28, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 29 -->
+    <article class="question-card" id="q29">
+      <div class="q-header">
+        <div class="q-num">29</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">لتحويل مخرجات <code>np.random.randn()</code> لتتبع توزيعاً طبيعياً بمتوسط μ وانحراف معياري σ، ما المعادلة المستخدمة؟</h3>
+          <div class="q-title-en">To transform <code>np.random.randn()</code> output to follow normal distribution with mean μ and std σ, which formula is used?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-29">
+        <div class="option-item" onclick="selectOption(29, 0, false)" id="opt-29-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.random.randn(...) / (μ + σ)</code></div>
+            <div class="opt-en"><code>np.random.randn(...) / (μ + σ)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(29, 1, false)" id="opt-29-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>μ * σ + np.random.randn(...)</code></div>
+            <div class="opt-en"><code>μ * σ + np.random.randn(...)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(29, 2, true)" id="opt-29-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>μ + σ * np.random.randn(...)</code></div>
+            <div class="opt-en"><code>μ + σ * np.random.randn(...)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(29, 3, false)" id="opt-29-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(np.random.randn(...) - μ) / σ</code></div>
+            <div class="opt-en"><code>(np.random.randn(...) - μ) / σ</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-29"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(29, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 30 -->
+    <article class="question-card" id="q30">
+      <div class="q-header">
+        <div class="q-num">30</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الفائدة الأساسية من استخدام الأمر <code>np.random.seed(7)</code> قبل توليد أرقام عشوائية؟</h3>
+          <div class="q-title-en">What is the primary benefit of using <code>np.random.seed(7)</code> before generating random numbers?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-30">
+        <div class="option-item" onclick="selectOption(30, 0, false)" id="opt-30-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">تسريع خوارزمية التوليد بنسبة 50%</div>
+            <div class="opt-en">Accelerating the generation algorithm by 50%</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(30, 1, true)" id="opt-30-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">ضمان الحصول على نفس الأرقام العشوائية في كل مرة يتم فيها تشغيل الكود (قابلة للتكرار Reproducibility)</div>
+            <div class="opt-en">Ensuring the exact same random numbers are generated each run (Reproducibility)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(30, 2, false)" id="opt-30-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">منع تكرار أي رقم داخل المصفوفة المولدة نهائياً</div>
+            <div class="opt-en">Completely preventing any number duplication within generated array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(30, 3, false)" id="opt-30-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">تحديد القيمة القصوى للأرقام العشوائية بحيث لا تتجاوز 7</div>
+            <div class="opt-en">Setting maximum threshold for random numbers not to exceed 7</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-30"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(30, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 31 -->
+    <article class="question-card" id="q31">
+      <div class="q-header">
+        <div class="q-num">31</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">في كود: <code>winners = np.random.choice(names, size=3, replace=False)</code>، ما معنى <code>replace=False</code>؟</h3>
+          <div class="q-title-en">In <code>winners = np.random.choice(names, size=3, replace=False)</code>, what does <code>replace=False</code> mean?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-31">
+        <div class="option-item" onclick="selectOption(31, 0, false)" id="opt-31-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">عدم استبدال عناصر المصفوفة الأصلية بقيم فارغة</div>
+            <div class="opt-en">Not replacing original array elements with null values</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(31, 1, true)" id="opt-31-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">الاختيار بدون إرجاع (لا يمكن اختيار نفس الاسم أكثر من مرة)</div>
+            <div class="opt-en">Sampling without replacement (the same name cannot be picked more than once)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(31, 2, false)" id="opt-31-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">ترتيب الأسماء المختارة أبجدياً بشكل إجباري</div>
+            <div class="opt-en">Mandatorily sorting picked names alphabetically</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(31, 3, false)" id="opt-31-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">الاختيار مع الإرجاع (يمكن تكرار نفس الاسم)</div>
+            <div class="opt-en">Sampling with replacement (the same name can be repeated)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-31"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(31, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 32 -->
+    <article class="question-card" id="q32">
+      <div class="q-header">
+        <div class="q-num">32</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هي الميزة الجوهرية لمصفوفة NumPy مقارنة بقائمة بايثون (Python List) القياسية؟</h3>
+          <div class="q-title-en">What is the key advantage of a NumPy array compared to a standard Python list?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-32">
+        <div class="option-item" onclick="selectOption(32, 0, true)" id="opt-32-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">تخزين البيانات في كتل ذاكرة متصلة وبنوع موحد مما يوفر سرعة عالية وكفاءة ذاكرة</div>
+            <div class="opt-en">Contiguous memory storage with homogenous data type offering superior speed and memory efficiency</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(32, 1, false)" id="opt-32-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">أنها مكتوبة بلغة جافا سكريبت بالكامل</div>
+            <div class="opt-en">It is written entirely in JavaScript</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(32, 2, false)" id="opt-32-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">إمكانية تغيير حجم المصفوفة بحرية دون إعادة تخصيص الذاكرة</div>
+            <div class="opt-en">Ability to dynamically resize arrays without reallocating memory</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(32, 3, false)" id="opt-32-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">القدرة على احتواء عناصر من أنواع بيانات مختلفة في نفس الخلية</div>
+            <div class="opt-en">Ability to contain elements of completely different data types in the same cell</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-32"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(32, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 33 -->
+    <article class="question-card" id="q33">
+      <div class="q-header">
+        <div class="q-num">33</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا كانت المصفوفة <code>arr</code> أبعادها <code>(3, 4, 2)</code>، فما هي قيمة <code>arr.size</code>؟</h3>
+          <div class="q-title-en">If array <code>arr</code> has shape <code>(3, 4, 2)</code>, what is the value of <code>arr.size</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-33">
+        <div class="option-item" onclick="selectOption(33, 0, false)" id="opt-33-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">9</div>
+            <div class="opt-en">9</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(33, 1, false)" id="opt-33-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">3</div>
+            <div class="opt-en">3</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(33, 2, true)" id="opt-33-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">24</div>
+            <div class="opt-en">24</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(33, 3, false)" id="opt-33-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">12</div>
+            <div class="opt-en">12</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-33"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(33, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 34 -->
+    <article class="question-card" id="q34">
+      <div class="q-header">
+        <div class="q-num">34</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الخاصية المستخدمة لمعرفة نوع البيانات المخزنة داخل مصفوفة NumPy؟</h3>
+          <div class="q-title-en">Which property is used to inspect the data type stored inside a NumPy array?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-34">
+        <div class="option-item" onclick="selectOption(34, 0, false)" id="opt-34-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>.datatype</code></div>
+            <div class="opt-en"><code>.datatype</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(34, 1, false)" id="opt-34-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>.format</code></div>
+            <div class="opt-en"><code>.format</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(34, 2, false)" id="opt-34-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>.type</code></div>
+            <div class="opt-en"><code>.type</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(34, 3, true)" id="opt-34-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>.dtype</code></div>
+            <div class="opt-en"><code>.dtype</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-34"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(34, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 35 -->
+    <article class="question-card" id="q35">
+      <div class="q-header">
+        <div class="q-num">35</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ماذا تعني القيمة <code>-1</code> عند استخدامها في إعادة التشكيل مثل <code>arr.reshape(2, -1)</code> لمصفوفة بها 10 عناصر؟</h3>
+          <div class="q-title-en">What does <code>-1</code> mean in <code>arr.reshape(2, -1)</code> for an array containing 10 elements?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-35">
+        <div class="option-item" onclick="selectOption(35, 0, true)" id="opt-35-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">جعل NumPy يحسب البعد المتبقي تلقائياً (هنا سيكون 5 أعمدة)</div>
+            <div class="opt-en">Instructing NumPy to automatically infer the remaining dimension (here 5 columns)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(35, 1, false)" id="opt-35-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">حذف العمود الأخير من المصفوفة الناتجة</div>
+            <div class="opt-en">Deleting the last column from the resulting array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(35, 2, false)" id="opt-35-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">عكس ترتيب العناصر في المصفوفة</div>
+            <div class="opt-en">Reversing the order of elements in the array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(35, 3, false)" id="opt-35-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">تحويل جميع الأرقام إلى قيم سالبة</div>
+            <div class="opt-en">Converting all numbers to negative values</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-35"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(35, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 36 -->
+    <article class="question-card" id="q36">
+      <div class="q-header">
+        <div class="q-num">36</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">لدينا المصفوفة <code>mat = np.array([[10, 20, 30], [40, 50, 60]])</code>، ما ناتج <code>mat[0, 1]</code>؟</h3>
+          <div class="q-title-en">Given <code>mat = np.array([[10, 20, 30], [40, 50, 60]])</code>, what is <code>mat[0, 1]</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-36">
+        <div class="option-item" onclick="selectOption(36, 0, true)" id="opt-36-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">20</div>
+            <div class="opt-en">20</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(36, 1, false)" id="opt-36-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">40</div>
+            <div class="opt-en">40</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(36, 2, false)" id="opt-36-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">50</div>
+            <div class="opt-en">50</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(36, 3, false)" id="opt-36-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">10</div>
+            <div class="opt-en">10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-36"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(36, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 37 -->
+    <article class="question-card" id="q37">
+      <div class="q-header">
+        <div class="q-num">37</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">كيف تستخرج العمود الثاني بالكامل (جميع الصفوف للعمود ذو الفهرس 1) من مصفوفة ثنائية الأبعاد <code>M</code>؟</h3>
+          <div class="q-title-en">How do you extract the entire second column (all rows for column index 1) from 2D array <code>M</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-37">
+        <div class="option-item" onclick="selectOption(37, 0, true)" id="opt-37-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>M[:, 1]</code></div>
+            <div class="opt-en"><code>M[:, 1]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(37, 1, false)" id="opt-37-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>M[1, :]</code></div>
+            <div class="opt-en"><code>M[1, :]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(37, 2, false)" id="opt-37-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>M[1, 1]</code></div>
+            <div class="opt-en"><code>M[1, 1]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(37, 3, false)" id="opt-37-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>M[:, :]</code></div>
+            <div class="opt-en"><code>M[:, :]</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-37"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(37, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 38 -->
+    <article class="question-card" id="q38">
+      <div class="q-header">
+        <div class="q-num">38</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">كيف نطبق شرطين معاً على مصفوفة <code>ages</code>: أكبر من أو يساوي 18 وأصغر من 30؟</h3>
+          <div class="q-title-en">How do we apply two conditions on <code>ages</code>: &gt;= 18 AND &lt; 30?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-38">
+        <div class="option-item" onclick="selectOption(38, 0, true)" id="opt-38-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>ages[(ages &gt;= 18) &amp; (ages &lt; 30)]</code></div>
+            <div class="opt-en"><code>ages[(ages &gt;= 18) &amp; (ages &lt; 30)]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(38, 1, false)" id="opt-38-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>ages[(ages &gt;= 18) &amp;&amp; (ages &lt; 30)]</code></div>
+            <div class="opt-en"><code>ages[(ages &gt;= 18) &amp;&amp; (ages &lt; 30)]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(38, 2, false)" id="opt-38-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>ages[ages &gt;= 18 and ages &lt; 30]</code></div>
+            <div class="opt-en"><code>ages[ages &gt;= 18 and ages &lt; 30]</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(38, 3, false)" id="opt-38-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>ages[18 &lt;= ages &lt; 30]</code></div>
+            <div class="opt-en"><code>ages[18 &lt;= ages &lt; 30]</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-38"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(38, 'A')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 39 -->
+    <article class="question-card" id="q39">
+      <div class="q-header">
+        <div class="q-num">39</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما هو المعامل المنطقي المستخدم لعملية (أو / OR) عنصر بعنصر بين مصفوفات الشروط في NumPy؟</h3>
+          <div class="q-title-en">Which logical operator is used for element-wise OR between conditions in NumPy?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-39">
+        <div class="option-item" onclick="selectOption(39, 0, false)" id="opt-39-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>or</code></div>
+            <div class="opt-en"><code>or</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(39, 1, false)" id="opt-39-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>||</code></div>
+            <div class="opt-en"><code>||</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(39, 2, false)" id="opt-39-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>~</code></div>
+            <div class="opt-en"><code>~</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(39, 3, true)" id="opt-39-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>|</code></div>
+            <div class="opt-en"><code>|</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-39"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(39, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 40 -->
+    <article class="question-card" id="q40">
+      <div class="q-header">
+        <div class="q-num">40</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">أي معامل يُستخدم لعكس القناع البولياني (Invert / NOT) في NumPy؟</h3>
+          <div class="q-title-en">Which operator is used to invert a Boolean mask (NOT) in NumPy?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-40">
+        <div class="option-item" onclick="selectOption(40, 0, false)" id="opt-40-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>^-1</code></div>
+            <div class="opt-en"><code>^-1</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(40, 1, false)" id="opt-40-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>not</code></div>
+            <div class="opt-en"><code>not</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(40, 2, true)" id="opt-40-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>~</code> (Tilde)</div>
+            <div class="opt-en"><code>~</code> (Tilde)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(40, 3, false)" id="opt-40-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>!</code></div>
+            <div class="opt-en"><code>!</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-40"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(40, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 41 -->
+    <article class="question-card" id="q41">
+      <div class="q-header">
+        <div class="q-num">41</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا طبقنا <code>np.sum(matrix, axis=0)</code> على مصفوفة ثنائية الأبعاد، على ماذا نحصل؟</h3>
+          <div class="q-title-en">If we apply <code>np.sum(matrix, axis=0)</code> to a 2D matrix, what do we obtain?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-41">
+        <div class="option-item" onclick="selectOption(41, 0, false)" id="opt-41-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">رقم مفرد يمثل المجموع الكلي لكل المصفوفة</div>
+            <div class="opt-en">A single scalar representing sum of the entire matrix</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(41, 1, false)" id="opt-41-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">مجموع العناصر لكل صف عبر دمج الأعمدة أفقياً</div>
+            <div class="opt-en">Sum of elements for each row by collapsing columns horizontally</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(41, 2, true)" id="opt-41-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">مجموع العناصر لكل عمود عبر دمج الصفوف رأسياً</div>
+            <div class="opt-en">Sum of elements for each column by collapsing rows vertically</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(41, 3, false)" id="opt-41-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">مجموع عناصر القطر الرئيسي فقط</div>
+            <div class="opt-en">Sum of main diagonal elements only</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-41"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(41, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 42 -->
+    <article class="question-card" id="q42">
+      <div class="q-header">
+        <div class="q-num">42</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">إذا طبقنا <code>np.sum(matrix, axis=1)</code> على مصفوفة أبعادها <code>(3, 4)</code>، فما هو شكل المصفوفة الناتجة؟</h3>
+          <div class="q-title-en">If we apply <code>np.sum(matrix, axis=1)</code> to a matrix of shape <code>(3, 4)</code>, what is the output shape?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-42">
+        <div class="option-item" onclick="selectOption(42, 0, false)" id="opt-42-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(1,)</code></div>
+            <div class="opt-en"><code>(1,)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(42, 1, true)" id="opt-42-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3,)</code></div>
+            <div class="opt-en"><code>(3,)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(42, 2, false)" id="opt-42-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(4,)</code></div>
+            <div class="opt-en"><code>(4,)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(42, 3, false)" id="opt-42-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>(3, 4)</code></div>
+            <div class="opt-en"><code>(3, 4)</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-42"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(42, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 43 -->
+    <article class="question-card" id="q43">
+      <div class="q-header">
+        <div class="q-num">43</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">وفقاً لقواعد الـ Broadcasting، متى يعتبر بعدان متوافقين لإجراء العمليات الحسابية؟</h3>
+          <div class="q-title-en">According to Broadcasting rules, when are two dimensions considered compatible?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-43">
+        <div class="option-item" onclick="selectOption(43, 0, false)" id="opt-43-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يجب أن تكون المصفوفات متطابقة تماماً في كل الأبعاد بدون استثناء</div>
+            <div class="opt-en">Arrays must be completely identical in all dimensions with no exception</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(43, 1, false)" id="opt-43-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">إذا كان حاصل قسمتهما عدداً صحيحاً فقط</div>
+            <div class="opt-en">Only if their division yields an integer</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(43, 2, false)" id="opt-43-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">إذا كان كلا البعدين أعداداً زوجية فقط</div>
+            <div class="opt-en">Only if both dimensions are even numbers</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(43, 3, true)" id="opt-43-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">إذا كان البعدان متساويين، أو كان أحدهما يساوي 1</div>
+            <div class="opt-en">If the dimensions are equal, or one of them equals 1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-43"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(43, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 44 -->
+    <article class="question-card" id="q44">
+      <div class="q-header">
+        <div class="q-num">44</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الوظيفة الإحصائية لكل من <code>np.mean()</code> و <code>np.std()</code> على التوالي؟</h3>
+          <div class="q-title-en">What statistical functions do <code>np.mean()</code> and <code>np.std()</code> perform respectively?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-44">
+        <div class="option-item" onclick="selectOption(44, 0, false)" id="opt-44-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">المنوال (Mode) والمدى (Range)</div>
+            <div class="opt-en">Mode and Range</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(44, 1, true)" id="opt-44-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">المتوسط الحسابي (Mean) والانحراف المعياري (Standard Deviation)</div>
+            <div class="opt-en">Arithmetic Mean and Standard Deviation</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(44, 2, false)" id="opt-44-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">القيمة العظمى (Max) والقيمة الصغرى (Min)</div>
+            <div class="opt-en">Maximum and Minimum</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(44, 3, false)" id="opt-44-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">الوسيط الحسابي (Median) والتباين (Variance)</div>
+            <div class="opt-en">Median and Variance</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-44"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(44, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 45 -->
+    <article class="question-card" id="q45">
+      <div class="q-header">
+        <div class="q-num">45</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند رص متجهين أحاديي البعد <code>a = np.array([1, 2])</code> و <code>b = np.array([3, 4])</code> كأعمدة للحصول على مصفوفة 2x2، أي دالة تحقق ذلك مباشرة؟</h3>
+          <div class="q-title-en">When stacking two 1D vectors <code>a = np.array([1, 2])</code> and <code>b = np.array([3, 4])</code> as columns to get a 2x2 matrix, which function does this directly?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-45">
+        <div class="option-item" onclick="selectOption(45, 0, false)" id="opt-45-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.concatenate((a, b))</code></div>
+            <div class="opt-en"><code>np.concatenate((a, b))</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(45, 1, true)" id="opt-45-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.column_stack((a, b))</code></div>
+            <div class="opt-en"><code>np.column_stack((a, b))</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(45, 2, false)" id="opt-45-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.vstack((a, b))</code></div>
+            <div class="opt-en"><code>np.vstack((a, b))</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(45, 3, false)" id="opt-45-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.split((a, b))</code></div>
+            <div class="opt-en"><code>np.split((a, b))</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-45"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(45, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 46 -->
+    <article class="question-card" id="q46">
+      <div class="q-header">
+        <div class="q-num">46</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">عند أخذ شريحة <code>sub = arr[1:3]</code> وتعديل قيمة في <code>sub</code>، ماذا يحدث للمصفوفة الأصلية <code>arr</code>؟</h3>
+          <div class="q-title-en">When slicing <code>sub = arr[1:3]</code> and modifying a value in <code>sub</code>, what happens to original array <code>arr</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-46">
+        <div class="option-item" onclick="selectOption(46, 0, false)" id="opt-46-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">يحدث خطأ تشغيلي لحماية المصفوفة الأصلية من التعديل</div>
+            <div class="opt-en">A runtime error is raised to protect the original array from modification</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(46, 1, false)" id="opt-46-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">لا تتأثر المصفوفة الأصلية لأن الشريحة تنشئ نسخة مستقلة دائماً</div>
+            <div class="opt-en">Original array is unaffected because slicing always creates an independent copy</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(46, 2, false)" id="opt-46-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">يتم مسح باقي عناصر المصفوفة الأصلية</div>
+            <div class="opt-en">Remaining elements of original array are erased</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(46, 3, true)" id="opt-46-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">تتعدل القيمة في المصفوفة الأصلية أيضاً لأن الشرائح تمثل عرضاً (View) للذاكرة الأصلية</div>
+            <div class="opt-en">The value in original array also changes because slices are views of original memory</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-46"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(46, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 47 -->
+    <article class="question-card" id="q47">
+      <div class="q-header">
+        <div class="q-num">47</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما الأمر الصحيح لإنشاء نسخة منفصلة تماماً في الذاكرة من المصفوفة <code>arr</code> لمنع تأثر الأصل؟</h3>
+          <div class="q-title-en">What is the correct command to create a completely separate deep copy in memory of <code>arr</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-47">
+        <div class="option-item" onclick="selectOption(47, 0, false)" id="opt-47-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>np.replicate(arr)</code></div>
+            <div class="opt-en"><code>np.replicate(arr)</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(47, 1, true)" id="opt-47-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>arr.copy()</code></div>
+            <div class="opt-en"><code>arr.copy()</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(47, 2, false)" id="opt-47-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>arr.view()</code></div>
+            <div class="opt-en"><code>arr.view()</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(47, 3, false)" id="opt-47-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar"><code>arr.clone()</code></div>
+            <div class="opt-en"><code>arr.clone()</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-47"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(47, 'B')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 48 -->
+    <article class="question-card" id="q48">
+      <div class="q-header">
+        <div class="q-num">48</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ما وظيفة الدالة <code>np.where(arr &gt; 0, 1, -1)</code>؟</h3>
+          <div class="q-title-en">What is the function of <code>np.where(arr &gt; 0, 1, -1)</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-48">
+        <div class="option-item" onclick="selectOption(48, 0, false)" id="opt-48-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">البحث عن أول عنصر أكبر من 0 فقط وحذفه</div>
+            <div class="opt-en">Finding only the first element greater than 0 and deleting it</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(48, 1, false)" id="opt-48-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">إرجاع القيم الأكبر من 0 وتجاهل باقي المصفوفة</div>
+            <div class="opt-en">Returning values greater than 0 and ignoring the rest</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(48, 2, true)" id="opt-48-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">استبدال القيم الأكبر من 0 بالرقم 1، والقيم الأخرى بالرقم -1 (شبيهة بـ if/else)</div>
+            <div class="opt-en">Replacing values &gt; 0 with 1, and others with -1 (vectorized if/else)</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(48, 3, false)" id="opt-48-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">فرز عناصر المصفوفة تصاعدياً بين 1 و -1</div>
+            <div class="opt-en">Sorting array elements in ascending order between 1 and -1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-48"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(48, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 49 -->
+    <article class="question-card" id="q49">
+      <div class="q-header">
+        <div class="q-num">49</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">ماذا تُرجع الدالة <code>np.argmax(arr)</code>؟</h3>
+          <div class="q-title-en">What does <code>np.argmax(arr)</code> return?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-49">
+        <div class="option-item" onclick="selectOption(49, 0, false)" id="opt-49-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">مصفوفة مرتبة ترتيباً تنازلياً</div>
+            <div class="opt-en">An array sorted in descending order</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(49, 1, false)" id="opt-49-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">أعلى قيمة عددية موجودة داخل المصفوفة</div>
+            <div class="opt-en">The maximum numeric value in the array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(49, 2, true)" id="opt-49-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">فهرس (Index) أعلى قيمة موجودة داخل المصفوفة</div>
+            <div class="opt-en">The index of the maximum value in the array</div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(49, 3, false)" id="opt-49-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">عدد العناصر ذات القيمة الموجبة</div>
+            <div class="opt-en">The count of positive-valued elements</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-49"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(49, 'C')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+    <!-- Question 50 -->
+    <article class="question-card" id="q50">
+      <div class="q-header">
+        <div class="q-num">50</div>
+        <div style="flex-grow:1;">
+          <h3 class="q-title-ar">في مصفوفة كود المستخدم الثلاثية الأبعاد:
+<code>arr = np.array([[[10, 20], [30, 40]], [[50, 60], [70, 80]]])</code>
+ما هي أبعادها (Shape) وعنصر الزاوية الأولى <code>arr[0, 0, 0]</code>؟</h3>
+          <div class="q-title-en">In the user&#x27;s 3D array code:
+<code>arr = np.array([[[10, 20], [30, 40]], [[50, 60], [70, 80]]])</code>
+What is its shape and the first corner element <code>arr[0, 0, 0]</code>?</div>
+        </div>
+      </div>
+
+      <div class="options-list" id="opts-50">
+        <div class="option-item" onclick="selectOption(50, 0, false)" id="opt-50-0">
+          <div class="opt-letter">A</div>
+          <div class="opt-content">
+            <div class="opt-ar">الشكل <code>(8,)</code> والعنصر هو <code>80</code></div>
+            <div class="opt-en">Shape <code>(8,)</code> and element is <code>80</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(50, 1, false)" id="opt-50-1">
+          <div class="opt-letter">B</div>
+          <div class="opt-content">
+            <div class="opt-ar">الشكل <code>(2, 4)</code> والعنصر هو <code>20</code></div>
+            <div class="opt-en">Shape <code>(2, 4)</code> and element is <code>20</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(50, 2, false)" id="opt-50-2">
+          <div class="opt-letter">C</div>
+          <div class="opt-content">
+            <div class="opt-ar">الشكل <code>(4, 2)</code> والعنصر هو <code>50</code></div>
+            <div class="opt-en">Shape <code>(4, 2)</code> and element is <code>50</code></div>
+          </div>
+        </div>
+        <div class="option-item" onclick="selectOption(50, 3, true)" id="opt-50-3">
+          <div class="opt-letter">D</div>
+          <div class="opt-content">
+            <div class="opt-ar">الشكل <code>(2, 2, 2)</code> والعنصر هو <code>10</code></div>
+            <div class="opt-en">Shape <code>(2, 2, 2)</code> and element is <code>10</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-feedback" id="feedback-50"></div>
+      <div class="actions-bar">
+        <button class="btn-reveal" onclick="revealAnswer(50, 'D')">إظهار الإجابة الصحيحة | Show Answer</button>
+      </div>
+    </article>
+
+  </main>
+</div>
+
+<a href="#top" class="back-to-top" title="العودة للأعلى">↑</a>
+
+<script>
+  const correctLabels = {
+    1: 'D',
+    2: 'D',
+    3: 'B',
+    4: 'C',
+    5: 'A',
+    6: 'C',
+    7: 'B',
+    8: 'C',
+    9: 'B',
+    10: 'C',
+    11: 'B',
+    12: 'B',
+    13: 'C',
+    14: 'C',
+    15: 'A',
+    16: 'C',
+    17: 'D',
+    18: 'A',
+    19: 'D',
+    20: 'B',
+    21: 'A',
+    22: 'A',
+    23: 'A',
+    24: 'C',
+    25: 'B',
+    26: 'A',
+    27: 'C',
+    28: 'A',
+    29: 'C',
+    30: 'B',
+    31: 'B',
+    32: 'A',
+    33: 'C',
+    34: 'D',
+    35: 'A',
+    36: 'A',
+    37: 'A',
+    38: 'A',
+    39: 'D',
+    40: 'C',
+    41: 'C',
+    42: 'B',
+    43: 'D',
+    44: 'B',
+    45: 'B',
+    46: 'D',
+    47: 'B',
+    48: 'C',
+    49: 'C',
+    50: 'D',
+  };
+
+  const answeredState = {};
+  let correctCount = 0;
+  let incorrectCount = 0;
+
+  function selectOption(qNum, optIdx, isCorrect) {
+    if (answeredState[qNum]) return; // already answered
+    answeredState[qNum] = true;
+
+    const optionsContainer = document.getElementById(`opts-${qNum}`);
+    const selectedOpt = document.getElementById(`opt-${qNum}-${optIdx}`);
+    const feedback = document.getElementById(`feedback-${qNum}`);
+    const indexBtn = document.getElementById(`idx-btn-${qNum}`);
+
+    // Disable all options in this question
+    Array.from(optionsContainer.children).forEach(child => child.classList.add('disabled'));
+
+    if (isCorrect) {
+      selectedOpt.classList.add('correct');
+      feedback.className = 'answer-feedback show-correct';
+      feedback.innerHTML = `✓ إجابة صحيحة! (Correct Answer: ${correctLabels[qNum]})`;
+      indexBtn.classList.add('answered-correct');
+      correctCount++;
+    } else {
+      selectedOpt.classList.add('incorrect');
+      // Highlight the correct one
+      feedback.className = 'answer-feedback show-incorrect';
+      feedback.innerHTML = `✗ إجابة غير صحيحة. الإجابة الصحيحة هي: <strong>(${correctLabels[qNum]})</strong>`;
+      indexBtn.classList.add('answered-incorrect');
+      incorrectCount++;
+    }
+
+    updateStats();
+  }
+
+  function revealAnswer(qNum, correctLetter) {
+    const feedback = document.getElementById(`feedback-${qNum}`);
+    feedback.className = 'answer-feedback show-correct';
+    feedback.innerHTML = `ℹ️ الإجابة الصحيحة هي: <strong>(${correctLetter})</strong>`;
+  }
+
+  function updateStats() {
+    document.getElementById('correctCount').innerText = correctCount;
+    document.getElementById('incorrectCount').innerText = incorrectCount;
+    document.getElementById('remainingCount').innerText = 50 - (correctCount + incorrectCount);
+  }
+</script>
+</body>
+</html>
