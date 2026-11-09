@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المرحلة الأولى: تصوير البيانات (Data Visualization) — دليل تفاعلي لطلاب الذكاء الاصطناعي</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+    code, pre, .font-mono {
+      font-family: 'Fira Code', monospace;
+      direction: ltr;
+      text-align: left;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+    .bar-anim {
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .point-anim {
+      transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .line-draw {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s ease-in-out, d 0.5s ease;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5)); }
+      50% { filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.9)); }
+    }
+    .glow-active {
+      animation: pulseGlow 2.2s infinite;
+    }
+    .code-box {
+      background: #090d16;
+      border: 1px solid #1e293b;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-sky-500 selection:text-white">
+
+  <!-- Top Header Banner -->
+  <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-lg">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-md shadow-sky-500/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">المرحلة الأولى • أسبوع إلى أسبوعين</span>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">مسار الذكاء الاصطناعي</span>
+          </div>
+          <h1 class="text-lg md:text-xl font-extrabold text-white mt-0.5">تصوير البيانات (Data Visualization) بالبايثون</h1>
+        </div>
+      </div>
+
+      <!-- Progress & Quick Actions -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex flex-col items-end">
+          <div class="flex items-center gap-2 text-xs text-slate-300">
+            <span>تقدم الدرس:</span>
+            <span id="progressText" class="font-bold text-sky-400">1 / 9</span>
+          </div>
+          <div class="w-36 h-2 bg-slate-800 rounded-full overflow-hidden mt-1">
+            <div id="progressBar" class="h-full bg-gradient-to-l from-sky-400 to-indigo-500 transition-all duration-500" style="width: 11.1%"></div>
+          </div>
+        </div>
+
+        <button id="toggleRefsBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <span>📚 المراجع المقترحة</span>
+        </button>
+
+        <button id="jumpProjectBtn" type="button" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-xs font-bold text-slate-950 shadow-md transition">
+          🚀 مشروع المرحلة
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Collapsible Reference Drawer -->
+  <div id="refsDrawer" class="hidden bg-slate-900 border-b border-slate-800 px-4 py-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+          <span>🔗 مصادر القراءة المرجعية لهذا الأسبوع (Day 31 & Beyond)</span>
+        </h2>
+        <button id="closeRefsBtn" type="button" class="text-xs text-slate-400 hover:text-white">إغلاق ✕</button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <a href="https://matplotlib.org/stable/tutorials/pyplot.html" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/80 transition flex flex-col justify-between">
+          <div>
+            <span class="text-sky-400 font-bold block mb-1">1. Day 31 — Getting Started with Matplotlib</span>
+            <p class="text-slate-300 leading-relaxed">A Beginner’s Guide to Plotting (by Ratnesh / Medium) + التوثيق الرسمي لـ Pyplot لبناء أول رسم بياني خطوة بخطوة.</p>
+          </div>
+          <span class="text-sky-300 mt-2 inline-block font-semibold">فتح المرجع ↗</span>
+        </a>
+        <a href="https://codesignal.com/learn/courses/intro-to-data-visualization-with-titanic/lessons/unlocking-insights-with-heatmaps-correlation-analysis-in-data-visualization" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/80 transition flex flex-col justify-between">
+          <div>
+            <span class="text-emerald-400 font-bold block mb-1">2. Unlocking Insights with Heatmaps</span>
+            <p class="text-slate-300 leading-relaxed">Correlation Analysis in Data Visualization | CodeSignal Learn — شرح عملي لمصفوفة الارتباط والخرائط الحرارية.</p>
+          </div>
+          <span class="text-emerald-300 mt-2 inline-block font-semibold">فتح الدرس على CodeSignal ↗</span>
+        </a>
+        <a href="https://www.educba.com/seaborn-scatter-plot/" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/80 transition flex flex-col justify-between">
+          <div>
+            <span class="text-purple-400 font-bold block mb-1">3. Seaborn Scatter Plot | EDUCBA</span>
+            <p class="text-slate-300 leading-relaxed">Creating Seaborn Scatter Plot — كيفية تمثيل العلاقة بين متغيرين مع إضافة الألوان (hue) والأحجام (size).</p>
+          </div>
+          <span class="text-purple-300 mt-2 inline-block font-semibold">فتح الدليل ↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workspace Container -->
+  <div class="max-w-7xl w-full mx-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6">
+
+    <!-- Sidebar Navigation (Curriculum) -->
+    <aside class="lg:col-span-3 flex flex-col gap-2">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl sticky top-20">
+        <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
+          <h2 class="font-bold text-sm text-slate-200">خريطة الدروس (8 موضوعات + مشروع)</h2>
+          <span id="completedCountBadge" class="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-sky-400 font-bold">0/9 مكتمل</span>
+        </div>
+
+        <nav id="lessonNav" class="flex flex-col gap-1.5 max-h-[68vh] overflow-y-auto pl-1">
+          <!-- Populated dynamically by JS -->
+        </nav>
+
+        <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <span>💡 وضع الشرح في القاعة:</span>
+          <button id="presentModeBtn" type="button" class="text-sky-400 hover:underline font-semibold">تكبير العرض للشرح</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Interactive Content Area -->
+    <main id="mainContentCol" class="lg:col-span-9 flex flex-col gap-6">
+
+      <!-- Dynamic Lesson Header Card -->
+      <section class="bg-gradient-to-l from-slate-900 via-slate-900 to-indigo-950/60 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl relative overflow-hidden">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <span id="topicBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">الموضوع 1 من 8</span>
+          <div class="flex items-center gap-2">
+            <button id="markCompleteBtn" type="button" class="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition">
+              ✓ تحديد كمكتمل
+            </button>
+          </div>
+        </div>
+        <h2 id="topicTitle" class="text-xl md:text-2xl font-extrabold text-white mb-2">1. مقدمة عن Data Visualization وأهميتها</h2>
+        <p id="topicSubtitle" class="text-slate-300 text-sm md:text-base leading-relaxed"></p>
+
+        <!-- Why it matters in AI box -->
+        <div class="mt-4 p-3.5 rounded-xl bg-slate-950/70 border border-sky-500/30 flex items-start gap-3">
+          <span class="text-xl">🤖</span>
+          <div class="text-xs md:text-sm">
+            <span class="font-bold text-sky-400">لماذا يهمنا هذا في الذكاء الاصطناعي (AI)؟ </span>
+            <span id="aiConnectionText" class="text-slate-200"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Animation & Simulator Stage -->
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800">
+          <div>
+            <h3 class="text-base md:text-lg font-bold text-white flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 glow-active"></span>
+              <span id="simTitle">المختبر التفاعلي والأنيميشن التوضيحي</span>
+            </h3>
+            <p id="simInstruction" class="text-xs text-slate-400 mt-0.5">غيّر الإعدادات بالأسفل ولاحظ كيف يتحرك الرسم البياني ويتحدث كود البايثون فوراً!</p>
+          </div>
+          <div id="simControlsHeader" class="flex flex-wrap items-center gap-2"></div>
+        </div>
+
+        <!-- Interactive Stage Content (Injected per lesson) -->
+        <div id="interactiveStage" class="min-h-[340px] flex flex-col justify-between"></div>
+      </section>
+
+      <!-- Concept Cards & Python Code Playground -->
+      <div id="bottomGrid" class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Simplified Explanation & Real-world analogy -->
+        <section class="md:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-amber-400 mb-3 flex items-center gap-2">
+              <span>💡</span>
+              <span>الشرح المبسط ومثال من الواقع</span>
+            </h3>
+            <div id="explanationList" class="space-y-3 text-sm text-slate-200 leading-relaxed"></div>
+          </div>
+
+          <div class="mt-5 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div class="text-xs font-bold text-amber-300 mb-1">🎯 خلاصة سريعة للطلاب:</div>
+            <p id="takeawayText" class="text-xs text-slate-200 leading-relaxed"></p>
+          </div>
+        </section>
+
+        <!-- Live Python Code Box -->
+        <section class="md:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-base font-bold text-sky-400 flex items-center gap-2">
+                <span>🐍</span>
+                <span>كود البايثون المقابل (يتحدث تلقائياً مع تفاعلك)</span>
+              </h3>
+              <button id="copyCodeBtn" type="button" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition">
+                📋 نسخ الكود
+              </button>
+            </div>
+            <pre class="code-box rounded-xl p-4 text-xs md:text-sm text-emerald-300 overflow-x-auto leading-relaxed"><code id="pythonCodeBlock"></code></pre>
+          </div>
+
+          <!-- Code Line-by-Line Explanation -->
+          <div class="mt-4">
+            <h4 class="text-xs font-bold text-slate-400 mb-2">🔍 تشريح الكود سطراً بسطر:</h4>
+            <div id="codeBreakdown" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Mini Quick Check Quiz per Topic -->
+      <section class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm md:text-base font-bold text-indigo-400 flex items-center gap-2">
+            <span>🧠</span>
+            <span>سؤال سريع للنقاش مع الطلاب في القاعة</span>
+          </h3>
+          <span id="quizStatusBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">اختر الإجابة الصحيحة</span>
+        </div>
+        <p id="quizQuestion" class="text-sm font-semibold text-white mb-3"></p>
+        <div id="quizOptions" class="grid grid-cols-1 md:grid-cols-3 gap-2.5"></div>
+        <div id="quizFeedback" class="hidden mt-3 p-3 rounded-xl text-xs font-semibold"></div>
+      </section>
+
+      <!-- Bottom Navigation Buttons -->
+      <div class="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+        <button id="prevTopicBtn" type="button" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none text-sm font-bold text-slate-200 transition flex items-center gap-2">
+          <span>→ الدرس السابق</span>
+        </button>
+        <div class="text-xs text-slate-400 hidden sm:block" id="footerStepIndicator">الدرس 1 من 9</div>
+        <button id="nextTopicBtn" type="button" class="px-5 py-2 rounded-xl bg-gradient-to-l from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-sm font-bold text-white shadow-lg transition flex items-center gap-2">
+          <span>الدرس التالي ←</span>
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="fixed bottom-5 left-5 z-50 hidden px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-2xl border border-emerald-400/40">
+    تم نسخ الكود بنجاح!
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        id: 1,
+        shortTitle: "1. مقدمة عن Data Visualization",
+        badge: "الموضوع 1 من 8 • الأساس المفاهيمي",
+        title: "1. مقدمة عن Data Visualization وأهميتها",
+        subtitle: "تصوير البيانات هو تحويل الأرقام والجداول الصامتة إلى رسوم بصرية تحكي قصة واضحة وتكشف الأنماط الخفية في ثوانٍ.",
+        aiConnection: "قبل بناء أي نموذج ذكاء اصطناعي (Machine Learning)، نحتاج لرؤية البيانات لاكتشاف القيم الشاذة (Outliers) وفهم التوزيع، لأن إدخال بيانات غير مفهومة للنموذج يؤدي لنتائج خاطئة (Garbage In, Garbage Out).",
+        simTitle: "أنيميشن تفاعلي: جدول الأرقام الصامت مقابل الرسم البصري الناطق",
+        simInstruction: "اضغط على زر «حوّل الجدول إلى رسم متحرك» وشاهد مع طلابك كم يستغرق اكتشاف أعلى شهر مبيعات وقيمة شاذة في الجدول مقارنة بالرسم!",
+        explanation: [
+          "🧠 <strong>العقل البشري بصري بطبعه:</strong> يعالج الدماغ الصور والرسوم أسرع بآلاف المرات من قراءة خلايا الجداول النصية.",
+          "🏪 <strong>مثال واقعي:</strong> تخيل مدير متجر إلكتروني أمامه جدول فيه 10,000 عملية شراء. بالجدول لن يلاحظ أن المبيعات تقفز كل يوم خميس، لكن برسم بسيط سيراها في لمحة بصر!",
+          "🔍 <strong>اكتشاف الأخطاء (Outliers):</strong> إذا سُجّل عمر طالب بالخطأ 190 سنة بدلاً من 19 سنة، سيظهر في الرسم كنقطة بعيدة جداً يسهل حذفها أو تصحيحها قبل تدريب نموذج الـ AI."
+        ],
+        takeaway: "تصوير البيانات (Data Visualization) ليس مجرد تزيين للتقارير، بل هو أداة الفحص الأولى (X-Ray) التي يستخدمها مهندس الذكاء الاصطناعي لفهم البيانات.",
+        code: `import matplotlib.pyplot as plt
+
+# بيانات مبيعات متجر خلال 6 أشهر (بالألف جنيه)
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+sales  = [42, 48, 45, 95, 52, 58]  # لاحظ القفزة في أبريل!
+
+plt.figure(figsize=(7, 4))
+plt.bar(months, sales, color='#38bdf8')
+plt.title('Monthly Store Sales (Spot the Peak!)')
+plt.xlabel('Month')
+plt.ylabel('Sales (K EGP)')
+plt.show()`,
+        breakdown: [
+          { cmd: "import matplotlib.pyplot as plt", desc: "استدعاء مكتبة الرسم الأساسية في بايثون وإعطاؤها اسماً مختصراً plt." },
+          { cmd: "plt.figure(figsize=(7, 4))", desc: "فتح لوحة رسم جديدة وتحديد عرضها (7) وارتفاعها (4)." },
+          { cmd: "plt.bar(months, sales)", desc: "تحويل قوائم الشهور والمبيعات إلى أعمدة بصرية." },
+          { cmd: "plt.show()", desc: "عرض الشكل النهائي على الشاشة." }
+        ],
+        quiz: {
+          q: "لماذا نستخدم Data Visualization قبل تدريب نموذج الذكاء الاصطناعي؟",
+          options: [
+            "لتلوين الكود وجعله يعمل بسرعة أكبر في المعالج",
+            "لاكتشاف الأنماط، القيم الشاذة (Outliers)، وفهم طبيعة البيانات بسرعة",
+            "لأن لغة بايثون لا تقبل الأرقام إلا بعد رسمها"
+          ],
+          correct: 1,
+          explanation: "أحسنت! الرسم البياني يكشف لنا الأنماط والأخطاء والقيم المتطرفة فوراً قبل إرسال البيانات لنموذج التعلم الآلي."
+        }
+      },
+      {
+        id: 2,
+        shortTitle: "2. أساسيات Matplotlib",
+        badge: "الموضوع 2 من 8 • Day 31 Matplotlib Guide",
+        title: "2. أساسيات مكتبة Matplotlib وهيكل الرسم",
+        subtitle: "مكتبة Matplotlib هي «الجد الأكبر» لمكتبات الرسم في بايثون. لفهمها بسهولة، تخيل أنك رسام: تحتاج أولاً إلى لوحة خشبية (Figure)، ثم تضع عليها ورقة الرسم ذات المحاور (Axes).",
+        aiConnection: "أغلب مكتبات الذكاء الاصطناعي مثل Scikit-Learn وTensorFlow وPyTorch تستخدم Matplotlib في الخلفية لرسم منحنى التعلم (Loss Curve) ودقة النموذج (Accuracy) أثناء التدريب.",
+        simTitle: "أنيميشن تشريح لوحة Matplotlib (Figure vs Axes)",
+        simInstruction: "مرّر أو اضغط على أجزاء لوحة الرسم الـ 4 لتعرف وظيفة كل جزء وكيف نتحكم به في الكود (مستوحى من مقال Day 31 — Ratnesh).",
+        explanation: [
+          "🖼️ <strong>اللوحة الخارجية (Figure):</strong> هي الإطار الكامل أو النافذة التي تضم كل شيء، ونتحكم في مقاسها عبر <code>plt.figure(figsize=(w,h))</code>.",
+          "📐 <strong>منطقة الرسم (Axes / Plot Area):</strong> هي المستطيل الداخلي الذي يحتوي على محور السينات (X-axis) ومحور الصادات (Y-axis) والبيانات المرسومة.",
+          "🧱 <strong>خطوات الرسم الأربع الثابتة:</strong> (1) تجهيز البيانات ← (2) إنشاء اللوحة ← (3) اختيار نوع الرسم <code>plt.plot</code> ← (4) الإظهار <code>plt.show()</code>."
+        ],
+        takeaway: "احفظ القاعدة الذهبية: Figure هي الإطار الخارجي بالكامل، بينما Axes هي ورقة الرسم الفعلية التي نضع عليها النقاط والمنحنيات.",
+        code: `import matplotlib.pyplot as plt
+
+# 1. تجهيز البيانات (أيام التدريب ودقة نموذج الذكاء الاصطناعي)
+days = [1, 2, 3, 4, 5]
+accuracy = [60, 72, 81, 88, 93]
+
+# 2. إنشاء اللوحة (Figure) وتحديد الحجم
+plt.figure(figsize=(8, 4))
+
+# 3. رسم البيانات على المحاور (Axes)
+plt.plot(days, accuracy, marker='o', linewidth=2)
+
+# 4. إظهار اللوحة
+plt.show()`,
+        breakdown: [
+          { cmd: "days, accuracy", desc: "محور X (الأيام) ومحور Y (دقة النموذج %) ويجب أن يكون لهما نفس الطول." },
+          { cmd: "figsize=(8, 4)", desc: "تحديد أبعاد اللوحة بالبوصة: 8 عرض و4 ارتفاع." },
+          { cmd: "marker='o'", desc: "وضع دائرة واضحة عند كل نقطة بيانات فعلية على الخط." },
+          { cmd: "linewidth=2", desc: "التحكم في سُمك الخط المرسوم." }
+        ],
+        quiz: {
+          q: "في مكتبة Matplotlib، ما الفرق بين Figure و Axes؟",
+          options: [
+            "Figure هي النافذة/الإطار الكامل، بينما Axes هي منطقة الرسم ذات المحاور X و Y",
+            "Figure تستخدم للأرقام فقط، و Axes تستخدم للنصوص فقط",
+            "لا يوجد فرق بينهما نهائياً"
+          ],
+          correct: 0,
+          explanation: "إجابة دقيقة! اللوحة الكاملة هي Figure، ويمكن أن تحتوي بداخلها على منطقة رسم واحدة (Axes) أو عدة رسوم فرعية (Subplots)."
+        }
+      },
+      {
+        id: 3,
+        shortTitle: "3. رسم Line وBar وPie Chart",
+        badge: "الموضوع 3 من 8 • الرسوم الكلاسيكية الثلاثة",
+        title: "3. رسم Line Chart وBar Chart وPie Chart",
+        subtitle: "كل نوع رسم يجيب عن سؤال مختلف! اختيار الرسم الخاطئ قد يربك القارئ؛ لذا سنتعلم متى نستخدم الخطي (Line)، العمودي (Bar)، والدائري (Pie).",
+        aiConnection: "في مشاريع الـ AI: نستخدم Line Chart لمراقبة تحسن النموذج عبر الزمن (Epochs)، وBar Chart لمقارنة دقة عدة خوارزميات، وPie Chart لمعرفة نسبة الفئات في البيانات (Class Balance).",
+        simTitle: "محاكي الرسوم الثلاثة المتحرك (بدّل بين Line و Bar و Pie)",
+        simInstruction: "اختر نوع الرسم من الأزرار بالأسفل، وشاهد الأنيميشن والكود المقابل لكل نوع!",
+        explanation: [
+          "📈 <strong>الرسم الخطي (Line Chart — <code>plt.plot</code>):</strong> مثالي لتتبع <strong>التغير عبر الزمن</strong> (مثل درجات الحرارة خلال أسبوع، أو أسعار الأسهم، أو تطور مستوى الطالب شهرياً).",
+          "📊 <strong>الرسم العمودي (Bar Chart — <code>plt.bar</code>):</strong> مثالي <strong>للمقارنة بين فئات مستقلة</strong> (مثل مقارنة متوسط درجات المواد: رياضيات، فيزياء، برمجة).",
+          "🥧 <strong>الرسم الدائري (Pie Chart — <code>plt.pie</code>):</strong> مثالي لعرض <strong>نسب الأجزاء من الكل (100%)</strong> بشرط أن يكون عدد الفئات قليلاً (3 إلى 5 فئات كحد أقصى)."
+        ],
+        takeaway: "اسأل نفسك دائماً: هل أتابع تطوراً زمنياً؟ (Line) • هل أقارن بين عناصر؟ (Bar) • هل أعرض حصصاً من 100%؟ (Pie).",
+        code: `import matplotlib.pyplot as plt
+
+categories = ['Math', 'Physics', 'AI', 'English']
+values = [85, 72, 94, 80]
+
+plt.figure(figsize=(7, 4))
+plt.bar(categories, values, color=['#38bdf8', '#818cf8', '#34d399', '#fbbf24'])
+plt.title('Average Score per Subject (Bar Chart)')
+plt.ylabel('Score')
+plt.show()`,
+        breakdown: [
+          { cmd: "plt.plot(x, y)", desc: "يرسم خطاً متصلاً يعبر عن الاستمرارية والتغير عبر الزمن." },
+          { cmd: "plt.bar(x, y)", desc: "يرسم أعمدة منفصلة لمقارنة القيم بين الفئات المختلفة." },
+          { cmd: "plt.pie(values, labels=..., autopct='%1.1f%%')", desc: "يرسم دائرة مقسمة ويحسب النسب المئوية تلقائياً." },
+          { cmd: "color=[...]", desc: "تخصيص لون مميز لكل فئة لتسهيل القراءة." }
+        ],
+        quiz: {
+          q: "إذا أردنا عرض تطور عدد مستخدمي تطبيق ذكاء اصطناعي يومياً على مدار 30 يوماً، ما الرسم الأنسب؟",
+          options: [
+            "Pie Chart (الرسم الدائري) لوجود 30 قطعة دائرية",
+            "Line Chart (الرسم الخطي) لأنه يوضح اتجاه الصعود والهبوط عبر الزمن",
+            "لا يمكن رسم بيانات زمنية في Matplotlib"
+          ],
+          correct: 1,
+          explanation: "رائع! الرسم الخطي (Line Chart) هو الخيار الأفضل لتوضيح الاتجاه (Trend) عبر الزمن، بينما Pie Chart لـ 30 يوماً سيكون مزدحماً ومستحيل القراءة."
+        }
+      },
+      {
+        id: 4,
+        shortTitle: "4. رسم Histogram وScatter Plot",
+        badge: "الموضوع 4 من 8 • التوزيع والعلاقات",
+        title: "4. رسم المدرج التكراري (Histogram) ومخطط الانتشار (Scatter Plot)",
+        subtitle: "هنا ننتقل من الرسوم البسيطة إلى الرسوم الإحصائية الأهم في علم البيانات: كيف تتوزع أعمار أو درجات الطلاب (Histogram)؟ وهل زيادة ساعات المذاكرة ترفع الدرجات فعلاً (Scatter Plot)؟",
+        aiConnection: "في تعلم الآلة، يكشف لنا الـ Histogram هل البيانات تتبع التوزيع الطبيعي (Normal Distribution)، ويكشف الـ Scatter Plot هل العلاقة خطية فنستخدم Linear Regression أم غير خطية!",
+        simTitle: "مختبر التوزيع والانتشار: تحكم في عدد السلال (Bins) وساعات المذاكرة!",
+        simInstruction: "جرّب التبديل بين Histogram (وغيّر عدد الـ Bins بشريط التمرير) وScatter Plot (لاحظ خط الاتجاه العام).",
+        explanation: [
+          "🏢 <strong>المدرج التكراري (Histogram — <code>plt.hist</code>):</strong> يتعامل مع <strong>متغير رقمي واحد متصل</strong> (مثل درجات 100 طالب). يقسم الدرجات إلى فترات متساوية تسمى سلال (Bins) مثل [50-60، 60-70...] ويعدّ كم طالباً وقع في كل سلة! (لاحظ: أعمدته متلاصقة عكس Bar Chart).",
+          "✨ <strong>مخطط الانتشار (Scatter Plot — <code>plt.scatter</code>):</strong> يربط بين <strong>متغيرين رقميين (X و Y)</strong> مثل (ساعات المذاكرة X) و(الدرجة النهائية Y). كل نقطة تمثل طالباً واحداً، لنرى هل النقاط تصعد معاً (علاقة طردية) أم تهبط (عكسية) أم عشوائية."
+        ],
+        takeaway: "الفرق الجوهري بين Bar و Histogram: الـ Bar يقارن فئات اسمية منفصلة (مواد دراسية)، بينما الـ Histogram يجمع أرقاماً متصلة في فترات (Bins) ليكشف شكل توزيعها.",
+        code: `import matplotlib.pyplot as plt
+
+# Scatter Plot: العلاقة بين ساعات المذاكرة والدرجة
+study_hours = [1, 2, 3, 4, 5, 6, 7, 8]
+exam_scores = [52, 58, 65, 70, 78, 85, 91, 96]
+
+plt.figure(figsize=(7, 4))
+plt.scatter(study_hours, exam_scores, color='#34d399', s=80)
+plt.title('Study Hours vs Exam Score')
+plt.xlabel('Study Hours per Week')
+plt.ylabel('Exam Score')
+plt.show()`,
+        breakdown: [
+          { cmd: "plt.hist(data, bins=5)", desc: "تقسيم البيانات الرقمية إلى 5 فترات (سلال) وحساب تكرار كل فترة." },
+          { cmd: "edgecolor='black'", desc: "رسم حدود واضحة بين أعمدة الـ Histogram المتلاصقة." },
+          { cmd: "plt.scatter(x, y)", desc: "تمثيل كل زوج (x, y) بنقطة مستقلة لاكتشاف العلاقة بينهما." },
+          { cmd: "s=80, alpha=0.8", desc: "التحكم في حجم النقاط (s) وشفافيتها (alpha) عند تداخلها." }
+        ],
+        quiz: {
+          q: "ما الرسم الأنسب لمعرفة كيف تتوزع أعمار 500 مشترك في دورة الذكاء الاصطناعي (مثلاً كم شخصاً بين 18-22 سنة، وكم بين 22-26 سنة)؟",
+          options: [
+            "Histogram (المدرج التكراري) باستخدام plt.hist",
+            "Pie Chart يحتوي على 500 شريحة",
+            "Line Chart يربط عمر كل مشترك بالذي يليه"
+          ],
+          correct: 0,
+          explanation: "ممتاز! الـ Histogram يجمع الأعمار الرقمية المتصلة في فترات (Bins) فيظهر لنا فوراً الفئة العمرية الأكثر تواجداً."
+        }
+      },
+      {
+        id: 5,
+        shortTitle: "5. العناوين والألوان والمحاور وLegend",
+        badge: "الموضوع 5 من 8 • التخصيص الاحترافي",
+        title: "5. التحكم في العناوين والألوان والمحاور ووسائل الإيضاح (Legend)",
+        subtitle: "رسم بياني بدون عنوان أو تسمية للمحاور هو لغز مبهم! في هذا الدرس نتعلم كيف نحوّل الرسم الصامت إلى لوحة واضحة يفهمها أي شخص دون أن يسألك.",
+        aiConnection: "عند عرض نتائج نموذج الذكاء الاصطناعي على فريق العمل أو العميل، وجود Legend يفرق بين منحنى التدريب (Train Accuracy) ومنحنى الاختبار (Validation Accuracy) ضروري لاكتشاف مشكلة الحفظ الصم (Overfitting).",
+        simTitle: "استوديو تجميل الرسم البياني (جرّب تشغيل وإيقاف عناصر التوضيح!)",
+        simInstruction: "فعّل أو أوقف العناوين، الشبكة الخلفية (Grid)، وسيلة الإيضاح (Legend)، والألوان، وشاهد كيف يتحول الرسم من مبهم إلى احترافي!",
+        explanation: [
+          "🏷️ <strong>العنوان والمحاور (Title & Labels):</strong> <code>plt.title()</code> يخبرنا بموضوع الرسم، بينما <code>plt.xlabel()</code> و<code>plt.ylabel()</code> يوضحان وحدات القياس (مثلاً: الزمن بالثواني، الدرجة من 100).",
+          "🎨 <strong>الألوان والأنماط (Colors & Styles):</strong> يمكننا تمرير اسم اللون أو كوده السداسي <code>color='#38bdf8'</code>، وتحديد شكل الخط متقطعاً <code>linestyle='--'</code> لتمييز خط الهدف أو المتوسط.",
+          "🗺️ <strong>وسيلة الإيضاح (Legend):</strong> عندما نرسم خطين في نفس اللوحة (مثلاً: درجات الفصل A ودرجات الفصل B)، نضع <code>label='Class A'</code> داخل دالة الرسم ثم نستدعي <code>plt.legend()</code> ليظهر صندوق الدليل."
+        ],
+        takeaway: "لا تسلم أي رسم بياني قبل التأكد من القائمة الخماسية: عنوان واضح + اسم محور X + اسم محور Y + ألوان مريحة للعين + وسيلة إيضاح (Legend) عند تعدد الخطوط.",
+        code: `import matplotlib.pyplot as plt
+
+weeks = [1, 2, 3, 4, 5]
+train_acc = [65, 75, 84, 91, 95]
+val_acc   = [62, 71, 79, 83, 85]
+
+plt.figure(figsize=(8, 4))
+plt.plot(weeks, train_acc, color='#38bdf8', marker='o', label='Train Accuracy')
+plt.plot(weeks, val_acc, color='#f43f5e', linestyle='--', marker='s', label='Validation Accuracy')
+
+plt.title('AI Model Performance Over Weeks')
+plt.xlabel('Week Number')
+plt.ylabel('Accuracy (%)')
+plt.ylim(50, 100)
+plt.grid(True, alpha=0.3)
+plt.legend()
+plt.show()`,
+        breakdown: [
+          { cmd: "label='Train Accuracy'", desc: "تسمية الخط ليظهر اسمه لاحقاً داخل صندوق الـ Legend." },
+          { cmd: "plt.legend()", desc: "إظهار صندوق وسيلة الإيضاح الذي يفرق بين الخطوط المرسومة." },
+          { cmd: "plt.ylim(50, 100)", desc: "تحديد بداية ونهاية محور الصادات للتركيز على النطاق المهم." },
+          { cmd: "plt.grid(True, alpha=0.3)", desc: "إضافة شبكة خلفية خفيفة تسهل قراءة القيم المقابلة لكل نقطة." }
+        ],
+        quiz: {
+          q: "كتبت label='Sales 2026' داخل دالة plt.plot() لكن الاسم لم يظهر على الرسم. ما الدالة الناقصة؟",
+          options: [
+            "نسيت استدعاء plt.legend() قبل plt.show()",
+            "نسيت كتابة plt.grid()",
+            "يجب إعادة تشغيل الكمبيوتر"
+          ],
+          correct: 0,
+          explanation: "بالضبط! كتابة معامل label يجهز الاسم فقط، ولا يظهر الصندوق إلا باستدعاء plt.legend()."
+        }
+      },
+      {
+        id: 6,
+        shortTitle: "6. مقدمة عن Seaborn",
+        badge: "الموضوع 6 من 8 • Seaborn Scatter Plot",
+        title: "6. مقدمة عن مكتبة Seaborn ولماذا يعشقها علماء البيانات؟",
+        subtitle: "مكتبة Seaborn مبنية فوق Matplotlib، لكنها مصممة خصيصاً للرسوم الإحصائية الجذابة وتتعامل مباشرة مع جداول البيانات (Pandas DataFrames) بسطر كود واحد!",
+        aiConnection: "في مشاريع الذكاء الاصطناعي، تكون بياناتنا مخزنة في جدول Pandas DataFrame يحتوي على ميزات متعددة (Features) وعمود الهدف (Target). مكتبة Seaborn تتيح لنا تلوين النقاط حسب الفئة عبر معامل واحد سحري هو hue!",
+        simTitle: "مختبر Seaborn Scatter Plot التفاعلي (قوة معامل hue و size)",
+        simInstruction: "فعّل خاصية التلوين حسب الفئة (hue) أو الحجم (size) لترى كيف تضيف Seaborn بُعداً ثالثاً ورابعاً للرسم بسطر واحد! (مستوحى من درس Seaborn Scatter Plot).",
+        explanation: [
+          "🎨 <strong>جمال تلقائي بكود أقل:</strong> ما يحتاج 6 أسطر لتنسيقه في Matplotlib، تفعله Seaborn في سطر واحد مع ألوان حديثة ومريحة للعين.",
+          "🐼 <strong>صديقة الجداول (DataFrames):</strong> بدلاً من فصل القوائم يدوياً، نمرر الجدول كله <code>data=df</code> ثم نكتب أسماء الأعمدة <code>x='hours', y='score'</code>.",
+          "🌈 <strong>المعامل السحري <code>hue</code>:</strong> في دالة <code>sns.scatterplot()</code>، إذا أضفنا <code>hue='passed'</code> أو <code>hue='track'</code>، ستقوم Seaborn تلقائياً بتلوين كل مجموعة بلون مختلف وإنشاء Legend دون أي مجهود إضافي!"
+        ],
+        takeaway: "Matplotlib تمنحك التحكم التفصيلي في كل بكسل، بينما Seaborn تمنحك رسوماً إحصائية فائقة الجمال مرتبطة بجداول Pandas في ثوانٍ.",
+        code: `import seaborn as sns
+import matplotlib.pyplot as plt
+
+# رسم Scatter Plot احترافي باستخدام Seaborn مع تلوين حسب حالة النجاح (hue)
+sns.set_theme(style='darkgrid')
+
+plt.figure(figsize=(7, 4))
+sns.scatterplot(
+    data=students_df,
+    x='study_hours',
+    y='final_score',
+    hue='status',      # تلوين تلقائي حسب (ناجح / يحتاج دعماً)
+    s=100
+)
+plt.title('Seaborn Scatter Plot with Hue Grouping')
+plt.show()`,
+        breakdown: [
+          { cmd: "import seaborn as sns", desc: "الاسم المختصر العالمي لمكتبة Seaborn هو sns." },
+          { cmd: "data=students_df", desc: "تمرير جدول البيانات (DataFrame) مباشرة للدالة." },
+          { cmd: "hue='status'", desc: "تلوين النقاط تلقائياً بناءً على عمود الفئة وإضافة Legend تلقائياً." },
+          { cmd: "sns.set_theme()", desc: "تفعيل التصميم العصري والألوان المتناسقة بنقرة واحدة." }
+        ],
+        quiz: {
+          q: "في دالة sns.scatterplot، ما وظيفة المعامل hue؟",
+          options: [
+            "حذف القيم المفقودة من الجدول",
+            "تلوين نقاط الرسم تلقائياً حسب عمود تصنيفي (مثل القسم أو حالة النجاح) وإضافة وسيلة إيضاح",
+            "تغيير حجم الخط في العنوان الرئيسي"
+          ],
+          correct: 1,
+          explanation: "إجابة ممتازة! معامل hue يضيف بُعداً ثالثاً للرسم الثنائي الأبعاد عن طريق اللون، وهو من أقوى ميزات Seaborn."
+        }
+      },
+      {
+        id: 7,
+        shortTitle: "7. رسم Heatmap والعلاقات",
+        badge: "الموضوع 7 من 8 • CodeSignal Heatmap Lesson",
+        title: "7. رسم الخريطة الحرارية (Heatmap) لفهم العلاقات بين المتغيرات",
+        subtitle: "كيف نعرف علاقات 5 أو 10 متغيرات ببعضها في نظرة واحدة؟ الخريطة الحرارية (Heatmap) تستبدل الأرقام بدرجات لونية تكشف فوراً قوة واتجاه الارتباط (Correlation).",
+        aiConnection: "في هندسة الميزات (Feature Engineering) للذكاء الاصطناعي، نستخدم مصفوفة الارتباط (Correlation Matrix Heatmap) لاكتشاف المتغيرات الأكثر تأثيراً في النتيجة، وكذلك حذف المتغيرات المكررة!",
+        simTitle: "مصفوفة الارتباط التفاعلية (Correlation Heatmap Explorer)",
+        simInstruction: "اضغط على أي خلية في الخريطة الحرارية لترى معنى معامل الارتباط (من -1 إلى +1) وتمثيله الفوري على شكل نقاط! (مستوحى من درس CodeSignal Learn).",
+        explanation: [
+          "🌡️ <strong>ما هو معامل الارتباط (Correlation)؟</strong> هو رقم يتراوح بين <strong>-1 و +1</strong> يقيس قوة العلاقة بين متغيرين:",
+          "🟢 <strong>ارتباط طردي قوي (قريب من +1):</strong> كلما زاد الأول زاد الثاني (مثل: ساعات المذاكرة والدرجة النهائية، أو درجة الرياضيات ودرجة الفيزياء).",
+          "🔴 <strong>ارتباط عكسي قوي (قريب من -1):</strong> كلما زاد الأول نقص الثاني (مثل: عدد أيام الغياب والدرجة النهائية، أو ساعات اللعب على الهاتف والتركيز).",
+          "⚪ <strong>لا يوجد ارتباط (قريب من 0):</strong> لا علاقة بينهما (مثل: طول الطالب ودرجته في البرمجة!)."
+        ],
+        takeaway: "كود ذهبي في كل مشروع علم بيانات: sns.heatmap(df.corr(), annot=True, cmap='coolwarm') — يختصر لك علاقات الجدول كله في لوحة واحدة!",
+        code: `import seaborn as sns
+import matplotlib.pyplot as plt
+
+# حساب مصفوفة الارتباط بين المتغيرات الرقمية في الجدول
+corr_matrix = students_df.corr()
+
+plt.figure(figsize=(7, 5))
+sns.heatmap(
+    corr_matrix,
+    annot=True,        # كتابة قيمة الارتباط داخل كل مربع
+    cmap='coolwarm',   # تدرج لوني من الأزرق (-1) إلى الأحمر (+1)
+    vmin=-1, vmax=1
+)
+plt.title('Correlation Heatmap of Student Metrics')
+plt.show()`,
+        breakdown: [
+          { cmd: "students_df.corr()", desc: "حساب معامل الارتباط رياضياً بين كل عمودين رقميين في الجدول." },
+          { cmd: "sns.heatmap(...)", desc: "تحويل جدول الارتباط إلى شبكة ملونة (خريطة حرارية)." },
+          { cmd: "annot=True", desc: "إظهار الأرقام الدقيقة داخل كل خلية ملونة لسهولة القراءة." },
+          { cmd: "cmap='coolwarm'", desc: "اختيار لوحة الألوان (الأحمر/الأخضر للموجب والأزرق للسالب)." }
+        ],
+        quiz: {
+          q: "إذا ظهرت قيمة الارتباط في الـ Heatmap بين «عدد أيام الغياب» و«المجموع الكلي» تساوي -0.82، ماذا يعني ذلك؟",
+          options: [
+            "علاقة طردية قوية: كلما زاد الغياب زاد المجموع",
+            "علاقة عكسية قوية: كلما زادت أيام الغياب انخفض المجموع الكلي بشكل ملحوظ",
+            "لا توجد أي علاقة بين الغياب والمجموع"
+          ],
+          correct: 1,
+          explanation: "أحسنت! الإشارة السالبة (-) تعني علاقة عكسية، واقتراب الرقم من -1 (مثل -0.82) يعني أن العلاقة العكسية قوية جداً."
+        }
+      },
+      {
+        id: 8,
+        shortTitle: "8. قراءة الرسوم واستخراج الاستنتاجات",
+        badge: "الموضوع 8 من 8 • التفكير التحليلي",
+        title: "8. قراءة الرسوم البيانية واستخراج استنتاجات ذكية من البيانات",
+        subtitle: "كتابة الكود لرسم الشكل هي نصف المهمة فقط؛ النصف الأهم هو قراءة الرسم بعين المحلل لاستخراج قرار عملي (Actionable Insight).",
+        aiConnection: "محلل البيانات ومهندس الـ AI الناجح لا يقول للمدير «هذا رسم عمودي»، بل يقول: «الرسم يوضح أن 70% من أخطاء النموذج تتركز في الفئة C بسبب نقص بياناتها، والحل هو جمع 200 عينة إضافية».",
+        simTitle: "مختبر المحقق البياني: استخرج الاستنتاجات الـ 3 من لوحة البيانات!",
+        simInstruction: "اضغط على عدسات الفحص الثلاث فوق الرسم البياني لتدريب طلابك على خطوات قراءة أي رسم بياني واستخراج التوصيات.",
+        explanation: [
+          "1️⃣ <strong>حدد الاتجاه العام (Trend):</strong> هل القيم في صعود مستمر، هبوط، أم تذبذب موسمي؟",
+          "2️⃣ <strong>قارن القمم والقيعان (Min & Max):</strong> من الأعلى أداءً ولماذا؟ ومن الأقل أداءً ويحتاج لتدخل عاجل؟",
+          "3️⃣ <strong>افحص التشتت والقيم الشاذة (Spread & Outliers):</strong> هل جميع الطلاب قريبون من المتوسط أم هناك فجوة كبيرة بين المتفوقين والمتعثرين؟",
+          "4️⃣ <strong>حول الملاحظة إلى قرار (Action):</strong> كل ملاحظة بصرية يجب أن تنتهي بتوصية عملية قابلة للتنفيذ."
+        ],
+        takeaway: "معادلة الاستنتاج الاحترافي = (ملاحظة رقمية من الرسم) + (تفسير السبب من العلاقات) + (توصية عملية للتحسين).",
+        code: `# مثال: إضافة خط المتوسط الحسابي على الرسم لتسهيل استخراج الاستنتاجات
+import matplotlib.pyplot as plt
+import numpy as np
+
+subjects = ['Math', 'Physics', 'Programming', 'AI', 'English']
+avg_scores = [78, 56, 88, 91, 82]
+overall_mean = np.mean(avg_scores)
+
+plt.figure(figsize=(8, 4))
+plt.bar(subjects, avg_scores, color='#38bdf8')
+plt.axhline(overall_mean, color='#f43f5e', linestyle='--', label=f'Overall Avg ({overall_mean:.1f})')
+plt.title('Highlighting Underperforming Subjects Below Average')
+plt.legend()
+plt.show()`,
+        breakdown: [
+          { cmd: "np.mean(avg_scores)", desc: "حساب المتوسط العام لجميع المواد ليكون خطاً مرجعياً للمقارنة." },
+          { cmd: "plt.axhline(overall_mean, ...)", desc: "رسم خط أفقي مرجعي يوضح فوراً أي مادة تقع تحت المتوسط العام." },
+          { cmd: "linestyle='--'", desc: "تمييز خط المرجع بنمط متقطع لئلا يختلط بالبيانات." },
+          { cmd: "f'Overall Avg ({overall_mean:.1f})'", desc: "عرض الرقم المحسوب تلقائياً داخل وسيلة الإيضاح." }
+        ],
+        quiz: {
+          q: "عند عرض رسم بياني لنتائج الطلاب، أي العبارات التالية تمثل «استنتاجاً عملياً» (Actionable Insight)؟",
+          options: [
+            "الرسم البياني ملون باللون الأزرق والأحمر ويحتوي على 5 أعمدة",
+            "مادة الفيزياء تسجل أقل متوسط (56%) وترتبط بارتفاع الغياب؛ نوصي بإضافة ورش تطبيقية ومراجعة عملية لها",
+            "استخدمنا دالة plt.bar في بايثون"
+          ],
+          correct: 1,
+          explanation: "إجابة احترافية! الاستنتاج الحقيقي يربط الرقم المكتشف (56%) بالسبب ويقدم توصية واضحة للتحسين."
+        }
+      },
+      {
+        id: 9,
+        shortTitle: "🏆 مشروع المرحلة: تحليل درجات الطلاب",
+        badge: "مشروع المرحلة الختامي • تطبيق شامل",
+        title: "مشروع المرحلة: تحليل درجات الطلاب وتحديد المادة التي تحتاج إلى تحسين",
+        subtitle: "تطبيق عملي يجمع كل ما تعلمناه في الأسبوع الأول والثاني: نحلل بيانات حقيقية لدرجات الطلاب في 5 مواد، نعرض المتوسطات، نقارن الأداء، ونستخرج المادة التي تحتاج إلى خطة تحسين!",
+        aiConnection: "هذا المشروع يمثل مرحلة الاستكشاف البصري للبيانات (Exploratory Data Analysis - EDA) الكاملة التي يقوم بها مهندس الذكاء الاصطناعي في أي نظام تعليمي ذكي (EdTech AI).",
+        simTitle: "لوحة مشروع المرحلة التفاعلية: تحليل أداء الطلاب في المواد الـ 5",
+        simInstruction: "تفاعل مع بيانات الطلاب، غيّر طريقة العرض (مقارنة المواد / جدول الطلاب / محاكي خطة التحسين) لترى كيف يكتشف النظام تلقائياً المادة التي تحتاج إلى تحسين!",
+        explanation: [
+          "📌 <strong>الهدف 1 (متوسط الدرجات):</strong> حساب ورسم متوسط كل مادة باستخدام Bar Chart مع خط المتوسط العام.",
+          "📌 <strong>الهدف 2 (مقارنة أداء الطلاب):</strong> استخدام الرسم المقارن وجدول البيانات لرؤية تفاوت درجات الطلاب داخل كل مادة.",
+          "📌 <strong>الهدف 3 (تحديد المادة التي تحتاج إلى تحسين):</strong> اكتشاف المادة ذات المتوسط الأقل (الفيزياء: 58.5%) ومحاكاة أثر خطة الدعم العملي."
+        ],
+        takeaway: "يمكنك نسخ كود المشروع الكامل من الصندوق المجاور وتشغيله مباشرة مع طلابك في Google Colab أو Jupyter Notebook!",
+        code: `import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 1. إعداد بيانات درجات الطلاب في 5 مواد
+data = {
+    'Student': ['Ahmed', 'Sara', 'Omar', 'Laila', 'Khaled', 'Nour', 'Youssef', 'Mona'],
+    'Math':        [85, 92, 74, 88, 68, 95, 79, 83],
+    'Physics':     [55, 68, 48, 62, 45, 72, 54, 64],  # لاحظ انخفاض الدرجات هنا
+    'Programming': [90, 95, 82, 91, 76, 98, 85, 89],
+    'AI_Basics':   [88, 94, 78, 86, 72, 96, 81, 85],
+    'English':     [80, 86, 75, 84, 70, 90, 77, 82]
+}
+df = pd.DataFrame(data)
+
+# 2. حساب متوسط كل مادة وتحديد المادة التي تحتاج لتحسين
+subject_means = df.drop(columns='Student').mean().sort_values()
+weakest_subject = subject_means.index[0]
+print(f"المادة التي تحتاج إلى تحسين عاجل: {weakest_subject} بمتوسط {subject_means.iloc[0]:.1f}%")
+
+# 3. رسم مقارنة متوسط الدرجات (Bar Chart) + Heatmap العلاقات
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+colors = ['#f43f5e' if sub == weakest_subject else '#38bdf8' for sub in subject_means.index]
+axes[0].bar(subject_means.index, subject_means.values, color=colors)
+axes[0].axhline(subject_means.mean(), color='#fbbf24', linestyle='--', label='Overall Average')
+axes[0].set_title('Average Score by Subject (Red = Needs Improvement)')
+axes[0].set_ylabel('Average Score (%)')
+axes[0].legend()
+
+sns.heatmap(df.drop(columns='Student').corr(), annot=True, cmap='coolwarm', ax=axes[1])
+axes[1].set_title('Subject Score Correlation Heatmap')
+
+plt.tight_layout()
+plt.show()`,
+        breakdown: [
+          { cmd: "df.drop(columns='Student').mean()", desc: "حساب المتوسط الحسابي لكل مادة دراسية بدقة." },
+          { cmd: "plt.subplots(1, 2, figsize=(13, 5))", desc: "إنشاء لوحة تضم رسمين متجاورين (Bar Chart + Heatmap)." },
+          { cmd: "['#f43f5e' if sub == weakest_subject ...]", desc: "تلوين المادة الأضعف باللون الأحمر تلقائياً للفت الانتباه البصري." },
+          { cmd: "plt.tight_layout()", desc: "تنظيم المسافات تلقائياً بين الرسوم الفرعية لمنع تداخل العناوين." }
+        ],
+        quiz: {
+          q: "في مشروع تحليل درجات الطلاب، كيف نجعل الرسم العمودي يبرز المادة التي تحتاج إلى تحسين تلقائياً؟",
+          options: [
+            "نخفي جميع المواد الأخرى من الرسم",
+            "نلوّن عمود المادة الأقل متوسطاً بلون تحذيري مميز (مثل الأحمر) مع رسم خط أفقي يمثل المتوسط العام للمقارنة",
+            "نستخدم Pie Chart بدون أرقام"
+          ],
+          correct: 1,
+          explanation: "ممتاز! استخدام التباين اللوني (اللون الأحمر للمادة الأضعف مقابل الأزرق لبقية المواد) مع خط المتوسط العام يجعل المشكلة واضحة في ثانية واحدة."
+        }
+      }
+    ];
+
+    let currentLessonIdx = 0;
+    let completedLessons = new Set();
+    let isPresentationMode = false;
+
+    let l1ViewMode = 'visual';
+    let l1HighlightOutlier = false;
+    let l2SelectedPart = 'figure';
+    let l3ChartType = 'bar';
+    let l4Mode = 'hist';
+    let l4Bins = 5;
+    let l4ShowTrend = true;
+
+    let l5Config = {
+      title: true,
+      labels: true,
+      grid: true,
+      legend: true,
+      themeColor: '#38bdf8'
+    };
+
+    let l6HueEnabled = true;
+    let l6SizeEnabled = true;
+    let l7SelectedCell = { r: 0, c: 2 };
+    let l8SelectedInsight = 0;
+
+    let projectStudents = [
+      { name: 'أحمد', math: 85, physics: 55, prog: 90, ai: 88, eng: 80, hours: 6 },
+      { name: 'سارة', math: 92, physics: 68, prog: 95, ai: 94, eng: 86, hours: 8 },
+      { name: 'عمر',  math: 74, physics: 48, prog: 82, ai: 78, eng: 75, hours: 4 },
+      { name: 'ليلى', math: 88, physics: 62, prog: 91, ai: 86, eng: 84, hours: 7 },
+      { name: 'خالد', math: 68, physics: 45, prog: 76, ai: 72, eng: 70, hours: 3 },
+      { name: 'نور',  math: 95, physics: 72, prog: 98, ai: 96, eng: 90, hours: 9 },
+      { name: 'يوسف', math: 79, physics: 54, prog: 85, ai: 81, eng: 77, hours: 5 },
+      { name: 'منى',  math: 83, physics: 64, prog: 89, ai: 85, eng: 82, hours: 6.5 }
+    ];
+    let projectActiveTab = 'overview';
+    let physicsBoost = 0;
+
+    try {
+      const saved = localStorage.getItem('dv_course_completed');
+      if (saved) {
+        completedLessons = new Set(JSON.parse(saved));
+      }
+    } catch (e) {}
+
+    function saveProgress() {
+      try {
+        localStorage.setItem('dv_course_completed', JSON.stringify(Array.from(completedLessons)));
+      } catch (e) {}
+    }
+
+    function renderNav() {
+      const nav = document.getElementById('lessonNav');
+      nav.innerHTML = '';
+      lessons.forEach((item, idx) => {
+        const isCurrent = idx === currentLessonIdx;
+        const isDone = completedLessons.has(item.id);
+        const isProject = idx === lessons.length - 1;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `w-full text-right px-3 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between gap-2 border ${
+          isCurrent
+            ? 'bg-sky-500/20 text-sky-300 border-sky-500/50 shadow-sm'
+            : isProject
+            ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+            : 'bg-slate-800/50 hover:bg-slate-800 text-slate-300 border-transparent'
+        }`;
+
+        btn.innerHTML = `
+          <span class="truncate">${item.shortTitle}</span>
+          <span class="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[11px] ${
+            isDone
+              ? 'bg-emerald-500 text-slate-950 font-extrabold'
+              : isCurrent
+              ? 'bg-sky-500/30 text-sky-200'
+              : 'bg-slate-700/60 text-slate-400'
+          }">${isDone ? '✓' : idx + 1}</span>
+        `;
+        btn.addEventListener('click', () => {
+          currentLessonIdx = idx;
+          renderAll();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        nav.appendChild(btn);
+      });
+
+      const pct = Math.round(((currentLessonIdx + 1) / lessons.length) * 100);
+      document.getElementById('progressText').textContent = `${currentLessonIdx + 1} / ${lessons.length}`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+      document.getElementById('completedCountBadge').textContent = `${completedLessons.size}/${lessons.length} مكتمل`;
+    }
+
+    function renderLessonContent() {
+      const lesson = lessons[currentLessonIdx];
+
+      document.getElementById('topicBadge').textContent = lesson.badge;
+      document.getElementById('topicTitle').textContent = lesson.title;
+      document.getElementById('topicSubtitle').textContent = lesson.subtitle;
+      document.getElementById('aiConnectionText').textContent = lesson.aiConnection;
+
+      const isDone = completedLessons.has(lesson.id);
+      const markBtn = document.getElementById('markCompleteBtn');
+      markBtn.textContent = isDone ? '✓ مكتمل (اضغط للإلغاء)' : '✓ تحديد كمكتمل';
+      markBtn.className = isDone
+        ? 'px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 text-xs font-extrabold transition'
+        : 'px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition';
+
+      document.getElementById('simTitle').textContent = lesson.simTitle;
+      document.getElementById('simInstruction').textContent = lesson.simInstruction;
+
+      const expEl = document.getElementById('explanationList');
+      expEl.innerHTML = lesson.explanation
+        .map(p => `<div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">${p}</div>`)
+        .join('');
+
+      document.getElementById('takeawayText').textContent = lesson.takeaway;
+
+      updateCodeDisplay(lesson.code, lesson.breakdown);
+      renderQuiz(lesson.quiz);
+
+      document.getElementById('prevTopicBtn').disabled = currentLessonIdx === 0;
+      const nextBtn = document.getElementById('nextTopicBtn');
+      if (currentLessonIdx === lessons.length - 1) {
+        nextBtn.innerHTML = '<span>🎉 العودة إلى بداية الدورة</span>';
+      } else if (currentLessonIdx === lessons.length - 2) {
+        nextBtn.innerHTML = '<span>🚀 الانتقال إلى مشروع المرحلة ←</span>';
+      } else {
+        nextBtn.innerHTML = '<span>الدرس التالي ←</span>';
+      }
+      document.getElementById('footerStepIndicator').textContent = `الدرس ${currentLessonIdx + 1} من ${lessons.length}`;
+
+      renderInteractiveStage(lesson.id);
+    }
+
+    function updateCodeDisplay(codeStr, breakdownList) {
+      document.getElementById('pythonCodeBlock').textContent = codeStr;
+      if (breakdownList) {
+        const bdEl = document.getElementById('codeBreakdown');
+        bdEl.innerHTML = breakdownList
+          .map(
+            item => `
+            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800">
+              <code class="text-sky-400 font-bold block mb-1 text-[11px]">${item.cmd}</code>
+              <span class="text-slate-300 leading-snug block">${item.desc}</span>
+            </div>`
+          )
+          .join('');
+      }
+    }
+
+    function renderQuiz(quiz) {
+      document.getElementById('quizQuestion').textContent = quiz.q;
+      const optsEl = document.getElementById('quizOptions');
+      const fbEl = document.getElementById('quizFeedback');
+      const badge = document.getElementById('quizStatusBadge');
+
+      fbEl.className = 'hidden mt-3 p-3 rounded-xl text-xs font-semibold';
+      badge.textContent = 'اختر الإجابة الصحيحة';
+      badge.className = 'text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400';
+
+      optsEl.innerHTML = '';
+      quiz.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'p-3 rounded-xl bg-slate-950/70 hover:bg-slate-800 border border-slate-800 text-right text-xs md:text-sm font-semibold text-slate-200 transition';
+        btn.textContent = optText;
+        btn.addEventListener('click', () => {
+          const isRight = idx === quiz.correct;
+          Array.from(optsEl.children).forEach((child, cIdx) => {
+            child.className = 'p-3 rounded-xl border text-right text-xs md:text-sm font-semibold transition ';
+            if (cIdx === quiz.correct) {
+              child.className += 'bg-emerald-500/20 border-emerald-500 text-emerald-200';
+            } else if (cIdx === idx && !isRight) {
+              child.className += 'bg-rose-500/20 border-rose-500 text-rose-200';
+            } else {
+              child.className += 'bg-slate-950/40 border-slate-800/50 text-slate-500';
+            }
+          });
+          fbEl.className = `mt-3 p-3 rounded-xl text-xs font-semibold border ${
+            isRight
+              ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
+              : 'bg-amber-500/15 border-amber-500/40 text-amber-300'
+          }`;
+          fbEl.textContent = isRight ? `✅ ${quiz.explanation}` : `💡 حاول مرة أخرى! التوضيح: ${quiz.explanation}`;
+          badge.textContent = isRight ? 'إجابة صحيحة 🌟' : 'تم التوضيح 💡';
+          badge.className = isRight
+            ? 'text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold'
+            : 'text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold';
+
+          if (isRight) {
+            completedLessons.add(lessons[currentLessonIdx].id);
+            saveProgress();
+            renderNav();
+          }
+        });
+        optsEl.appendChild(btn);
+      });
+    }
+
+    function renderInteractiveStage(lessonId) {
+      const headerCtrl = document.getElementById('simControlsHeader');
+      const stage = document.getElementById('interactiveStage');
+      headerCtrl.innerHTML = '';
+      stage.innerHTML = '';
+
+      if (lessonId === 1) renderStage1(headerCtrl, stage);
+      else if (lessonId === 2) renderStage2(headerCtrl, stage);
+      else if (lessonId === 3) renderStage3(headerCtrl, stage);
+      else if (lessonId === 4) renderStage4(headerCtrl, stage);
+      else if (lessonId === 5) renderStage5(headerCtrl, stage);
+      else if (lessonId === 6) renderStage6(headerCtrl, stage);
+      else if (lessonId === 7) renderStage7(headerCtrl, stage);
+      else if (lessonId === 8) renderStage8(headerCtrl, stage);
+      else if (lessonId === 9) renderStage9(headerCtrl, stage);
+    }
+
+    function renderStage1(headerCtrl, stage) {
+      const months = ['يناير', 'فبراير', 'مارس', 'أبريل 🌟', 'مايو', 'يونيو'];
+      const sales = [42, 48, 45, 95, 52, 58];
+
+      headerCtrl.innerHTML = `
+        <button id="l1BtnTable" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l1ViewMode === 'table' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">📄 عرض كجدول أرقام خام</button>
+        <button id="l1BtnVisual" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l1ViewMode === 'visual' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">📊 حوّل الجدول إلى رسم متحرك</button>
+        <button id="l1BtnOutlier" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l1HighlightOutlier ? 'bg-rose-500 text-white' : 'bg-slate-800 text-rose-300 border border-rose-500/30 hover:bg-slate-700'
+        }">🔍 إبراز القفزة الشاذة (Outlier)</button>
+      `;
+
+      document.getElementById('l1BtnTable').addEventListener('click', () => {
+        l1ViewMode = 'table';
+        renderStage1(headerCtrl, stage);
+      });
+      document.getElementById('l1BtnVisual').addEventListener('click', () => {
+        l1ViewMode = 'visual';
+        renderStage1(headerCtrl, stage);
+      });
+      document.getElementById('l1BtnOutlier').addEventListener('click', () => {
+        l1HighlightOutlier = !l1HighlightOutlier;
+        renderStage1(headerCtrl, stage);
+      });
+
+      if (l1ViewMode === 'table') {
+        stage.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center my-auto">
+            <div class="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-right text-sm">
+                <thead class="bg-slate-800/80 text-slate-300 text-xs">
+                  <tr>
+                    <th class="p-3">الشهر</th>
+                    <th class="p-3">المبيعات (ألف ج.م)</th>
+                    <th class="p-3">عدد الطلبات</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60">
+                  ${months.map((m, i) => `
+                    <tr class="${l1HighlightOutlier && i === 3 ? 'bg-rose-500/20 text-rose-200 font-bold' : 'text-slate-300'}">
+                      <td class="p-2.5">${m}</td>
+                      <td class="p-2.5 font-mono">${sales[i]} K</td>
+                      <td class="p-2.5 font-mono">${sales[i] * 12}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+            <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+              <div class="text-amber-400 font-bold text-sm">⏱️ تجربة مع الطلاب:</div>
+              <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+                عند النظر إلى الجدول فقط، يحتاج القارئ لقراءة الأرقام سطراً بسطر ومقارنتها ذهنياً ليكتشف أن شهر <strong>أبريل (95K)</strong> يساوي ضعف الشهور العادية تقريباً.
+              </p>
+              <p class="text-xs text-sky-400 font-semibold">
+                👈 اضغط الآن على «حوّل الجدول إلى رسم متحرك» لترى الفرق البصري في جزء من الثانية!
+              </p>
+            </div>
+          </div>
+        `;
+      } else {
+        stage.innerHTML = `
+          <div class="flex flex-col justify-between h-full gap-4">
+            <div class="grid grid-cols-6 gap-3 items-end h-56 pt-8 px-4 bg-slate-950/80 rounded-xl border border-slate-800 relative">
+              ${sales.map((val, i) => {
+                const isPeak = i === 3;
+                const heightPct = Math.round((val / 100) * 100);
+                const barColor = isPeak && l1HighlightOutlier
+                  ? 'bg-gradient-to-t from-rose-600 to-amber-400 glow-active'
+                  : isPeak
+                  ? 'bg-gradient-to-t from-sky-500 to-emerald-400'
+                  : 'bg-gradient-to-t from-sky-700 to-sky-400';
+                return `
+                  <div class="flex flex-col items-center justify-end h-full group">
+                    <span class="text-xs font-bold mb-1.5 ${isPeak ? 'text-amber-300 scale-110' : 'text-slate-300'}">${val}K</span>
+                    <div class="w-full max-w-[54px] rounded-t-xl bar-anim ${barColor}" style="height: ${heightPct}%"></div>
+                    <span class="text-[11px] text-slate-300 mt-2 font-semibold text-center">${months[i]}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span class="text-emerald-300 font-bold">✨ ماذا حدث؟ تحولت الأرقام إلى أطوال بصرية، فقفزت عينك مباشرة إلى عمود شهر أبريل (95K) في أقل من ثانية!</span>
+              <span class="text-slate-400">هذه هي قوة Data Visualization</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderStage2(headerCtrl, stage) {
+      const parts = [
+        { id: 'figure', label: '1. الإطار الكامل (Figure)', color: 'amber', code: 'plt.figure(figsize=(8, 4))', desc: 'النافذة الخارجية التي تضم كل شيء؛ نحدد عرضها وارتفاعها بالبوصة.' },
+        { id: 'axes', label: '2. منطقة الرسم (Axes)', color: 'sky', code: 'plt.plot(days, accuracy)', desc: 'المساحة الداخلية التي تُرسم عليها الخطوط والأعمدة والنقاط.' },
+        { id: 'xaxis', label: '3. محور السينات (X-Axis)', color: 'emerald', code: "plt.xlabel('Days of Training')", desc: 'المحور الأفقي؛ يمثل عادة المتغير المستقل أو الزمن (Days / Epochs).' },
+        { id: 'yaxis', label: '4. محور الصادات (Y-Axis)', color: 'purple', code: "plt.ylabel('Model Accuracy %')", desc: 'المحور الرأسي؛ يمثل المتغير التابع أو النتيجة التي نقيسها (Accuracy).' }
+      ];
+
+      headerCtrl.innerHTML = parts.map(p => `
+        <button data-part="${p.id}" type="button" class="l2-part-btn px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l2SelectedPart === p.id
+            ? 'bg-sky-500 text-slate-950 shadow'
+            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">${p.label}</button>
+      `).join('');
+
+      headerCtrl.querySelectorAll('.l2-part-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          l2SelectedPart = btn.getAttribute('data-part');
+          renderStage2(headerCtrl, stage);
+        });
+      });
+
+      const activeObj = parts.find(p => p.id === l2SelectedPart) || parts[0];
+
+      stage.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+          <div class="lg:col-span-8 p-4 rounded-2xl transition-all duration-300 ${
+            l2SelectedPart === 'figure'
+              ? 'bg-amber-500/15 border-2 border-amber-400 shadow-lg shadow-amber-500/10'
+              : 'bg-slate-950 border-2 border-slate-800'
+          }">
+            <div class="flex items-center justify-between text-xs mb-2">
+              <span class="font-bold text-amber-300">🖼️ Figure (اللوحة الكاملة: figsize=(8,4))</span>
+              <span class="text-slate-400 font-mono">Window Container</span>
+            </div>
+
+            <div class="p-4 rounded-xl transition-all duration-300 ${
+              l2SelectedPart === 'axes'
+                ? 'bg-sky-500/15 border-2 border-sky-400'
+                : 'bg-slate-900/90 border border-slate-700'
+            }">
+              <div class="text-center text-xs font-bold text-white mb-2">AI Model Accuracy Over Training Days (Title)</div>
+
+              <div class="flex items-center gap-2">
+                <div class="p-2 rounded-lg text-xs font-bold transition-all ${
+                  l2SelectedPart === 'yaxis'
+                    ? 'bg-purple-500/30 border border-purple-400 text-purple-200 scale-105'
+                    : 'bg-slate-800/70 text-slate-400'
+                }" style="writing-mode: vertical-rl; transform: rotate(180deg);">
+                  Y-Axis: Accuracy (%)
+                </div>
+
+                <div class="flex-1 bg-slate-950 rounded-lg p-3 border border-slate-800">
+                  <svg viewBox="0 0 400 160" class="w-full h-40 overflow-visible">
+                    <line x1="30" y1="20" x2="380" y2="20" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="30" y1="70" x2="380" y2="70" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="30" y1="120" x2="380" y2="120" stroke="#1e293b" stroke-dasharray="4"/>
+                    <line x1="30" y1="10" x2="30" y2="140" stroke="${l2SelectedPart === 'yaxis' ? '#c084fc' : '#64748b'}" stroke-width="3"/>
+                    <line x1="30" y1="140" x2="385" y2="140" stroke="${l2SelectedPart === 'xaxis' ? '#34d399' : '#64748b'}" stroke-width="3"/>
+
+                    <polyline fill="none" stroke="#38bdf8" stroke-width="3.5" class="line-draw"
+                      points="50,120 125,95 200,68 275,45 350,25" />
+                    <circle cx="50" cy="120" r="5" fill="#38bdf8" />
+                    <circle cx="125" cy="95" r="5" fill="#38bdf8" />
+                    <circle cx="200" cy="68" r="5" fill="#38bdf8" />
+                    <circle cx="275" cy="45" r="5" fill="#38bdf8" />
+                    <circle cx="350" cy="25" r="6" fill="#34d399" />
+
+                    <text x="50" y="155" fill="#94a3b8" font-size="11" text-anchor="middle">Day 1</text>
+                    <text x="125" y="155" fill="#94a3b8" font-size="11" text-anchor="middle">Day 2</text>
+                    <text x="200" y="155" fill="#94a3b8" font-size="11" text-anchor="middle">Day 3</text>
+                    <text x="275" y="155" fill="#94a3b8" font-size="11" text-anchor="middle">Day 4</text>
+                    <text x="350" y="155" fill="#94a3b8" font-size="11" text-anchor="middle">Day 5</text>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="mt-2 p-2 rounded-lg text-center text-xs font-bold transition-all ${
+                l2SelectedPart === 'xaxis'
+                  ? 'bg-emerald-500/30 border border-emerald-400 text-emerald-200 scale-[1.02]'
+                  : 'bg-slate-800/70 text-slate-400'
+              }">
+                X-Axis: Days of Training (الأيام)
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <span class="text-xs font-bold text-sky-400 block">الجزء المحدد حالياً:</span>
+            <h4 class="text-base font-extrabold text-white">${activeObj.label}</h4>
+            <p class="text-xs md:text-sm text-slate-300 leading-relaxed">${activeObj.desc}</p>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <span class="text-[11px] text-slate-400 block mb-1">الأمر المسؤول عنه في بايثون:</span>
+              <code class="text-xs text-emerald-400 font-bold">${activeObj.code}</code>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStage3(headerCtrl, stage) {
+      headerCtrl.innerHTML = `
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button id="l3TypeLine" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            l3ChartType === 'line' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }">📈 Line Chart (خطي)</button>
+          <button id="l3TypeBar" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            l3ChartType === 'bar' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }">📊 Bar Chart (عمودي)</button>
+          <button id="l3TypePie" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+            l3ChartType === 'pie' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }">🥧 Pie Chart (دائري)</button>
+        </div>
+      `;
+
+      document.getElementById('l3TypeLine').addEventListener('click', () => {
+        l3ChartType = 'line';
+        renderStage3(headerCtrl, stage);
+      });
+      document.getElementById('l3TypeBar').addEventListener('click', () => {
+        l3ChartType = 'bar';
+        renderStage3(headerCtrl, stage);
+      });
+      document.getElementById('l3TypePie').addEventListener('click', () => {
+        l3ChartType = 'pie';
+        renderStage3(headerCtrl, stage);
+      });
+
+      let dynamicCode = '';
+      if (l3ChartType === 'line') {
+        dynamicCode = `import matplotlib.pyplot as plt
+
+# تتبع تطور متوسط درجات الطلاب على مدار 5 أشهر (Line Chart)
+months = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb']
+avg_score = [68, 73, 79, 84, 91]
+
+plt.figure(figsize=(7, 4))
+plt.plot(months, avg_score, color='#38bdf8', marker='o', linewidth=3)
+plt.title('Student Performance Progression Over Time')
+plt.xlabel('Month')
+plt.ylabel('Average Score (%)')
+plt.grid(True, alpha=0.3)
+plt.show()`;
+      } else if (l3ChartType === 'bar') {
+        dynamicCode = `import matplotlib.pyplot as plt
+
+# مقارنة متوسط الدرجات بين المواد الدراسية (Bar Chart)
+subjects = ['Math', 'Physics', 'AI', 'English']
+scores = [85, 62, 94, 80]
+
+plt.figure(figsize=(7, 4))
+plt.bar(subjects, scores, color=['#38bdf8', '#f43f5e', '#34d399', '#fbbf24'])
+plt.title('Average Score Comparison Across Subjects')
+plt.xlabel('Subject')
+plt.ylabel('Score (%)')
+plt.show()`;
+      } else {
+        dynamicCode = `import matplotlib.pyplot as plt
+
+# توزيع نسب تقديرات الطلاب في الدفعة (Pie Chart)
+grades = ['Excellent (A)', 'Very Good (B)', 'Good (C)', 'Needs Support (D)']
+counts = [40, 30, 20, 10]
+
+plt.figure(figsize=(6, 6))
+plt.pie(counts, labels=grades, autopct='%1.1f%%', colors=['#34d399', '#38bdf8', '#fbbf24', '#f43f5e'])
+plt.title('Distribution of Student Grade Categories (100%)')
+plt.show()`;
+      }
+      updateCodeDisplay(dynamicCode, null);
+
+      if (l3ChartType === 'line') {
+        stage.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center my-auto">
+            <div class="md:col-span-8 bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <div class="text-xs font-bold text-sky-300 mb-2 text-center">تطور مستوى الطلاب عبر الشهور (Line Chart — تغير زمني)</div>
+              <svg viewBox="0 0 420 180" class="w-full h-48 overflow-visible">
+                <line x1="40" y1="25" x2="390" y2="25" stroke="#1e293b" stroke-dasharray="4"/>
+                <line x1="40" y1="75" x2="390" y2="75" stroke="#1e293b" stroke-dasharray="4"/>
+                <line x1="40" y1="125" x2="390" y2="125" stroke="#1e293b" stroke-dasharray="4"/>
+                <line x1="40" y1="10" x2="40" y2="150" stroke="#475569" stroke-width="2"/>
+                <line x1="40" y1="150" x2="400" y2="150" stroke="#475569" stroke-width="2"/>
+
+                <polyline fill="none" stroke="#38bdf8" stroke-width="4"
+                  points="65,120 140,100 215,75 290,52 365,25" />
+                ${[
+                  { x: 65, y: 120, m: 'أكتوبر', v: '68%' },
+                  { x: 140, y: 100, m: 'نوفمبر', v: '73%' },
+                  { x: 215, y: 75, m: 'ديسمبر', v: '79%' },
+                  { x: 290, y: 52, m: 'يناير', v: '84%' },
+                  { x: 365, y: 25, m: 'فبراير', v: '91%' }
+                ].map(pt => `
+                  <circle cx="${pt.x}" cy="${pt.y}" r="6" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+                  <text x="${pt.x}" y="${pt.y - 12}" fill="#e2e8f0" font-size="11" font-weight="bold" text-anchor="middle">${pt.v}</text>
+                  <text x="${pt.x}" y="168" fill="#94a3b8" font-size="11" text-anchor="middle">${pt.m}</text>
+                `).join('')}
+              </svg>
+            </div>
+            <div class="md:col-span-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <span class="px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold">متى نختاره؟</span>
+              <p class="text-slate-200 leading-relaxed font-semibold">عندما يكون محور X يمثل تسلسلاً زمنياً (ساعات، أيام، شهور، Epochs تدريب).</p>
+              <p class="text-slate-400 leading-relaxed">الخط المتصل يساعد العين على رؤية سرعة الصعود أو الهبوط فوراً.</p>
+            </div>
+          </div>
+        `;
+      } else if (l3ChartType === 'bar') {
+        const items = [
+          { name: 'الرياضيات (Math)', val: 85, col: 'bg-sky-400' },
+          { name: 'الفيزياء (Physics)', val: 62, col: 'bg-rose-500' },
+          { name: 'الذكاء الاصطناعي (AI)', val: 94, col: 'bg-emerald-400' },
+          { name: 'اللغة الإنجليزية (English)', val: 80, col: 'bg-amber-400' }
+        ];
+        stage.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center my-auto">
+            <div class="md:col-span-8 bg-slate-950 p-5 rounded-xl border border-slate-800">
+              <div class="text-xs font-bold text-emerald-300 mb-4 text-center">مقارنة متوسط الدرجات بين المواد (Bar Chart — مقارنة فئات مستقلة)</div>
+              <div class="grid grid-cols-4 gap-4 items-end h-44 pt-4 px-4 border-b border-slate-800">
+                ${items.map(it => `
+                  <div class="flex flex-col items-center justify-end h-full">
+                    <span class="text-xs font-bold text-white mb-1">${it.val}%</span>
+                    <div class="w-full max-w-[56px] rounded-t-xl bar-anim ${it.col}" style="height: ${it.val}%"></div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="grid grid-cols-4 gap-4 pt-2 text-center">
+                ${items.map(it => `<span class="text-[11px] font-semibold text-slate-300">${it.name}</span>`).join('')}
+              </div>
+            </div>
+            <div class="md:col-span-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">متى نختاره؟</span>
+              <p class="text-slate-200 leading-relaxed font-semibold">عند مقارنة قيم بين فئات منفصلة لا يربطها تسلسل زمني (مواد، فروع، منتجات).</p>
+              <p class="text-slate-400 leading-relaxed">لاحظ كيف يبرز اللون الأحمر أن مادة الفيزياء (62%) هي الأقل مقارنة بـ AI (94%).</p>
+            </div>
+          </div>
+        `;
+      } else {
+        stage.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center my-auto">
+            <div class="md:col-span-8 bg-slate-950 p-5 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center justify-around gap-6">
+              <div class="relative w-44 h-44 rounded-full shadow-xl flex items-center justify-center"
+                   style="background: conic-gradient(#34d399 0% 40%, #38bdf8 40% 70%, #fbbf24 70% 90%, #f43f5e 90% 100%);">
+                <div class="w-20 h-20 rounded-full bg-slate-950 flex flex-col items-center justify-center text-center">
+                  <span class="text-xs font-extrabold text-white">100%</span>
+                  <span class="text-[10px] text-slate-400">الدفعة</span>
+                </div>
+              </div>
+              <div class="space-y-2.5 text-xs">
+                <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded bg-emerald-400 inline-block"></span><span class="text-slate-200 font-bold">امتياز (A): 40%</span></div>
+                <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded bg-sky-400 inline-block"></span><span class="text-slate-200 font-bold">جيد جداً (B): 30%</span></div>
+                <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded bg-amber-400 inline-block"></span><span class="text-slate-200 font-bold">جيد (C): 20%</span></div>
+                <div class="flex items-center gap-2"><span class="w-3.5 h-3.5 rounded bg-rose-500 inline-block"></span><span class="text-slate-200 font-bold">يحتاج دعماً (D): 10%</span></div>
+              </div>
+            </div>
+            <div class="md:col-span-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold">متى نختاره؟</span>
+              <p class="text-slate-200 leading-relaxed font-semibold">فقط عندما نريد إظهار حصة كل جزء من إجمالي 100% وعدد الفئات قليل (3 إلى 5 فئات).</p>
+              <p class="text-rose-300 leading-relaxed">⚠️ تجنب Pie Chart إذا كانت النسب متقاربة جداً أو كثيرة العدد، واستخدم Bar Chart بدلاً منه!</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderStage4(headerCtrl, stage) {
+      headerCtrl.innerHTML = `
+        <button id="l4BtnHist" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l4Mode === 'hist' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">🏢 Histogram (مدرج تكراري)</button>
+        <button id="l4BtnScatter" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l4Mode === 'scatter' ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">✨ Scatter Plot (مخطط الانتشار)</button>
+      `;
+
+      document.getElementById('l4BtnHist').addEventListener('click', () => {
+        l4Mode = 'hist';
+        renderStage4(headerCtrl, stage);
+      });
+      document.getElementById('l4BtnScatter').addEventListener('click', () => {
+        l4Mode = 'scatter';
+        renderStage4(headerCtrl, stage);
+      });
+
+      const rawScores = [52, 55, 61, 64, 67, 70, 72, 74, 75, 76, 78, 79, 81, 83, 84, 85, 88, 91, 94, 97];
+
+      if (l4Mode === 'hist') {
+        const minV = 50, maxV = 100;
+        const step = (maxV - minV) / l4Bins;
+        const binsData = [];
+        for (let b = 0; b < l4Bins; b++) {
+          const low = minV + b * step;
+          const high = low + step;
+          const count = rawScores.filter(s => (b === l4Bins - 1 ? s >= low && s <= high : s >= low && s < high)).length;
+          binsData.push({ label: `${Math.round(low)}-${Math.round(high)}`, count });
+        }
+        const maxCount = Math.max(...binsData.map(d => d.count), 1);
+
+        updateCodeDisplay(`import matplotlib.pyplot as plt
+
+# درجات 20 طالباً في اختبار الذكاء الاصطناعي
+scores = [52, 55, 61, 64, 67, 70, 72, 74, 75, 76, 78, 79, 81, 83, 84, 85, 88, 91, 94, 97]
+
+plt.figure(figsize=(7, 4))
+plt.hist(scores, bins=${l4Bins}, color='#38bdf8', edgecolor='black')
+plt.title('Distribution of Student Scores (bins=${l4Bins})')
+plt.xlabel('Score Range (Bins)')
+plt.ylabel('Number of Students (Frequency)')
+plt.show()`, null);
+
+        stage.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+              <div class="flex items-center gap-3">
+                <label for="binsSlider" class="text-xs font-bold text-sky-300">عدد السلال (bins = ${l4Bins}):</label>
+                <input id="binsSlider" type="range" min="3" max="10" value="${l4Bins}" class="w-36 accent-sky-400 cursor-pointer" />
+              </div>
+              <span class="text-xs text-slate-400">لاحظ كيف تتلاصق الأعمدة لأن الدرجات متصلة (50 إلى 100)!</span>
+            </div>
+
+            <div class="bg-slate-950 p-5 rounded-xl border border-slate-800">
+              <div class="flex items-end justify-center gap-0.5 h-44 pt-6 px-6 border-b border-slate-800">
+                ${binsData.map(b => {
+                  const hPct = Math.round((b.count / maxCount) * 100);
+                  return `
+                    <div class="flex-1 flex flex-col items-center justify-end h-full">
+                      <span class="text-xs font-bold text-sky-300 mb-1">${b.count} طلاب</span>
+                      <div class="w-full bg-sky-500/80 hover:bg-sky-400 border border-slate-950 bar-anim rounded-t-sm" style="height: ${Math.max(hPct, 6)}%"></div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <div class="flex justify-center gap-0.5 pt-2 px-6">
+                ${binsData.map(b => `<div class="flex-1 text-center text-[11px] font-mono text-slate-300">${b.label}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('binsSlider').addEventListener('input', (e) => {
+          l4Bins = parseInt(e.target.value, 10);
+          renderStage4(headerCtrl, stage);
+        });
+      } else {
+        updateCodeDisplay(`import matplotlib.pyplot as plt
+
+# العلاقة بين ساعات المذاكرة الأسبوعية والدرجة النهائية
+study_hours = [1, 2, 3, 4, 5, 6, 7, 8]
+exam_scores = [52, 58, 65, 70, 78, 85, 91, 96]
+
+plt.figure(figsize=(7, 4))
+plt.scatter(study_hours, exam_scores, color='#34d399', s=90)
+plt.title('Study Hours vs Exam Score (Positive Correlation)')
+plt.xlabel('Weekly Study Hours')
+plt.ylabel('Exam Score (%)')
+plt.show()`, null);
+
+        const pts = [
+          { h: 1, s: 52 }, { h: 2, s: 58 }, { h: 3, s: 65 }, { h: 4, s: 70 },
+          { h: 5, s: 78 }, { h: 6, s: 85 }, { h: 7, s: 91 }, { h: 8, s: 96 }
+        ];
+
+        stage.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center justify-between bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+              <span class="text-xs font-bold text-emerald-300">كل نقطة = طالب واحد (محور X ساعات المذاكرة، ومحور Y الدرجة)</span>
+              <button id="toggleTrendBtn" type="button" class="px-3 py-1 rounded-lg text-xs font-bold ${
+                l4ShowTrend ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+              }">📈 ${l4ShowTrend ? 'إخفاء خط الاتجاه العام' : 'إظهار خط الاتجاه العام (Trend Line)'}</button>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <svg viewBox="0 0 420 175" class="w-full h-48 overflow-visible">
+                <line x1="45" y1="20" x2="390" y2="20" stroke="#1e293b" stroke-dasharray="4"/>
+                <line x1="45" y1="80" x2="390" y2="80" stroke="#1e293b" stroke-dasharray="4"/>
+                <line x1="45" y1="140" x2="390" y2="140" stroke="#475569" stroke-width="2"/>
+                <line x1="45" y1="15" x2="45" y2="140" stroke="#475569" stroke-width="2"/>
+
+                ${l4ShowTrend ? `<line x1="65" y1="130" x2="375" y2="22" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6" />` : ''}
+
+                ${pts.map(p => {
+                  const cx = 45 + p.h * 41;
+                  const cy = 140 - ((p.s - 45) / 55) * 120;
+                  return `
+                    <circle cx="${cx}" cy="${cy}" r="6.5" fill="#34d399" stroke="#0f172a" stroke-width="2" />
+                    <text x="${cx}" y="${cy - 10}" fill="#cbd5e1" font-size="10" text-anchor="middle">(${p.h}h, ${p.s}%)</text>
+                  `;
+                }).join('')}
+
+                <text x="220" y="165" fill="#94a3b8" font-size="11" text-anchor="middle">ساعات المذاكرة أسبوعياً (Study Hours) →</text>
+              </svg>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('toggleTrendBtn').addEventListener('click', () => {
+          l4ShowTrend = !l4ShowTrend;
+          renderStage4(headerCtrl, stage);
+        });
+      }
+    }
+
+    function renderStage5(headerCtrl, stage) {
+      headerCtrl.innerHTML = `
+        <button id="l5BtnTitle" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold ${l5Config.title ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-400'}">العنوان (Title)</button>
+        <button id="l5BtnLabels" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold ${l5Config.labels ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-400'}">أسماء المحاور (Labels)</button>
+        <button id="l5BtnGrid" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold ${l5Config.grid ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-400'}">الشبكة (Grid)</button>
+        <button id="l5BtnLegend" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold ${l5Config.legend ? 'bg-sky-500 text-slate-950' : 'bg-slate-800 text-slate-400'}">وسيلة الإيضاح (Legend)</button>
+        <button id="l5BtnColor" type="button" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">🎨 تغيير اللون</button>
+      `;
+
+      document.getElementById('l5BtnTitle').addEventListener('click', () => { l5Config.title = !l5Config.title; renderStage5(headerCtrl, stage); });
+      document.getElementById('l5BtnLabels').addEventListener('click', () => { l5Config.labels = !l5Config.labels; renderStage5(headerCtrl, stage); });
+      document.getElementById('l5BtnGrid').addEventListener('click', () => { l5Config.grid = !l5Config.grid; renderStage5(headerCtrl, stage); });
+      document.getElementById('l5BtnLegend').addEventListener('click', () => { l5Config.legend = !l5Config.legend; renderStage5(headerCtrl, stage); });
+      document.getElementById('l5BtnColor').addEventListener('click', () => {
+        const palette = ['#38bdf8', '#34d399', '#a855f7', '#fbbf24'];
+        const nextIdx = (palette.indexOf(l5Config.themeColor) + 1) % palette.length;
+        l5Config.themeColor = palette[nextIdx];
+        renderStage5(headerCtrl, stage);
+      });
+
+      const codeLines = [
+        `import matplotlib.pyplot as plt`,
+        ``,
+        `weeks = [1, 2, 3, 4, 5]`,
+        `train_acc = [65, 75, 84, 91, 95]`,
+        `val_acc   = [62, 71, 79, 83, 85]`,
+        ``,
+        `plt.figure(figsize=(8, 4))`,
+        `plt.plot(weeks, train_acc, color='${l5Config.themeColor}', marker='o', label='Train Accuracy')`,
+        `plt.plot(weeks, val_acc, color='#f43f5e', linestyle='--', marker='s', label='Validation Accuracy')`
+      ];
+      if (l5Config.title) codeLines.push(`plt.title('AI Model Performance Over Weeks')`);
+      if (l5Config.labels) {
+        codeLines.push(`plt.xlabel('Week Number')`);
+        codeLines.push(`plt.ylabel('Accuracy (%)')`);
+      }
+      if (l5Config.grid) codeLines.push(`plt.grid(True, alpha=0.3)`);
+      if (l5Config.legend) codeLines.push(`plt.legend()`);
+      codeLines.push(`plt.show()`);
+
+      updateCodeDisplay(codeLines.join('\n'), null);
+
+      const scoreCount = [l5Config.title, l5Config.labels, l5Config.grid, l5Config.legend].filter(Boolean).length;
+
+      stage.innerHTML = `
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold ${scoreCount === 4 ? 'text-emerald-400' : 'text-amber-400'}">
+              جودة وضوح الرسم للجمهور: ${scoreCount * 25}% ${scoreCount === 4 ? '(مكتمل واحترافي 🌟)' : '(جرّب تفعيل العناصر الناقصة!)'}
+            </span>
+          </div>
+
+          <div class="text-center h-6">
+            ${l5Config.title ? `<h4 class="text-sm font-extrabold text-white">AI Model Performance Over Weeks</h4>` : `<span class="text-xs text-rose-400/70 italic">[بدون عنوان: القارئ لا يعرف موضوع الرسم!]</span>`}
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="w-6 text-center">
+              ${l5Config.labels ? `<span class="text-xs font-bold text-sky-300" style="writing-mode: vertical-rl; transform: rotate(180deg);">Accuracy (%)</span>` : `<span class="text-[10px] text-rose-400">?</span>`}
+            </div>
+
+            <div class="flex-1 relative bg-slate-900/90 rounded-xl p-3 border border-slate-800">
+              ${l5Config.legend ? `
+                <div class="absolute top-3 left-3 bg-slate-950/90 border border-slate-700 rounded-lg px-3 py-1.5 text-[11px] space-y-1 shadow">
+                  <div class="flex items-center gap-2"><span class="w-3 h-1 inline-block" style="background:${l5Config.themeColor}"></span><span class="text-slate-200">Train Accuracy</span></div>
+                  <div class="flex items-center gap-2"><span class="w-3 h-0.5 border-b-2 border-dashed border-rose-500 inline-block"></span><span class="text-slate-200">Validation Accuracy</span></div>
+                </div>
+              ` : ''}
+
+              <svg viewBox="0 0 420 150" class="w-full h-40 overflow-visible">
+                ${l5Config.grid ? `
+                  <line x1="35" y1="25" x2="395" y2="25" stroke="#334155" stroke-dasharray="3"/>
+                  <line x1="35" y1="65" x2="395" y2="65" stroke="#334155" stroke-dasharray="3"/>
+                  <line x1="35" y1="105" x2="395" y2="105" stroke="#334155" stroke-dasharray="3"/>
+                ` : ''}
+                <line x1="35" y1="10" x2="35" y2="135" stroke="#64748b" stroke-width="2"/>
+                <line x1="35" y1="135" x2="400" y2="135" stroke="#64748b" stroke-width="2"/>
+
+                <polyline fill="none" stroke="${l5Config.themeColor}" stroke-width="3.5" points="60,110 140,85 220,60 300,38 380,20" />
+                <polyline fill="none" stroke="#f43f5e" stroke-width="3" stroke-dasharray="6" points="60,118 140,95 220,76 300,64 380,55" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="text-center h-5">
+            ${l5Config.labels ? `<span class="text-xs font-bold text-emerald-300">Week Number (أسابيع التدريب)</span>` : `<span class="text-xs text-rose-400/70 italic">[بدون تسمية محور X]</span>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStage6(headerCtrl, stage) {
+      headerCtrl.innerHTML = `
+        <button id="l6BtnHue" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l6HueEnabled ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+        }">🌈 تفعيل hue='status' (التلوين حسب الفئة)</button>
+        <button id="l6BtnSize" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l6SizeEnabled ? 'bg-purple-500 text-white' : 'bg-slate-800 text-slate-300'
+        }">⭕ تفعيل size='projects' (الحجم حسب المشاريع)</button>
+      `;
+
+      document.getElementById('l6BtnHue').addEventListener('click', () => {
+        l6HueEnabled = !l6HueEnabled;
+        renderStage6(headerCtrl, stage);
+      });
+      document.getElementById('l6BtnSize').addEventListener('click', () => {
+        l6SizeEnabled = !l6SizeEnabled;
+        renderStage6(headerCtrl, stage);
+      });
+
+      const snsCode = `import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style='darkgrid')
+plt.figure(figsize=(7, 4))
+
+sns.scatterplot(
+    data=students_df,
+    x='study_hours',
+    y='final_score'${l6HueEnabled ? ",\n    hue='status'       # تلوين تلقائي (Pass / Needs Support)" : ''}${l6SizeEnabled ? ",\n    size='projects',   # حجم النقطة يمثل عدد المشاريع المنجزة\n    sizes=(60, 220)" : ''}
+)
+plt.title('Seaborn Multi-Dimensional Scatter Plot')
+plt.show()`;
+      updateCodeDisplay(snsCode, null);
+
+      const sampleStudents = [
+        { h: 1.5, s: 48, pass: false, proj: 1 },
+        { h: 2.2, s: 54, pass: false, proj: 1 },
+        { h: 3.0, s: 58, pass: false, proj: 2 },
+        { h: 4.2, s: 71, pass: true,  proj: 2 },
+        { h: 5.0, s: 76, pass: true,  proj: 3 },
+        { h: 6.1, s: 84, pass: true,  proj: 4 },
+        { h: 7.3, s: 91, pass: true,  proj: 5 },
+        { h: 8.2, s: 96, pass: true,  proj: 5 }
+      ];
+
+      stage.innerHTML = `
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span class="text-sky-300 font-bold">لاحظ كيف تعرض Seaborn حتى 4 أبعاد للبيانات (X، Y، اللون Hue، والحجم Size) في رسم واحد!</span>
+            ${l6HueEnabled ? `
+              <div class="flex items-center gap-3 bg-slate-900 px-3 py-1 rounded-lg border border-slate-800">
+                <span class="text-slate-400 font-bold">status:</span>
+                <span class="flex items-center gap-1 text-emerald-300"><i class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></i> ناجح بتفوق</span>
+                <span class="flex items-center gap-1 text-rose-300"><i class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></i> يحتاج دعماً</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <svg viewBox="0 0 420 170" class="w-full h-48 overflow-visible bg-slate-900/70 rounded-xl p-2 border border-slate-800">
+            <line x1="40" y1="30" x2="390" y2="30" stroke="#1e293b" stroke-dasharray="3"/>
+            <line x1="40" y1="80" x2="390" y2="80" stroke="#1e293b" stroke-dasharray="3"/>
+            <line x1="40" y1="130" x2="390" y2="130" stroke="#1e293b" stroke-dasharray="3"/>
+            <line x1="40" y1="15" x2="40" y2="145" stroke="#64748b" stroke-width="2"/>
+            <line x1="40" y1="145" x2="395" y2="145" stroke="#64748b" stroke-width="2"/>
+
+            ${sampleStudents.map(st => {
+              const cx = 40 + st.h * 40;
+              const cy = 145 - ((st.s - 40) / 60) * 120;
+              const fillCol = l6HueEnabled ? (st.pass ? '#34d399' : '#f43f5e') : '#38bdf8';
+              const radius = l6SizeEnabled ? 4 + st.proj * 2.2 : 7;
+              return `
+                <circle cx="${cx}" cy="${cy}" r="${radius}" fill="${fillCol}" fill-opacity="0.88" stroke="#0f172a" stroke-width="2" class="point-anim" />
+                <text x="${cx}" y="${cy - radius - 5}" fill="#cbd5e1" font-size="9.5" text-anchor="middle">${st.s}%</text>
+              `;
+            }).join('')}
+          </svg>
+        </div>
+      `;
+    }
+
+    function renderStage7(headerCtrl, stage) {
+      const vars = ['ساعات المذاكرة', 'أيام الغياب', 'الدرجة النهائية', 'المشاريع العملية'];
+      const matrix = [
+        [ 1.00, -0.75,  0.92,  0.81],
+        [-0.75,  1.00, -0.84, -0.68],
+        [ 0.92, -0.84,  1.00,  0.88],
+        [ 0.81, -0.68,  0.88,  1.00]
+      ];
+
+      const r = l7SelectedCell.r;
+      const c = l7SelectedCell.c;
+      const val = matrix[r][c];
+
+      let relationTitle = '';
+      let relationDesc = '';
+      let badgeCol = '';
+      if (r === c) {
+        relationTitle = 'ارتباط المتغير بنفسه (+1.00 دائماً)';
+        relationDesc = 'القطر الرئيسي في أي Heatmap يساوي 1.00 لأن كل عمود يطابق نفسه تماماً.';
+        badgeCol = 'bg-emerald-500/20 text-emerald-300';
+      } else if (val > 0.5) {
+        relationTitle = `علاقة طردية قوية (+${val.toFixed(2)})`;
+        relationDesc = `كلما زاد «${vars[r]}» زاد معه «${vars[c]}» بشكل واضح جداً!`;
+        badgeCol = 'bg-emerald-500/20 text-emerald-300';
+      } else if (val < -0.5) {
+        relationTitle = `علاقة عكسية قوية (${val.toFixed(2)})`;
+        relationDesc = `كلما زاد «${vars[r]}» انخفض «${vars[c]}» بشكل ملحوظ! (إشارة سالبة).`;
+        badgeCol = 'bg-rose-500/20 text-rose-300';
+      }
+
+      function cellColor(v) {
+        if (v >= 0.8) return 'bg-emerald-600/80 text-white';
+        if (v > 0) return 'bg-sky-600/70 text-white';
+        if (v <= -0.7) return 'bg-rose-600/85 text-white';
+        return 'bg-orange-600/75 text-white';
+      }
+
+      stage.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <div class="text-xs font-bold text-slate-300 mb-3 text-center">اضغط على أي مربع في مصفوفة الارتباط لتفسير الرقم فوراً:</div>
+            <div class="grid grid-cols-5 gap-1.5 text-xs items-center">
+              <div></div>
+              ${vars.map(v => `<div class="text-[11px] font-bold text-slate-300 text-center p-1">${v}</div>`).join('')}
+
+              ${matrix.map((rowVals, rIdx) => `
+                <div class="text-[11px] font-bold text-slate-300 p-1">${vars[rIdx]}</div>
+                ${rowVals.map((cellVal, cIdx) => {
+                  const isSel = rIdx === r && cIdx === c;
+                  return `
+                    <button type="button" data-r="${rIdx}" data-c="${cIdx}"
+                      class="heatmap-cell h-12 rounded-lg font-mono font-bold text-xs transition transform ${cellColor(cellVal)} ${
+                        isSel ? 'ring-2 ring-white scale-105 shadow-lg' : 'opacity-85 hover:opacity-100'
+                      }">
+                      ${cellVal > 0 ? '+' : ''}${cellVal.toFixed(2)}
+                    </button>
+                  `;
+                }).join('')}
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+            <span class="text-xs px-2.5 py-1 rounded-full font-bold inline-block ${badgeCol}">${relationTitle}</span>
+            <h4 class="text-sm font-extrabold text-white">«${vars[r]}» × «${vars[c]}»</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">${relationDesc}</p>
+
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="text-[11px] text-slate-400 mb-1">شكل النقاط المقابل لهذا الرقم (${val.toFixed(2)}):</div>
+              <svg viewBox="0 0 240 90" class="w-full h-24">
+                <line x1="20" y1="80" x2="220" y2="80" stroke="#475569"/>
+                <line x1="20" y1="10" x2="20" y2="80" stroke="#475569"/>
+                ${[0, 1, 2, 3, 4, 5].map(i => {
+                  const x = 35 + i * 32;
+                  const y = val > 0 ? 72 - i * 11 : 18 + i * 11;
+                  return `<circle cx="${x}" cy="${y}" r="4.5" fill="${val > 0 ? '#34d399' : '#f43f5e'}" />`;
+                }).join('')}
+              </svg>
+            </div>
+          </div>
+        </div>
+      `;
+
+      stage.querySelectorAll('.heatmap-cell').forEach(btn => {
+        btn.addEventListener('click', () => {
+          l7SelectedCell = {
+            r: parseInt(btn.getAttribute('data-r'), 10),
+            c: parseInt(btn.getAttribute('data-c'), 10)
+          };
+          renderStage7(headerCtrl, stage);
+        });
+      });
+    }
+
+    function renderStage8(headerCtrl, stage) {
+      const insights = [
+        {
+          btn: '1. القمة (أعلى مادة)',
+          title: 'الذكاء الاصطناعي والبرمجة في الصدارة (91% و 88%)',
+          detail: 'الطلاب يتفاعلون بقوة مع المواد العملية التي تحتوي على مشاريع تطبيقية ومحاكي تفاعلي.',
+          action: 'توصية: نقل أسلوب التعلم بالمشاريع إلى بقية المواد النظرية.'
+        },
+        {
+          btn: '2. القاع (مادة تحتاج لتحسين)',
+          title: 'الفيزياء تحت خط المتوسط العام بوضوح (56%)',
+          detail: 'تقع الفيزياء أقل بـ 23 درجة عن المتوسط العام (79%)، مما يخفض المعدل التراكمي للدفعة.',
+          action: 'توصية: تخصيص ساعتين عمليتين لحل المسائل الفيزيائية بالمحاكاة البصرية.'
+        },
+        {
+          btn: '3. خط المرجع (Baseline)',
+          title: 'خط المتوسط العام (79.0%) يفصل الأداء فوراً',
+          detail: 'إضافة خط أفقي مرجعي (axhline) جعلت 4 مواد فوق الخط ومادة واحدة فقط تحت الخط دون الحاجة لحساب ذهني.',
+          action: 'توصية برمجية: استخدم دائماً plt.axhline() في تقارير المقارنة.'
+        }
+      ];
+
+      headerCtrl.innerHTML = insights.map((ins, i) => `
+        <button type="button" data-ins="${i}" class="l8-ins-btn px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          l8SelectedInsight === i ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">🔍 ${ins.btn}</button>
+      `).join('');
+
+      headerCtrl.querySelectorAll('.l8-ins-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          l8SelectedInsight = parseInt(btn.getAttribute('data-ins'), 10);
+          renderStage8(headerCtrl, stage);
+        });
+      });
+
+      const cur = insights[l8SelectedInsight];
+      const subjects = [
+        { name: 'Math', val: 78 },
+        { name: 'Physics ⚠️', val: 56 },
+        { name: 'Programming', val: 88 },
+        { name: 'AI 🌟', val: 91 },
+        { name: 'English', val: 82 }
+      ];
+
+      stage.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center my-auto">
+          <div class="md:col-span-7 bg-slate-950 p-5 rounded-xl border border-slate-800 relative">
+            <div class="text-xs font-bold text-slate-300 mb-4 text-center">مقارنة المواد مع خط المتوسط المرجعي (79%)</div>
+
+            <div class="relative h-44 flex items-end justify-around gap-3 pt-4 px-3 border-b border-slate-800">
+              <div class="absolute inset-x-2 border-t-2 border-dashed border-amber-400 z-10 flex justify-end" style="bottom: 79%;">
+                <span class="bg-amber-400 text-slate-950 text-[10px] font-extrabold px-1.5 py-0.5 rounded -mt-2.5">المتوسط العام 79%</span>
+              </div>
+
+              ${subjects.map((s, idx) => {
+                const isLow = idx === 1;
+                const isHigh = idx === 3;
+                const highlight = (l8SelectedInsight === 0 && (idx === 2 || idx === 3)) ||
+                                  (l8SelectedInsight === 1 && isLow);
+                return `
+                  <div class="flex flex-col items-center justify-end h-full w-full">
+                    <span class="text-xs font-bold mb-1 ${isLow ? 'text-rose-400' : isHigh ? 'text-emerald-300' : 'text-slate-200'}">${s.val}%</span>
+                    <div class="w-full max-w-[48px] rounded-t-xl bar-anim ${
+                      isLow ? 'bg-rose-500' : isHigh ? 'bg-emerald-400' : 'bg-sky-500'
+                    } ${highlight ? 'ring-2 ring-white scale-105' : 'opacity-85'}" style="height: ${s.val}%"></div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div class="flex justify-around pt-2 text-[11px] font-bold text-slate-300">
+              ${subjects.map(s => `<span>${s.name}</span>`).join('')}
+            </div>
+          </div>
+
+          <div class="md:col-span-5 bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3">
+            <span class="text-xs font-bold text-amber-400 block">📊 بطاقة الاستنتاج التحليلي:</span>
+            <h4 class="text-base font-extrabold text-white">${cur.title}</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">${cur.detail}</p>
+            <div class="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs font-bold text-emerald-300">
+              ✅ ${cur.action}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStage9(headerCtrl, stage) {
+      headerCtrl.innerHTML = `
+        <button id="projTabOverview" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          projectActiveTab === 'overview' ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">📊 1. متوسط المواد وتحديد الأضعف</button>
+        <button id="projTabStudents" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          projectActiveTab === 'students' ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">👩‍🎓 2. مقارنة أداء الطلاب وجدول الدرجات</button>
+        <button id="projTabSim" type="button" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+          projectActiveTab === 'simulator' ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+        }">🛠️ 3. محاكي خطة تحسين المادة</button>
+      `;
+
+      document.getElementById('projTabOverview').addEventListener('click', () => { projectActiveTab = 'overview'; renderStage9(headerCtrl, stage); });
+      document.getElementById('projTabStudents').addEventListener('click', () => { projectActiveTab = 'students'; renderStage9(headerCtrl, stage); });
+      document.getElementById('projTabSim').addEventListener('click', () => { projectActiveTab = 'simulator'; renderStage9(headerCtrl, stage); });
+
+      const n = projectStudents.length;
+      const avgMath = projectStudents.reduce((a, b) => a + b.math, 0) / n;
+      const avgPhys = projectStudents.reduce((a, b) => a + Math.min(100, b.physics + physicsBoost), 0) / n;
+      const avgProg = projectStudents.reduce((a, b) => a + b.prog, 0) / n;
+      const avgAI   = projectStudents.reduce((a, b) => a + b.ai, 0) / n;
+      const avgEng  = projectStudents.reduce((a, b) => a + b.eng, 0) / n;
+
+      const subjectsList = [
+        { key: 'math', label: 'الرياضيات (Math)', avg: avgMath },
+        { key: 'phys', label: 'الفيزياء (Physics)', avg: avgPhys },
+        { key: 'prog', label: 'البرمجة (Programming)', avg: avgProg },
+        { key: 'ai',   label: 'أساسيات الذكاء الاصطناعي (AI)', avg: avgAI },
+        { key: 'eng',  label: 'اللغة الإنجليزية (English)', avg: avgEng }
+      ];
+
+      const overallAvg = subjectsList.reduce((a, b) => a + b.avg, 0) / subjectsList.length;
+      const sorted = [...subjectsList].sort((a, b) => a.avg - b.avg);
+      const weakest = sorted[0];
+      const strongest = sorted[sorted.length - 1];
+
+      if (projectActiveTab === 'overview') {
+        stage.innerHTML = `
+          <div class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+                <span class="text-xs text-slate-400 block">المتوسط العام لجميع المواد</span>
+                <span class="text-xl font-extrabold text-sky-400">${overallAvg.toFixed(1)}%</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                <span class="text-xs text-emerald-300 block">أعلى مادة أداءً</span>
+                <span class="text-base font-extrabold text-white">${strongest.label} (${strongest.avg.toFixed(1)}%)</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40">
+                <span class="text-xs text-rose-300 block">⚠️ المادة التي تحتاج إلى تحسين</span>
+                <span class="text-base font-extrabold text-white">${weakest.label} (${weakest.avg.toFixed(1)}%)</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-5 rounded-xl border border-slate-800">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-white">مقارنة متوسط درجات المواد الـ 5 (اللون الأحمر يحدد تلقائياً المادة الأضعف)</span>
+                <span class="text-xs text-amber-300 font-semibold">خط المتوسط العام: ${overallAvg.toFixed(1)}%</span>
+              </div>
+
+              <div class="relative h-48 flex items-end justify-around gap-4 pt-6 px-4 border-b border-slate-800">
+                <div class="absolute inset-x-3 border-t-2 border-dashed border-amber-400 z-10" style="bottom: ${overallAvg}%;"></div>
+                ${subjectsList.map(sub => {
+                  const isWeak = sub.key === weakest.key;
+                  return `
+                    <div class="flex flex-col items-center justify-end h-full w-full">
+                      <span class="text-xs font-extrabold mb-1 ${isWeak ? 'text-rose-400' : 'text-sky-300'}">${sub.avg.toFixed(1)}%</span>
+                      <div class="w-full max-w-[60px] rounded-t-xl bar-anim ${
+                        isWeak ? 'bg-gradient-to-t from-rose-600 to-rose-400 glow-active' : 'bg-gradient-to-t from-sky-600 to-sky-400'
+                      }" style="height: ${sub.avg}%"></div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              <div class="grid grid-cols-5 gap-2 pt-2.5 text-center text-[11px] font-bold text-slate-300">
+                ${subjectsList.map(sub => `<span>${sub.label}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (projectActiveTab === 'students') {
+        stage.innerHTML = `
+          <div class="space-y-4">
+            <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950">
+              <table class="w-full text-right text-xs">
+                <thead class="bg-slate-800 text-slate-200">
+                  <tr>
+                    <th class="p-3">اسم الطالب</th>
+                    <th class="p-3">الرياضيات</th>
+                    <th class="p-3 text-rose-300">الفيزياء ⚠️</th>
+                    <th class="p-3">البرمجة</th>
+                    <th class="p-3">الذكاء الاصطناعي</th>
+                    <th class="p-3">الإنجليزية</th>
+                    <th class="p-3 text-sky-300">متوسط الطالب</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/70">
+                  ${projectStudents.map(st => {
+                    const ph = Math.min(100, st.physics + physicsBoost);
+                    const stAvg = (st.math + ph + st.prog + st.ai + st.eng) / 5;
+                    return `
+                      <tr class="hover:bg-slate-900/60">
+                        <td class="p-2.5 font-bold text-white">${st.name}</td>
+                        <td class="p-2.5 font-mono">${st.math}%</td>
+                        <td class="p-2.5 font-mono font-bold ${ph < 65 ? 'text-rose-400' : 'text-emerald-300'}">${ph}%</td>
+                        <td class="p-2.5 font-mono">${st.prog}%</td>
+                        <td class="p-2.5 font-mono">${st.ai}%</td>
+                        <td class="p-2.5 font-mono">${st.eng}%</td>
+                        <td class="p-2.5 font-mono font-bold text-sky-300">${stAvg.toFixed(1)}%</td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
+              💡 <strong>ملاحظة للطلاب:</strong> حتى الطلاب المتفوقون في البرمجة والـ AI (مثل أحمد 90% وعمر 82%) يعانون من انخفاض واضح في درجات الفيزياء (55% و 48%)، مما يؤكد أن المشكلة عامة في المادة وليست في طالب فردي!
+            </div>
+          </div>
+        `;
+      } else {
+        stage.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center my-auto">
+            <div class="md:col-span-7 bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+              <h4 class="text-sm font-extrabold text-amber-400">🛠️ محاكاة أثر خطة التحسين على مادة الفيزياء</h4>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                بعد اكتشاف أن الفيزياء هي المادة الأضعف (بمتوسط 58.5%)، اقترح فريق تحليل البيانات إضافة <strong>حصص محاكاة عملية</strong>. حرّك المؤشر لترى تأثير رفع درجات الفيزياء على المتوسط العام وعلى ترتيب المواد!
+              </p>
+
+              <div class="space-y-2 pt-2">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-sky-300">مقدار التحسن بعد البرنامج العلاجي: +${physicsBoost} درجة</span>
+                  <span class="text-emerald-300">متوسط الفيزياء الجديد: ${avgPhys.toFixed(1)}%</span>
+                </div>
+                <input id="physBoostSlider" type="range" min="0" max="30" step="2" value="${physicsBoost}" class="w-full accent-amber-400 cursor-pointer" />
+              </div>
+
+              <div class="p-3.5 rounded-xl border ${
+                weakest.key === 'phys'
+                  ? 'bg-rose-500/10 border-rose-500/30 text-rose-200'
+                  : 'bg-emerald-500/15 border-emerald-500/40 text-emerald-200'
+              } text-xs font-bold">
+                ${
+                  weakest.key === 'phys'
+                    ? `⚠️ ما زالت الفيزياء (${avgPhys.toFixed(1)}%) هي المادة الأقل وتحتاج لمزيد من الدعم لتتجاوز الإنجليزية (${avgEng.toFixed(1)}%).`
+                    : `🎉 نجاح الخطة! ارتفع متوسط الفيزياء إلى ${avgPhys.toFixed(1)}% وتجاوز مرحلة الخطر!`
+                }
+              </div>
+            </div>
+
+            <div class="md:col-span-5 bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-3 text-xs">
+              <div class="font-bold text-white text-sm mb-2">📋 خطوات تسليم المشروع للطلاب:</div>
+              <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">1. إنشاء DataFrame بدرجات الطلاب في 5 مواد.</div>
+              <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">2. رسم Bar Chart لمتوسط المواد مع خط المتوسط العام.</div>
+              <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">3. رسم Histogram و Scatter Plot للمادة الأضعف.</div>
+              <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800">4. رسم Heatmap لمصفوفة الارتباط وكتابة 3 توصيات.</div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('physBoostSlider').addEventListener('input', (e) => {
+          physicsBoost = parseInt(e.target.value, 10);
+          renderStage9(headerCtrl, stage);
+        });
+      }
+    }
+
+    function renderAll() {
+      renderNav();
+      renderLessonContent();
+    }
+
+    document.getElementById('prevTopicBtn').addEventListener('click', () => {
+      if (currentLessonIdx > 0) {
+        currentLessonIdx--;
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    document.getElementById('nextTopicBtn').addEventListener('click', () => {
+      if (currentLessonIdx < lessons.length - 1) {
+        currentLessonIdx++;
+      } else {
+        currentLessonIdx = 0;
+      }
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('jumpProjectBtn').addEventListener('click', () => {
+      currentLessonIdx = lessons.length - 1;
+      renderAll();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('markCompleteBtn').addEventListener('click', () => {
+      const id = lessons[currentLessonIdx].id;
+      if (completedLessons.has(id)) {
+        completedLessons.delete(id);
+      } else {
+        completedLessons.add(id);
+      }
+      saveProgress();
+      renderAll();
+    });
+
+    document.getElementById('toggleRefsBtn').addEventListener('click', () => {
+      const drawer = document.getElementById('refsDrawer');
+      drawer.classList.toggle('hidden');
+    });
+
+    document.getElementById('closeRefsBtn').addEventListener('click', () => {
+      document.getElementById('refsDrawer').classList.add('hidden');
+    });
+
+    document.getElementById('presentModeBtn').addEventListener('click', () => {
+      isPresentationMode = !isPresentationMode;
+      const sidebar = document.querySelector('aside');
+      const mainCol = document.getElementById('mainContentCol');
+      const btn = document.getElementById('presentModeBtn');
+      if (isPresentationMode) {
+        sidebar.classList.add('hidden');
+        mainCol.className = 'lg:col-span-12 flex flex-col gap-6';
+        btn.textContent = 'إظهار القائمة الجانبية';
+      } else {
+        sidebar.classList.remove('hidden');
+        mainCol.className = 'lg:col-span-9 flex flex-col gap-6';
+        btn.textContent = 'تكبير العرض للشرح';
+      }
+    });
+
+    document.getElementById('copyCodeBtn').addEventListener('click', () => {
+      const codeText = document.getElementById('pythonCodeBlock').textContent;
+      const showToast = () => {
+        const toast = document.getElementById('toastBox');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2200);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(codeText).then(showToast).catch(() => {
+          fallbackCopy(codeText, showToast);
+        });
+      } else {
+        fallbackCopy(codeText, showToast);
+      }
+    });
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        cb();
+      } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+    });
+  </script>
+</body>
+</html>
