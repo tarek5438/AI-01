@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Vision Assistant – Lesson 1: Introduction to Computer Vision &amp; Object Detection</title>
+  <style>
+    :root {
+      --bg-main: #0b1120;
+      --bg-card: #131c31;
+      --bg-card-alt: #1b2642;
+      --bg-glass: rgba(19, 28, 49, 0.88);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --border-color: rgba(148, 163, 184, 0.18);
+      --code-bg: #090d16;
+      --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.45);
+      --base-font-size: 16px;
+    }
+
+    body.light-mode {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-alt: #f1f5f9;
+      --bg-glass: rgba(255, 255, 255, 0.92);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent-cyan: #0891b2;
+      --accent-blue: #2563eb;
+      --accent-purple: #7c3aed;
+      --accent-emerald: #059669;
+      --accent-amber: #d97706;
+      --accent-rose: #e11d48;
+      --border-color: rgba(15, 23, 42, 0.12);
+      --code-bg: #0f172a;
+      --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: var(--base-font-size);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.75;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    /* Top Sticky Navigation */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1.25rem;
+    }
+
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent-cyan);
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.35);
+    }
+
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 0.38rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--text-main);
+      background: var(--bg-card-alt);
+      border-color: var(--accent-cyan);
+    }
+
+    .toolbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tool-btn {
+      background: var(--bg-card-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.38rem 0.68rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .tool-btn:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(148, 163, 184, 0.15);
+      margin-top: 0.6rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 11%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-emerald));
+      transition: width 0.3s ease;
+    }
+
+    /* Main Container */
+    .main-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.75rem 1.25rem 4rem;
+    }
+
+    /* Hero Header */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.14), rgba(139, 92, 246, 0.14));
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(6, 182, 212, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      padding: 0.25rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--accent-purple);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .hero-goals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .goal-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    /* Section Card */
+    .lesson-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.85rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .section-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .section-en-badge {
+      font-size: 0.85rem;
+      background: var(--bg-card-alt);
+      color: var(--accent-cyan);
+      padding: 0.3rem 0.75rem;
+      border-radius: 8px;
+      font-family: Consolas, Monaco, monospace;
+      direction: ltr;
+      border: 1px solid var(--border-color);
+    }
+
+    .lead-box {
+      background: var(--bg-card-alt);
+      border-right: 4px solid var(--accent-cyan);
+      padding: 1.1rem 1.25rem;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .teacher-note {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-right: 4px solid var(--accent-amber);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+
+    .teacher-note-title {
+      color: var(--accent-amber);
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    /* Interactive Simulators & Layouts */
+    .sim-box {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.35rem;
+      margin-top: 1.25rem;
+    }
+
+    .sim-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-secondary:hover, .btn-secondary.active {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    /* Pipeline Grid (Section 1) */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .pipeline-step {
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.2rem;
+      transition: all 0.35s ease;
+      position: relative;
+    }
+
+    .pipeline-step.active-step {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 22px rgba(6, 182, 212, 0.28);
+      transform: translateY(-3px);
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+      direction: ltr;
+    }
+
+    .badge-input { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .badge-ai { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
+    .badge-output { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+    /* Virtual Camera Room Scene */
+    .room-scene {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 70%, #334155 70%, #1e293b 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      margin: 0.85rem 0;
+    }
+
+    .scan-laser {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.35), transparent);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .scan-laser.scanning {
+      opacity: 1;
+      animation: laserSweep 1.6s ease-in-out infinite;
+    }
+
+    @keyframes laserSweep {
+      0% { left: -60%; }
+      100% { left: 100%; }
+    }
+
+    .scene-obj {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      padding: 4px;
+      border: 2px dashed transparent;
+      border-radius: 8px;
+    }
+
+    .scene-obj.detected {
+      border-style: solid;
+      background: rgba(6, 182, 212, 0.14);
+    }
+
+    .bbox-tag {
+      position: absolute;
+      top: -24px;
+      left: 0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fff;
+      white-space: nowrap;
+      direction: ltr;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.25s ease;
+    }
+
+    .scene-obj.detected .bbox-tag {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Soundwave Animation */
+    .voice-box {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .sound-bars {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      height: 20px;
+    }
+
+    .sound-bar {
+      width: 4px;
+      height: 6px;
+      background: var(--accent-emerald);
+      border-radius: 2px;
+      transition: height 0.15s ease;
+    }
+
+    .sound-bars.speaking .sound-bar:nth-child(1) { animation: bounceBar 0.5s infinite 0.0s; }
+    .sound-bars.speaking .sound-bar:nth-child(2) { animation: bounceBar 0.5s infinite 0.15s; }
+    .sound-bars.speaking .sound-bar:nth-child(3) { animation: bounceBar 0.5s infinite 0.3s; }
+    .sound-bars.speaking .sound-bar:nth-child(4) { animation: bounceBar 0.5s infinite 0.1s; }
+
+    @keyframes bounceBar {
+      0%, 100% { height: 5px; }
+      50% { height: 20px; }
+    }
+
+    /* Cards Grid (Section 2 & 3) */
+    .cards-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.2rem;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover, .feature-card.selected-card {
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(6, 182, 212, 0.15);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    /* Pixel Matrix Demo */
+    .pixel-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      max-width: 320px;
+      margin: 0.75rem auto;
+      direction: ltr;
+    }
+
+    .pixel-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-family: Consolas, monospace;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    /* Bounding Box Canvas Sandbox (Section 5) */
+    .bbox-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .bbox-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .coord-stage-wrapper {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1rem;
+      overflow: hidden;
+    }
+
+    .coord-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background-color: #111827;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+      background-size: 10% 10%;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      direction: ltr;
+    }
+
+    .dynamic-bbox {
+      position: absolute;
+      border: 3px solid #06b6d4;
+      background: rgba(6, 182, 212, 0.18);
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .corner-pin {
+      position: absolute;
+      padding: 2px 6px;
+      font-size: 0.72rem;
+      font-family: Consolas, monospace;
+      font-weight: 800;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .pin-top-left {
+      top: -24px;
+      left: -2px;
+      background: #06b6d4;
+      color: #000;
+    }
+
+    .pin-bottom-right {
+      bottom: -24px;
+      right: -2px;
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .slider-row {
+      margin-bottom: 0.85rem;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      direction: ltr;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+
+    /* Tables */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+
+    .styled-table th, .styled-table td {
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border-color);
+      text-align: right;
+    }
+
+    .styled-table th {
+      background: var(--bg-card-alt);
+      color: var(--accent-cyan);
+      font-weight: 800;
+    }
+
+    /* Code Blocks (Section 8) */
+    .code-box {
+      background: var(--code-bg);
+      color: #e2e8f0;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      font-size: 0.9rem;
+      direction: ltr;
+      text-align: left;
+      overflow-x: auto;
+      position: relative;
+      margin: 0.75rem 0;
+    }
+
+    .code-line {
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      display: block;
+      white-space: pre;
+    }
+
+    .code-line:hover, .code-line.active-code-line {
+      background: rgba(6, 182, 212, 0.22);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .kw { color: #c084fc; font-weight: 700; }
+    .fn { color: #38bdf8; }
+    .str { color: #34d399; }
+    .cm { color: #64748b; font-style: italic; }
+    .num { color: #fbbf24; }
+
+    /* Quiz Styling (Section 9) */
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--accent-cyan);
+    }
+
+    .quiz-option.selected {
+      border-color: var(--accent-blue);
+      background: rgba(59, 130, 246, 0.14);
+    }
+
+    .quiz-option.correct-ans {
+      border-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.18);
+    }
+
+    .quiz-option.wrong-ans {
+      border-color: var(--accent-rose);
+      background: rgba(244, 63, 94, 0.18);
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: var(--accent-emerald);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      z-index: 999;
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Navigation -->
+  <header class="top-navbar">
+    <div class="nav-container">
+      <div class="brand-badge">
+        <span class="brand-icon">AI</span>
+        <span>AI Vision Assistant – الدرس الأول</span>
+      </div>
+
+      <nav class="nav-pills" aria-label="أقسام الدرس">
+        <button class="nav-btn active" onclick="scrollToSection('sec-1', 1)">1. فكرة المشروع</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-2', 2)">2. Computer Vision</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-3', 3)">3. Object Detection</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-4', 4)">4. Classification vs Detection</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-5', 5)">5. Bounding Box</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-6', 6)">6. YOLO</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-7', 7)">7. Confidence Score</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-8', 8)">8. التطبيق العملي</button>
+        <button class="nav-btn" onclick="scrollToSection('sec-9', 9)">9. الاختبار والمراجعة</button>
+      </nav>
+
+      <div class="toolbar-controls">
+        <button class="tool-btn" onclick="changeFontSize(1)" title="تكبير الخط">A+</button>
+        <button class="tool-btn" onclick="changeFontSize(-1)" title="تصغير الخط">A-</button>
+        <button class="tool-btn" id="themeToggleBtn" onclick="toggleTheme()">☀️ الوضع النهاري</button>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="lessonProgress"></div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+      <span class="hero-tag">Lesson 1 • Interactive Courseware</span>
+      <h1 class="hero-title">مساعد الرؤية الذكي – مدخل إلى الرؤية الحاسوبية واكتشاف الأشياء</h1>
+      <div class="hero-subtitle">AI Vision Assistant – Introduction to Computer Vision &amp; Object Detection (YOLO + OpenCV)</div>
+      <p>
+        مرحباً بكِ في الدرس الأول من مشروع <strong>AI Vision Assistant</strong>! في هذا الدرس التفاعلي سنفهم كيف نجعل الكمبيوتر يرى العالم من حولنا عبر الكاميرا، يكتشف الأشياء ويحدد أماكنها بدقة باستخدام نموذج <strong>YOLO</strong>، تمهيداً لتحويلها إلى مساعد صوتي ذكي يساعد المكفوفين.
+      </p>
+      <div class="hero-goals">
+        <div class="goal-chip">🎯 فهم معنى Computer Vision وتطبيقاته</div>
+        <div class="goal-chip">🔍 التفريق بين Classification و Object Detection</div>
+        <div class="goal-chip">📐 إتقان إحداثيات المستطيل Bounding Box</div>
+        <div class="goal-chip">⚡ تشغيل نموذج YOLO مع كاميرا الويب عملياً</div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: What are we going to build? -->
+    <section class="lesson-section" id="sec-1">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">1</span>
+          <h2 class="section-title">ماذا سنبني في هذا المشروع؟</h2>
+        </div>
+        <span class="section-en-badge">1. What are we going to build?</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          <strong>المشكلة التي يحاول المشروع حلها:</strong>
+          تخيلي شخصاً كفيفاً يريد معرفة الأشياء الموجودة حوله في الغرفة أو الطريق، لكنه لا يستطيع رؤيتها.
+          هدفنا هو بناء تطبيق ذكي يستخدم <strong>الكاميرا (Camera)</strong> لالتقاط صورة للبيئة المحيطة، ثم يمررها إلى <strong>الذكاء الاصطناعي (AI Object Detection)</strong> للتعرف على الأشياء ومواقعها، وبعد ذلك يحوّل النتائج إلى <strong>رسالة صوتية (Voice Assistant)</strong> تنطق بما أمامه!
+        </p>
+      </div>
+
+      <!-- Interactive Pipeline Simulator -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>🎬 محاكي خط عمل المشروع (Interactive Pipeline Simulator)</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">اضغطي على زر التشغيل لمشاهدة كيف تنتقل الصورة من الكاميرا إلى الذكاء الاصطناعي ثم المساعد الصوتي:</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-primary" onclick="runPipelineDemo()">▶️ تشغيل المحاكاة بالكامل</button>
+            <button class="btn-secondary" onclick="speakAssistantArabic()">🔊 سماع المساعد الصوتي</button>
+          </div>
+        </div>
+
+        <!-- Room Visual Scene -->
+        <div class="room-scene" id="sec1RoomScene">
+          <div class="scan-laser" id="sec1Laser"></div>
+
+          <!-- Person -->
+          <div class="scene-obj detected" id="s1ObjPerson" style="left: 12%; top: 24%; width: 95px; height: 150px; border-color: #06b6d4;">
+            <span class="bbox-tag" style="background: #06b6d4;">Person (0.95)</span>
+            <span style="font-size: 3.4rem;">🧍</span>
+          </div>
+
+          <!-- Chair -->
+          <div class="scene-obj detected" id="s1ObjChair" style="left: 38%; top: 44%; width: 85px; height: 110px; border-color: #10b981;">
+            <span class="bbox-tag" style="background: #10b981;">Chair (0.87)</span>
+            <span style="font-size: 2.8rem;">🪑</span>
+          </div>
+
+          <!-- Table -->
+          <div class="scene-obj detected" id="s1ObjTable" style="left: 62%; top: 48%; width: 120px; height: 105px; border-color: #f59e0b;">
+            <span class="bbox-tag" style="background: #f59e0b;">Table (0.84)</span>
+            <span style="font-size: 2.8rem;">🛋️</span>
+          </div>
+
+          <!-- Bottle -->
+          <div class="scene-obj detected" id="s1ObjBottle" style="left: 69%; top: 22%; width: 62px; height: 70px; border-color: #8b5cf6;">
+            <span class="bbox-tag" style="background: #8b5cf6;">Bottle (0.62)</span>
+            <span style="font-size: 2rem;">🍾</span>
+          </div>
+        </div>
+
+        <!-- 3 Pipeline Steps -->
+        <div class="pipeline-grid">
+          <div class="pipeline-step active-step" id="pipeStep1">
+            <span class="step-badge badge-input">Step 1 • Input</span>
+            <h4>📸 التقاط الصورة (Camera Input)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+              تقوم الكاميرا بالتقاط إطار (Frame) حي للغرفة وإرساله كمصفوفة ألوان إلى برنامج بايثون.
+            </p>
+          </div>
+
+          <div class="pipeline-step" id="pipeStep2">
+            <span class="step-badge badge-ai">Step 2 • AI Processing</span>
+            <h4>🧠 معالجة الذكاء الاصطناعي (Object Detection)</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+              يحلل نموذج <strong>YOLO</strong> الصورة ويكتشف كل جسم ويرسم حوله مربع تحديد.
+            </p>
+          </div>
+
+          <div class="pipeline-step" id="pipeStep3">
+            <span class="step-badge badge-output">Step 3 • Output</span>
+            <h4>🔊 المخرجات والمساعد الصوتي</h4>
+            <ul style="font-size: 0.88rem; margin: 0.4rem 1.2rem; direction: ltr; text-align: left;">
+              <li>Person</li>
+              <li>Chair</li>
+              <li>Table</li>
+              <li>Bottle</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Voice Output Banner -->
+        <div class="voice-box">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="sound-bars" id="voiceWave">
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+              <span class="sound-bar"></span>
+            </div>
+            <div>
+              <strong style="color: var(--accent-emerald);">Voice Assistant Output:</strong>
+              <p id="voiceTextOutput">«يوجد شخص وكرسي وطاولة وزجاجة أمام الكاميرا»</p>
+            </div>
+          </div>
+          <span id="pipelineStatusBadge" style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">جاهز للتشغيل ✅</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: What is Computer Vision? -->
+    <section class="lesson-section" id="sec-2">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">2</span>
+          <h2 class="section-title">ما هي الرؤية الحاسوبية (Computer Vision)؟</h2>
+        </div>
+        <span class="section-en-badge">2. What is Computer Vision?</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          <strong>Computer Vision (الرؤية الحاسوبية)</strong> هو أحد فروع الذكاء الاصطناعي الذي يجعل الكمبيوتر قادراً على <strong>تحليل الصور والفيديوهات واستخراج معلومات مفيدة منها</strong>.
+        </p>
+        <p style="margin-top: 0.5rem;">
+          <strong>بمعنى أبسط:</strong> نحن البشر ننظر إلى أي صورة فنفهم فوراً أنها تحتوي على شخص وسيارة وكلب. أما الكمبيوتر فلا يرى سوى <strong>شبكة ضخمة من الأرقام (Pixels)</strong> تمثل شدة الإضاءة والألوان (RGB). لذلك نستخدم نماذج ذكاء اصطناعي تم تدريبها على ملايين الصور لتتعلم الأنماط (Patterns) التي تميز الحواف والأشكال والأشياء!
+        </p>
+      </div>
+
+      <!-- Interactive Human vs Computer View -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>👁️ كيف نرى نحن الصورة مقابل كيف يراها الكمبيوتر؟</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">بدّلي بين رؤية الإنسان ورؤية الكمبيوتر الرقمية (مصفوفة البكسلات):</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-secondary active" id="btnHumanView" onclick="setVisionMode('human')">👀 رؤية الإنسان (صورة مفهومة)</button>
+            <button class="btn-secondary" id="btnComputerView" onclick="setVisionMode('computer')">🔢 رؤية الكمبيوتر (أرقام Pixels)</button>
+          </div>
+        </div>
+
+        <div id="visionCompareArea" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; align-items: center;">
+          <div style="text-align: center; padding: 1rem; background: var(--bg-card); border-radius: 14px; border: 1px solid var(--border-color);">
+            <div id="humanEmojiDisplay" style="font-size: 5rem; transition: transform 0.3s ease;">🚗 🐕 🧍</div>
+            <p id="visionModeCaption" style="font-weight: 700; color: var(--accent-cyan); margin-top: 0.5rem;">
+              الإنسان يميز فوراً: سيارة + كلب + شخص
+            </p>
+          </div>
+          <div>
+            <div class="pixel-grid" id="pixelMatrixGrid"></div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">
+              كل مربع يمثل Pixel بقيمة رقمية من 0 إلى 255. نموذج الذكاء الاصطناعي يبحث عن الأنماط داخل هذه الأرقام!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Applications of Computer Vision -->
+      <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.15rem;">أشهر تطبيقات Computer Vision في حياتنا اليومية (اضغطي على أي بطاقة لتفاصيل أكثر):</h3>
+      <div class="cards-grid-4">
+        <div class="feature-card selected-card" onclick="selectCvApp(0)" id="cvCard0">
+          <span class="card-icon">😊</span>
+          <h4>Face Detection</h4>
+          <p style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 700;">اكتشاف الوجوه</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">فتح الهاتف بالوجه (Face ID) والتركيز التلقائي في كاميرات الهواتف.</p>
+        </div>
+
+        <div class="feature-card" onclick="selectCvApp(1)" id="cvCard1">
+          <span class="card-icon">🚘</span>
+          <h4>Self-Driving Cars</h4>
+          <p style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 700;">السيارات ذاتية القيادة</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">التعرف على السيارات والمشاة وإشارات المرور والحارات المرورية.</p>
+        </div>
+
+        <div class="feature-card" onclick="selectCvApp(2)" id="cvCard2">
+          <span class="card-icon">🩻</span>
+          <h4>Medical Imaging</h4>
+          <p style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 700;">تحليل الصور الطبية</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">مساعدة الأطباء في قراءة الأشعة السينية (X-Ray) والرنين المغناطيسي.</p>
+        </div>
+
+        <div class="feature-card" onclick="selectCvApp(3)" id="cvCard3">
+          <span class="card-icon">📦</span>
+          <h4>Object Detection</h4>
+          <p style="color: var(--accent-cyan); font-size: 0.9rem; font-weight: 700;">اكتشاف الأشياء المختلفة</p>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem;">تحديد الأشياء وأماكنها في الكاميرات الأمنية والروبوتات ومشروعنا الحالي.</p>
+        </div>
+      </div>
+
+      <div class="teacher-note" id="cvAppDetailBox">
+        <div class="teacher-note-title">💡 مثال توضيحي: Face Detection (اكتشاف الوجوه)</div>
+        <p id="cvAppDetailText">
+          عندما تفتحين كاميرا الهاتف وتظهر مربعات صفراء حول وجوه الأشخاص لضبط الإضاءة والتركيز (Auto-Focus)، فهذا تطبيق مباشر للرؤية الحاسوبية!
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 3: What is Object Detection? -->
+    <section class="lesson-section" id="sec-3">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">3</span>
+          <h2 class="section-title">ما هي تقنية اكتشاف الأشياء (Object Detection)؟</h2>
+        </div>
+        <span class="section-en-badge">3. What is Object Detection?</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          في مشروعنا، سنستخدم تقنية اسمها <strong>Object Detection</strong>. هذه التقنية لا تكتفي بمعرفة أن هناك شيئاً في الصورة، بل تسمح للكمبيوتر بالقيام بـ <strong>ثلاث مهام معاً</strong>:
+        </p>
+      </div>
+
+      <div class="pipeline-grid">
+        <div class="pipeline-step active-step">
+          <span class="step-badge badge-input">المهمة الأولى (1)</span>
+          <h4>🔍 تحديد الأشياء الموجودة</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+            اكتشاف كل جسم موجود داخل الصورة حتى لو كانت الصورة تحتوي على عشرات الأشياء المختلفة.
+          </p>
+        </div>
+        <div class="pipeline-step active-step">
+          <span class="step-badge badge-ai">المهمة الثانية (2)</span>
+          <h4>🏷️ معرفة اسم كل شيء (Class Name)</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+            تصنيف كل جسم تم العثور عليه وإعطاؤه اسماً واضحاً مثل: <code>Person</code> أو <code>Bottle</code> أو <code>Chair</code>.
+          </p>
+        </div>
+        <div class="pipeline-step active-step">
+          <span class="step-badge badge-output">المهمة الثالثة (3)</span>
+          <h4>📐 تحديد مكان كل شيء (Bounding Box)</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.4rem;">
+            رسم مستطيل (Bounding Box) حول كل جسم وإرجاع إحداثيات موقعه الدقيقة داخل الصورة.
+          </p>
+        </div>
+      </div>
+
+      <div class="sim-box">
+        <strong>🧪 مثال تفاعلي: مرري الفأرة أو اضغطي على العناصر في الصورة لترى المهام الثلاث معاً:</strong>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.85rem; align-items: center;">
+          <button class="btn-secondary active" id="objInspectBtn0" onclick="inspectObject(0)">🧍 فحص العنصر الأول (Person)</button>
+          <button class="btn-secondary" id="objInspectBtn1" onclick="inspectObject(1)">🍾 فحص العنصر الثاني (Bottle)</button>
+          <button class="btn-secondary" id="objInspectBtn2" onclick="inspectObject(2)">🪑 فحص العنصر الثالث (Chair)</button>
+        </div>
+        <div id="objInspectResult" style="margin-top: 1rem; background: var(--bg-card); padding: 1rem 1.25rem; border-radius: 12px; border: 1px solid var(--border-color); direction: ltr; font-family: Consolas, monospace;">
+          ✅ <strong>Detected Object #1:</strong> Label = <span style="color: var(--accent-cyan);">"Person"</span> | Bounding Box = <span style="color: var(--accent-amber);">[x1: 80, y1: 60, x2: 240, y2: 410]</span> | Confidence = <span style="color: var(--accent-emerald);">0.95 (95%)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: Image Classification vs Object Detection -->
+    <section class="lesson-section" id="sec-4">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">4</span>
+          <h2 class="section-title">الفرق الجوهري بين Image Classification و Object Detection</h2>
+        </div>
+        <span class="section-en-badge">4. Classification vs. Object Detection</span>
+      </div>
+
+      <div class="teacher-note">
+        <div class="teacher-note-title">⭐ نقطة أساسية قبل كتابة أي كود:</div>
+        <p>
+          لماذا لم نستخدم <strong>Image Classification</strong> في مشروع مساعد المكفوفين واخترنا <strong>Object Detection</strong>؟
+          جربي المقارنة التفاعلية التالية بنفسك لتكتشفي السبب!
+        </p>
+      </div>
+
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>🔄 محاكي المقارنة: نفس الصورة بطريقتين مختلفتين</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">اضغطي للتبديل بين وضع التصنيف الكلي للصورة ووضع اكتشاف الأشياء المتعددة:</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-secondary" id="modeClassBtn" onclick="setComparisonMode('classification')">🏷️ وضع Image Classification</button>
+            <button class="btn-primary" id="modeDetectBtn" onclick="setComparisonMode('detection')">🎯 وضع Object Detection (أنسب لمشروعنا)</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; align-items: center;">
+          <!-- Interactive Scene -->
+          <div class="room-scene" style="height: 220px; margin: 0;">
+            <!-- Person -->
+            <div class="scene-obj detected" id="compPerson" style="left: 8%; top: 24%; width: 75px; height: 135px; border-color: #06b6d4;">
+              <span class="bbox-tag" style="background: #06b6d4;">Person</span>
+              <span style="font-size: 3rem;">🧍</span>
+            </div>
+            <!-- Dog -->
+            <div class="scene-obj detected" id="compDog" style="left: 33%; top: 45%; width: 75px; height: 95px; border-color: #f59e0b;">
+              <span class="bbox-tag" style="background: #f59e0b;">Dog</span>
+              <span style="font-size: 2.6rem;">🐕</span>
+            </div>
+            <!-- Chair -->
+            <div class="scene-obj detected" id="compChair" style="left: 58%; top: 40%; width: 75px; height: 105px; border-color: #10b981;">
+              <span class="bbox-tag" style="background: #10b981;">Chair</span>
+              <span style="font-size: 2.6rem;">🪑</span>
+            </div>
+            <!-- Bottle -->
+            <div class="scene-obj detected" id="compBottle" style="left: 81%; top: 48%; width: 55px; height: 78px; border-color: #8b5cf6;">
+              <span class="bbox-tag" style="background: #8b5cf6;">Bottle</span>
+              <span style="font-size: 2rem;">🍾</span>
+            </div>
+          </div>
+
+          <!-- Output Explanation Card -->
+          <div style="background: var(--bg-card); padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color);">
+            <h4 id="compResultTitle" style="color: var(--accent-cyan); margin-bottom: 0.5rem;">🎯 مخرجات Object Detection:</h4>
+            <p id="compResultDesc" style="font-size: 0.93rem;">
+              يكتشف كل عنصر داخل الصورة <strong>على حدة</strong>، ويرسم مستطيلاً حول كل واحد منها مع تحديد إحداثياته:
+            </p>
+            <div id="compResultBadges" style="margin-top: 0.85rem; padding: 0.75rem; background: var(--bg-card-alt); border-radius: 10px; direction: ltr; font-family: Consolas, monospace; font-weight: 700; color: var(--accent-emerald);">
+              Detected: Person + Dog + Chair + Bottle (4 Bounding Boxes)
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <table class="styled-table" style="margin-top: 1.25rem;">
+          <thead>
+            <tr>
+              <th>وجه المقارنة</th>
+              <th>Image Classification (تصنيف الصور)</th>
+              <th>Object Detection (اكتشاف الأشياء)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>السؤال الذي يجيب عنه</strong></td>
+              <td>«ما هو الشيء الرئيسي في هذه الصورة؟»</td>
+              <td>«ما هي الأشياء الموجودة وأين يقع كل منها؟»</td>
+            </tr>
+            <tr>
+              <td><strong>تحديد المكان (Bounding Box)</strong></td>
+              <td>❌ لا يحدد مكان الشيء داخل الصورة</td>
+              <td>✅ يرسم مستطيلاً بإحداثيات دقيقة حول كل جسم</td>
+            </tr>
+            <tr>
+              <td><strong>التعامل مع عدة أشياء معاً</strong></td>
+              <td>يعطي تصنيفاً واحداً للصورة ككل (مثل: <code>Dog</code> أو <code>Person</code>)</td>
+              <td>يكتشف الشخص والكرسي والزجاجة والكلب كلاً على حدة</td>
+            </tr>
+            <tr>
+              <td><strong>الملاءمة لمشروعنا</strong></td>
+              <td>غير كافٍ لأن الكفيف يحتاج معرفة كل ما أمامه</td>
+              <td><strong>أنسب لمشروعنا 🌟</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 5: What is a Bounding Box? -->
+    <section class="lesson-section" id="sec-5">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">5</span>
+          <h2 class="section-title">ما هو مستطيل التحديد (Bounding Box)؟</h2>
+        </div>
+        <span class="section-en-badge">5. What is a Bounding Box?</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          الـ <strong>Bounding Box</strong> هو المستطيل الذي يرسمه نموذج الذكاء الاصطناعي حول الشيء الذي اكتشفه داخل الصورة.
+          في برمجة الرؤية الحاسوبية، تبدأ نقطة الأصل <code>(0, 0)</code> دائماً من <strong>أعلى يسار الصورة (Top-Left Corner)</strong>، ويكون لكل مستطيل <strong>4 إحداثيات أساسية</strong>:
+          <code>x1, y1, x2, y2</code>.
+        </p>
+        <ul style="margin: 0.6rem 1.4rem;">
+          <li><strong><code>x1</code></strong>: بداية المستطيل أفقياً (من اليسار).</li>
+          <li><strong><code>y1</code></strong>: بداية المستطيل رأسياً (من الأعلى).</li>
+          <li><strong><code>x2</code></strong>: نهاية المستطيل أفقياً (إلى اليمين).</li>
+          <li><strong><code>y2</code></strong>: نهاية المستطيل رأسياً (إلى الأسفل).</li>
+        </ul>
+      </div>
+
+      <!-- Interactive Bounding Box Coordinate Explorer -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>📐 مختبر الإحداثيات التفاعلي (أبعاد الصورة: 640 × 480)</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">حرّكي المؤشرات لتغيير إحداثيات المستطيل حول الكرسي وشاهدي كيف تتغير نقطة البداية <code>(x1, y1)</code> ونقطة النهاية <code>(x2, y2)</code>:</p>
+          </div>
+          <button class="btn-secondary" onclick="resetBboxLessonExample()">🔄 إعادة لمثال الدرس (100, 120, 300, 400)</button>
+        </div>
+
+        <div class="bbox-layout">
+          <!-- Visual 640x480 Coordinate Canvas -->
+          <div class="coord-stage-wrapper">
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; font-family: Consolas, monospace; margin-bottom: 4px; direction: ltr;">
+              <span>(0, 0) Top-Left Origin</span>
+              <span>Width = 640 px ⟶</span>
+            </div>
+            <div class="coord-stage" id="bboxStage">
+              <!-- Chair in the middle -->
+              <div id="bboxTargetChair" style="position: absolute; left: 22%; top: 32%; font-size: 4.2rem; pointer-events: none; user-select: none;">🪑</div>
+
+              <!-- Dynamic Bounding Box -->
+              <div class="dynamic-bbox" id="interactiveBbox">
+                <span class="corner-pin pin-top-left" id="pinTopLeft">(100, 120)</span>
+                <span style="font-size: 0.78rem; font-weight: 800; color: #fff; background: rgba(0,0,0,0.65); padding: 2px 6px; border-radius: 4px;">Chair</span>
+                <span class="corner-pin pin-bottom-right" id="pinBottomRight">(300, 400)</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; font-family: Consolas, monospace; margin-top: 4px; direction: ltr;">
+              <span>↓ Height = 480 px</span>
+              <span>(640, 480) Bottom-Right</span>
+            </div>
+          </div>
+
+          <!-- Sliders & Live Readout -->
+          <div style="background: var(--bg-card); padding: 1.25rem; border-radius: 14px; border: 1px solid var(--border-color);">
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>x1 (بداية المستطيل أفقياً)</span>
+                <span id="valX1" style="color: var(--accent-cyan);">100 px</span>
+              </div>
+              <input type="range" id="sliderX1" min="20" max="450" value="100" oninput="updateBboxFromSliders()" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>y1 (بداية المستطيل رأسياً)</span>
+                <span id="valY1" style="color: var(--accent-cyan);">120 px</span>
+              </div>
+              <input type="range" id="sliderY1" min="20" max="320" value="120" oninput="updateBboxFromSliders()" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>x2 (نهاية المستطيل أفقياً)</span>
+                <span id="valX2" style="color: var(--accent-amber);">300 px</span>
+              </div>
+              <input type="range" id="sliderX2" min="120" max="620" value="300" oninput="updateBboxFromSliders()" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>y2 (نهاية المستطيل رأسياً)</span>
+                <span id="valY2" style="color: var(--accent-amber);">400 px</span>
+              </div>
+              <input type="range" id="sliderY2" min="140" max="460" value="400" oninput="updateBboxFromSliders()" />
+            </div>
+
+            <div class="code-box" id="bboxCodeSummary" style="margin-top: 1rem; font-size: 0.85rem;">
+x1 = 100, y1 = 120
+x2 = 300, y2 = 400
+Start Point = (100, 120)
+End Point   = (300, 400)
+Box Width   = 200 px | Box Height = 280 px</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: What is YOLO? -->
+    <section class="lesson-section" id="sec-6">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">6</span>
+          <h2 class="section-title">ما هو نموذج YOLO؟ وكيف يعمل؟</h2>
+        </div>
+        <span class="section-en-badge">6. What is YOLO? (You Only Look Once)</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          <strong>YOLO = You Only Look Once</strong> (أنت تنظر مرة واحدة فقط!).
+          هو أشهر وأسرع نموذج ذكاء اصطناعي متخصص في اكتشاف الأشياء داخل الصور والفيديوهات في الوقت الفعلي (Real-Time).
+        </p>
+        <p style="margin-top: 0.5rem;">
+          بدلاً من أن نبرمج الكمبيوتر بأنفسنا لمعرفة شكل الكرسي أو الزجاجة أو الإنسان (وهو أمر شبه مستحيل بالبرمجة التقليدية بسبب اختلاف الألوان والزوايا والإضاءة)، نستخدم <strong>نموذج YOLO المدرب مسبقاً (Pretrained Model)</strong> على ملايين الصور (مثل قاعدة بيانات COCO التي تضم 80 فئة من الأشياء اليومية).
+        </p>
+      </div>
+
+      <!-- Interactive 5-Step YOLO Pipeline -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>⚡ كيف يعمل YOLO في 5 خطوات سريعة؟</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">اضغطي على زر «الخطوة التالية» أو شغّلي العرض المتحرك لمتابعة رحلة الصورة داخل الشبكة العصبية:</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-primary" onclick="nextYoloStep()">⏭️ الخطوة التالية</button>
+            <button class="btn-secondary" onclick="autoPlayYoloSteps()">🔄 تشغيل تلقائي للخطوات الـ 5</button>
+          </div>
+        </div>
+
+        <div class="pipeline-grid" style="grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));">
+          <div class="pipeline-step active-step" id="yoloStepCard1" onclick="setYoloStep(1)" style="cursor: pointer;">
+            <span class="step-badge badge-input">الخطوة 1</span>
+            <h4>1. استقبال الصورة</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">يستقبل YOLO الصورة من الكاميرا ويقسمها داخلياً إلى شبكة (Grid).</p>
+          </div>
+
+          <div class="pipeline-step" id="yoloStepCard2" onclick="setYoloStep(2)" style="cursor: pointer;">
+            <span class="step-badge badge-ai">الخطوة 2</span>
+            <h4>2. الشبكة العصبية</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">يحلل محتويات الصورة دفعة واحدة باستخدام شبكة عصبية عميقة (CNN).</p>
+          </div>
+
+          <div class="pipeline-step" id="yoloStepCard3" onclick="setYoloStep(3)" style="cursor: pointer;">
+            <span class="step-badge badge-ai">الخطوة 3</span>
+            <h4>3. توقع الأشياء والمواقع</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">يتوقع الأشياء الموجودة ويرسم مستطيلات (Bounding Boxes) مبدئية.</p>
+          </div>
+
+          <div class="pipeline-step" id="yoloStepCard4" onclick="setYoloStep(4)" style="cursor: pointer;">
+            <span class="step-badge badge-output">الخطوة 4</span>
+            <h4>4. الاسم ودرجة الثقة</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">يعطي اسم كل شيء (Class) ودرجة الثقة في التوقع (Confidence Score).</p>
+          </div>
+
+          <div class="pipeline-step" id="yoloStepCard5" onclick="setYoloStep(5)" style="cursor: pointer;">
+            <span class="step-badge badge-output">الخطوة 5</span>
+            <h4>5. عرض النتائج</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">يرسم المربعات النهائية والأسماء على الإطار ويعرضها أمامنا فوراً.</p>
+          </div>
+        </div>
+
+        <div id="yoloStepExplainBox" style="margin-top: 1rem; padding: 1rem 1.25rem; background: var(--bg-card); border-radius: 12px; border-right: 4px solid var(--accent-purple);">
+          <strong>الخطوة 1 (استقبال الصورة):</strong> يلتقط البرنامج الإطار من الكاميرا (مثلاً بحجم 640×480) ويمرره إلى نموذج YOLO في نظرة واحدة سريعة (ولهذا سمي You Only Look Once).
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: What is Confidence Score? -->
+    <section class="lesson-section" id="sec-7">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">7</span>
+          <h2 class="section-title">ما هي درجة الثقة (Confidence Score)؟</h2>
+        </div>
+        <span class="section-en-badge">7. What is Confidence Score?</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          عندما يكتشف النموذج شيئاً داخل الصورة، فإنه يعطي <strong>درجة ثقة (Confidence Score)</strong> تتراوح بين <code>0.0</code> و <code>1.0</code> لكل اكتشاف:
+        </p>
+        <ul style="margin: 0.5rem 1.4rem;">
+          <li><strong>Person = <code>0.95</code></strong> ⬅️ درجة ثقة <strong>95%</strong>.</li>
+          <li><strong>Chair = <code>0.87</code></strong> ⬅️ درجة ثقة <strong>87%</strong>.</li>
+          <li><strong>Bottle = <code>0.62</code></strong> ⬅️ درجة ثقة <strong>62%</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="teacher-note">
+        <div class="teacher-note-title">⚠️ تنبيه علمي مهم جداً للطالبة:</div>
+        <p>
+          هذه الدرجات تعبر عن مدى ثقة النموذج في توقعه، لكنها <strong>ليست احتمالات مضمونة 100% لصحة التوقع</strong>، ولا تعني أن النموذج دقيق بنسبة 95% في جميع الحالات والظروف.
+          لتجنب التوقعات العشوائية الضعيفة، نحدد في الكود <strong>حداً أدنى للثقة (Confidence Threshold)</strong> مثل <code>0.50</code> ونتجاهل أي نتيجة أقل منه!
+        </p>
+      </div>
+
+      <!-- Interactive Confidence Filter Simulator -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>🎚️ محاكي فلتر درجة الثقة (Confidence Threshold Filter)</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">حرّكي مؤشر الحد الأدنى للثقة (Threshold) ولاحظي أي الأشياء يتم قبولها وأيها يتم تجاهلها تلقائياً:</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-secondary" onclick="setThresholdValue(0.50)">الحد الافتراضي (0.50)</button>
+            <button class="btn-secondary" onclick="setThresholdValue(0.80)">حد صارم (0.80)</button>
+          </div>
+        </div>
+
+        <div class="slider-row" style="background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div class="slider-label">
+            <span>Minimum Confidence Threshold:</span>
+            <span id="thresholdReadout" style="color: var(--accent-emerald); font-size: 1.1rem;">0.50 (50%)</span>
+          </div>
+          <input type="range" id="thresholdSlider" min="0.10" max="0.98" step="0.01" value="0.50" oninput="updateConfidenceFilter()" />
+        </div>
+
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>الشيء المكتشف (Object)</th>
+              <th>درجة الثقة (Confidence)</th>
+              <th>النسبة المئوية</th>
+              <th>حالة الاكتشاف عند الحد الحالي</th>
+            </tr>
+          </thead>
+          <tbody id="confidenceTableBody">
+            <!-- Populated dynamically by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 8: Practical Part -->
+    <section class="lesson-section" id="sec-8">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">8</span>
+          <h2 class="section-title">الجزء العملي – أول تجربة لتشغيل الكاميرا مع YOLO</h2>
+        </div>
+        <span class="section-en-badge">8. Practical Part – First Live Experiment</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          الآن بعد أن فهمنا <strong>Computer Vision</strong> و <strong>Object Detection</strong> و <strong>YOLO</strong>، سنبدأ التطبيق العملي في <strong>VS Code</strong>!
+          المطلوب في هذه التجربة: تشغيل كاميرا الويب ⬅️ قراءة الصور منها ⬅️ تمريرها إلى YOLO ⬅️ عرض الأشياء المكتشفة على الشاشة.
+        </p>
+      </div>
+
+      <!-- Step 1: Environment Setup -->
+      <h3 style="margin-bottom: 0.75rem; color: var(--accent-cyan);">أولاً: تجهيز بيئة العمل (Environment Setup)</h3>
+      <div class="pipeline-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+        <div class="pipeline-step">
+          <span class="step-badge badge-input">1. إنشاء المجلد والبيئة</span>
+          <p style="font-size: 0.88rem;">افتحي VS Code وأنشئي مجلداً باسم <code>AI_Vision_Assistant</code>، ثم افتحي Terminal ونفّذي:</p>
+          <div class="code-box" style="display: flex; justify-content: space-between; align-items: center;">
+            <code>python -m venv venv</code>
+            <button class="tool-btn" onclick="copyText('python -m venv venv')">📋 نسخ</button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">ينشئ بيئة افتراضية معزولة لمشروعنا.</p>
+        </div>
+
+        <div class="pipeline-step">
+          <span class="step-badge badge-ai">2. تفعيل البيئة الافتراضية</span>
+          <p style="font-size: 0.88rem;">لتفعيل البيئة على نظام Windows اكتبي في الـ Terminal:</p>
+          <div class="code-box" style="display: flex; justify-content: space-between; align-items: center;">
+            <code>venv\Scripts\activate</code>
+            <button class="tool-btn" onclick="copyText('venv\\Scripts\\activate')">📋 نسخ</button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">سيظهر اسم <code>(venv)</code> باللون الأخضر في بداية السطر.</p>
+        </div>
+
+        <div class="pipeline-step">
+          <span class="step-badge badge-output">3. تثبيت المكتبات المطلوبة</span>
+          <p style="font-size: 0.88rem;">نثبت مكتبة <code>ultralytics</code> (الخاصة بـ YOLO) ومكتبة <code>opencv-python</code> للكاميرا:</p>
+          <div class="code-box" style="display: flex; justify-content: space-between; align-items: center;">
+            <code>pip install ultralytics opencv-python</code>
+            <button class="tool-btn" onclick="copyText('pip install ultralytics opencv-python')">📋 نسخ</button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">يتم تحميل المكتبات داخل بيئة المشروع.</p>
+        </div>
+      </div>
+
+      <!-- Step 2: Interactive Python Code Explorer -->
+      <h3 style="margin-top: 1.75rem; margin-bottom: 0.5rem; color: var(--accent-cyan);">ثانياً: كتابة أول برنامج لاكتشاف الأشياء (<code>webcam_test.py</code>)</h3>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+        💡 <strong>تفاعلي:</strong> اضغطي على أي سطر داخل الكود التالي لمعرفة وظيفته بالتفصيل، أو انسخي الكود بالكامل لتشغيله في VS Code:
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 1.25rem; align-items: start;" class="bbox-layout">
+        <div class="code-box" style="margin: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(148,163,184,0.2); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+            <span style="color: #94a3b8; font-size: 0.82rem;">🐍 webcam_test.py</span>
+            <button class="tool-btn" onclick="copyFullPythonCode()">📋 نسخ الكود بالكامل</button>
+          </div>
+          <span class="code-line active-code-line" onclick="explainCodeLine(0)"><span class="kw">import</span> cv2</span>
+          <span class="code-line" onclick="explainCodeLine(1)"><span class="kw">from</span> ultralytics <span class="kw">import</span> YOLO</span>
+          <span class="code-line" onclick="explainCodeLine(2)"><span class="cm"># Load the pretrained model</span></span>
+          <span class="code-line" onclick="explainCodeLine(2)">model = <span class="fn">YOLO</span>(<span class="str">"yolo26n.pt"</span>)</span>
+          <span class="code-line" onclick="explainCodeLine(3)"><span class="cm"># Open webcam</span></span>
+          <span class="code-line" onclick="explainCodeLine(3)">camera = cv2.<span class="fn">VideoCapture</span>(<span class="num">0</span>)</span>
+          <span class="code-line" onclick="explainCodeLine(4)"><span class="kw">while</span> <span class="kw">True</span>:</span>
+          <span class="code-line" onclick="explainCodeLine(5)">    success, frame = camera.<span class="fn">read</span>()</span>
+          <span class="code-line" onclick="explainCodeLine(6)">    <span class="kw">if not</span> success:</span>
+          <span class="code-line" onclick="explainCodeLine(6)">        <span class="kw">break</span></span>
+          <span class="code-line" onclick="explainCodeLine(7)">    <span class="cm"># Detect objects</span></span>
+          <span class="code-line" onclick="explainCodeLine(7)">    results = <span class="fn">model</span>(frame)</span>
+          <span class="code-line" onclick="explainCodeLine(8)">    <span class="cm"># Draw detection results</span></span>
+          <span class="code-line" onclick="explainCodeLine(8)">    output = results[<span class="num">0</span>].<span class="fn">plot</span>()</span>
+          <span class="code-line" onclick="explainCodeLine(9)">    <span class="cm"># Display the image</span></span>
+          <span class="code-line" onclick="explainCodeLine(9)">    cv2.<span class="fn">imshow</span>(<span class="str">"AI Vision Assistant"</span>, output)</span>
+          <span class="code-line" onclick="explainCodeLine(10)">    <span class="cm"># Exit when Q is pressed</span></span>
+          <span class="code-line" onclick="explainCodeLine(10)">    <span class="kw">if</span> cv2.<span class="fn">waitKey</span>(<span class="num">1</span>) == <span class="fn">ord</span>(<span class="str">"q"</span>):</span>
+          <span class="code-line" onclick="explainCodeLine(10)">        <span class="kw">break</span></span>
+          <span class="code-line" onclick="explainCodeLine(11)">camera.<span class="fn">release</span>()</span>
+          <span class="code-line" onclick="explainCodeLine(12)">cv2.<span class="fn">destroyAllWindows</span>()</span>
+        </div>
+
+        <div style="background: var(--bg-card-alt); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.25rem;">
+          <span class="step-badge badge-ai" id="codeExplainBadge">شرح السطر المحدد</span>
+          <h4 id="codeExplainTitle" style="color: var(--accent-cyan); margin-bottom: 0.5rem;">import cv2</h4>
+          <p id="codeExplainText" style="font-size: 0.93rem;">
+            استدعاء مكتبة <strong>OpenCV</strong> (Open Source Computer Vision)، وهي المكتبة المسؤولة عن فتح كاميرا الويب وقراءة الإطارات وعرض النافذة على الشاشة.
+          </p>
+          <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--border-color);">
+            <strong>لتشغيل البرنامج في الـ Terminal:</strong>
+            <div class="code-box" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem;">
+              <code>python webcam_test.py</code>
+              <button class="tool-btn" onclick="copyText('python webcam_test.py')">📋 نسخ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Virtual Webcam Window Simulator -->
+      <div class="sim-box">
+        <div class="sim-header">
+          <div>
+            <strong>🎥 محاكي نافذة OpenCV (`AI Vision Assistant`)</strong>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">جربي ماذا سيحدث عند تشغيل <code>python webcam_test.py</code>! ضعي أو أزيلي أشياء أمام الكاميرا، أو اضغطي مفتاح <code>Q</code> للإغلاق:</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-primary" id="webcamToggleBtn" onclick="toggleVirtualWebcam()">🟢 تشغيل الكاميرا الافتراضية</button>
+            <button class="btn-secondary" onclick="simulatePressQ()">⌨️ اضغطي حرف Q للإيقاف</button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
+          <span style="font-size: 0.88rem; font-weight: 700; align-self: center;">ضعي أشياء أمام الكاميرا:</span>
+          <button class="btn-secondary active" id="camItemPerson" onclick="toggleWebcamItem('person')">🧍 شخص (Person)</button>
+          <button class="btn-secondary active" id="camItemChair" onclick="toggleWebcamItem('chair')">🪑 كرسي (Chair)</button>
+          <button class="btn-secondary active" id="camItemBottle" onclick="toggleWebcamItem('bottle')">🍾 زجاجة (Bottle)</button>
+          <button class="btn-secondary" id="camItemLaptop" onclick="toggleWebcamItem('laptop')">💻 لابتوب (Laptop)</button>
+        </div>
+
+        <div class="room-scene" id="virtualWebcamWindow" style="height: 230px; border: 3px solid var(--accent-cyan);">
+          <div style="background: #1e293b; color: #fff; padding: 4px 12px; font-size: 0.8rem; font-family: Consolas, monospace; display: flex; justify-content: space-between; direction: ltr;">
+            <span>Window: AI Vision Assistant (cv2.imshow)</span>
+            <span id="webcamFpsStatus" style="color: #34d399;">● LIVE (30 FPS) - Press 'q' to exit</span>
+          </div>
+
+          <div id="webcamObjectsContainer" style="position: relative; width: 100%; height: 190px;">
+            <div class="scene-obj detected" id="wcPerson" style="left: 10%; top: 15%; width: 85px; height: 140px; border-color: #06b6d4;">
+              <span class="bbox-tag" style="background: #06b6d4;">person 0.95</span>
+              <span style="font-size: 3.1rem;">🧍</span>
+            </div>
+            <div class="scene-obj detected" id="wcChair" style="left: 38%; top: 32%; width: 85px; height: 115px; border-color: #10b981;">
+              <span class="bbox-tag" style="background: #10b981;">chair 0.87</span>
+              <span style="font-size: 2.8rem;">🪑</span>
+            </div>
+            <div class="scene-obj detected" id="wcBottle" style="left: 65%; top: 38%; width: 65px; height: 95px; border-color: #8b5cf6;">
+              <span class="bbox-tag" style="background: #8b5cf6;">bottle 0.62</span>
+              <span style="font-size: 2.2rem;">🍾</span>
+            </div>
+            <div class="scene-obj detected" id="wcLaptop" style="left: 80%; top: 35%; width: 80px; height: 95px; border-color: #f59e0b; display: none;">
+              <span class="bbox-tag" style="background: #f59e0b;">laptop 0.91</span>
+              <span style="font-size: 2.4rem;">💻</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: Homework & Interactive Quiz -->
+    <section class="lesson-section" id="sec-9">
+      <div class="section-header">
+        <div class="section-title-group">
+          <span class="section-num">9</span>
+          <h2 class="section-title">الواجب واختبار المراجعة (Computer Vision Quiz)</h2>
+        </div>
+        <span class="section-en-badge">9. Homework – 5 Core + 5 Bonus Questions</span>
+      </div>
+
+      <div class="lead-box">
+        <p>
+          اختبري فهمك للدرس الأول! اختاري إجاباتك لجميع الأسئلة ثم اضغطي على زر <strong>«تسليم الإجابات (Submit Answers)»</strong> في الأسفل لتظهر لكِ النتيجة النهائية ومراجعة الأخطاء مع الشرح.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+        <button class="btn-secondary active" id="quizMode5Btn" onclick="switchQuizSet('core5')">📝 أسئلة الواجب الأساسية (5 Questions)</button>
+        <button class="btn-secondary" id="quizMode10Btn" onclick="switchQuizSet('full10')">🚀 الاختبار الشامل مع أسئلة إضافية (10 Questions)</button>
+      </div>
+
+      <div id="quizQuestionsContainer"></div>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <button class="btn-primary" id="submitQuizBtn" onclick="submitQuizAnswers()">✅ Submit Answers (تسليم الإجابات)</button>
+        <button class="btn-secondary" onclick="resetQuiz()">🔄 إعادة المحاولة</button>
+      </div>
+
+      <div id="quizResultBox" style="display: none; margin-top: 1.5rem; padding: 1.35rem; border-radius: 16px; background: var(--bg-card-alt); border: 2px solid var(--accent-emerald);"></div>
+
+      <!-- Next Lesson Preview -->
+      <div class="teacher-note" style="margin-top: 2rem;">
+        <div class="teacher-note-title">🚀 ماذا بعد نجاح هذه التجربة؟ (الدرس القادم – Lesson 2)</div>
+        <p>
+          <strong>ملخص هدف الدرس الأول:</strong> أن تفهم الطالبة ما هو <strong>Computer Vision</strong>، والفرق بين <strong>Classification</strong> و <strong>Object Detection</strong>، وتتعرف على <strong>YOLO</strong> و <strong>Bounding Box</strong> و <strong>Confidence Score</strong>، وتنجح في تشغيل كاميرا الويب مع نموذج جاهز.
+        </p>
+        <p style="margin-top: 0.45rem;">
+          <strong>الدرس القادم (Lesson 2 – Understanding YOLO Results in Python):</strong> سنتعلم كيف نستخرج أسماء الأشياء والإحداثيات <code>(x1, y1, x2, y2)</code> ودرجات الثقة برمجياً داخل بايثون من الكائن <code>results</code> بدلاً من الاكتفاء برسم المربعات بـ <code>results[0].plot()</code>!
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toastMsg">تم النسخ بنجاح! ✅</div>
+
+  <script>
+    // 1. Font Size & Theme Controls
+    let currentFontSize = 16;
+    function changeFontSize(delta) {
+      currentFontSize = Math.min(22, Math.max(13, currentFontSize + delta));
+      document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-mode');
+      const btn = document.getElementById('themeToggleBtn');
+      if (document.body.classList.contains('light-mode')) {
+        btn.textContent = '🌙 الوضع الليلي';
+      } else {
+        btn.textContent = '☀️ الوضع النهاري';
+      }
+    }
+
+    function scrollToSection(id, index) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      const navBtns = document.querySelectorAll('.nav-btn');
+      navBtns.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === index - 1);
+      });
+      const pct = Math.round((index / 9) * 100);
+      document.getElementById('lessonProgress').style.width = pct + '%';
+    }
+
+    // 2. Section 1: Pipeline Animation & Speech
+    let pipelineTimer = null;
+    function runPipelineDemo() {
+      if (pipelineTimer) clearTimeout(pipelineTimer);
+      const s1 = document.getElementById('pipeStep1');
+      const s2 = document.getElementById('pipeStep2');
+      const s3 = document.getElementById('pipeStep3');
+      const laser = document.getElementById('sec1Laser');
+      const status = document.getElementById('pipelineStatusBadge');
+      const objs = document.querySelectorAll('#sec1RoomScene .scene-obj');
+
+      s1.classList.add('active-step');
+      s2.classList.remove('active-step');
+      s3.classList.remove('active-step');
+      objs.forEach(o => o.classList.remove('detected'));
+      laser.classList.remove('scanning');
+      status.textContent = '📸 الكاميرا تلتقط الصورة...';
+
+      pipelineTimer = setTimeout(() => {
+        s2.classList.add('active-step');
+        laser.classList.add('scanning');
+        status.textContent = '🧠 نموذج YOLO يحلل الأشياء داخل الصورة...';
+
+        pipelineTimer = setTimeout(() => {
+          laser.classList.remove('scanning');
+          objs.forEach(o => o.classList.add('detected'));
+          s3.classList.add('active-step');
+          status.textContent = '🔊 تم الاكتشاف وتحويل النتائج إلى صوت!';
+          speakAssistantArabic();
+        }, 1600);
+      }, 900);
+    }
+
+    function speakAssistantArabic() {
+      const wave = document.getElementById('voiceWave');
+      wave.classList.add('speaking');
+      setTimeout(() => wave.classList.remove('speaking'), 3000);
+
+      if ('speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance('يوجد شخص وكرسي وطاولة وزجاجة أمام الكاميرا');
+          utter.lang = 'ar-EG';
+          utter.rate = 0.95;
+          utter.onend = () => wave.classList.remove('speaking');
+          window.speechSynthesis.speak(utter);
+        } catch (e) {
+          // Fallback visual wave already active
+        }
+      }
+    }
+
+    // 3. Section 2: Pixel Matrix & CV Applications
+    const samplePixels = [
+      24, 32, 45, 120, 195, 210, 88, 30,
+      28, 55, 160, 220, 240, 215, 110, 35,
+      40, 130, 235, 250, 245, 190, 95, 42,
+      65, 185, 248, 120, 115, 220, 140, 50,
+      70, 190, 240, 95, 90, 235, 165, 58,
+      50, 145, 215, 242, 238, 205, 120, 44,
+      35, 80, 165, 200, 192, 140, 75, 32,
+      20, 30, 60, 95, 90, 55, 28, 18
+    ];
+
+    function renderPixelMatrix(mode) {
+      const grid = document.getElementById('pixelMatrixGrid');
+      grid.innerHTML = '';
+      samplePixels.forEach(val => {
+        const cell = document.createElement('div');
+        cell.className = 'pixel-cell';
+        if (mode === 'computer') {
+          cell.style.background = `rgb(${Math.round(val * 0.2)}, ${Math.round(val * 0.65)}, ${val})`;
+          cell.style.color = val > 140 ? '#000' : '#fff';
+          cell.textContent = val;
+        } else {
+          cell.style.background = `rgb(${val}, ${val}, ${val})`;
+          cell.style.color = 'transparent';
+          cell.textContent = val;
+        }
+        grid.appendChild(cell);
+      });
+    }
+
+    function setVisionMode(mode) {
+      document.getElementById('btnHumanView').classList.toggle('active', mode === 'human');
+      document.getElementById('btnComputerView').classList.toggle('active', mode === 'computer');
+      const caption = document.getElementById('visionModeCaption');
+      const emoji = document.getElementById('humanEmojiDisplay');
+      if (mode === 'computer') {
+        caption.textContent = 'الكمبيوتر يرى مصفوفة أرقام (من 0 إلى 255 لكل لون RGB)';
+        emoji.textContent = '010110 🔢 [RGB]';
+      } else {
+        caption.textContent = 'الإنسان يميز فوراً: سيارة + كلب + شخص';
+        emoji.textContent = '🚗 🐕 🧍';
+      }
+      renderPixelMatrix(mode);
+    }
+
+    const cvAppsData = [
+      {
+        title: '💡 مثال توضيحي: Face Detection (اكتشاف الوجوه)',
+        text: 'عندما تفتحين كاميرا الهاتف وتظهر مربعات صفراء حول وجوه الأشخاص لضبط الإضاءة والتركيز (Auto-Focus)، فهذا تطبيق مباشر للرؤية الحاسوبية!'
+      },
+      {
+        title: '🚘 مثال توضيحي: Self-Driving Cars (السيارات ذاتية القيادة)',
+        text: 'تستخدم سيارات مثل Tesla كاميرات محيطية ونماذج رؤية حاسوبية لاكتشاف المشاة والسيارات الأخرى واللوحات الإرشادية لاتخاذ قرار التوقف أو الانعطاف في أجزاء من الثانية.'
+      },
+      {
+        title: '🩻 مثال توضيحي: Medical Imaging (تحليل الصور الطبية)',
+        text: 'تساعد أنظمة الذكاء الاصطناعي الأطباء في تحليل صور الأشعة لاكتشاف الأورام أو الكسور الدقيقة مبكراً وبسرعة عالية.'
+      },
+      {
+        title: '📦 مثال توضيحي: Object Detection (اكتشاف الأشياء المختلفة)',
+        text: 'التقنية التي نبني بها مشروعنا اليوم! حيث يتعرف النموذج على الأشخاص والكراسي والزجاجات والطاولات ويحدد مكان كل عنصر بمستطيل خاص به.'
+      }
+    ];
+
+    function selectCvApp(idx) {
+      for (let i = 0; i < 4; i++) {
+        document.getElementById('cvCard' + i).classList.toggle('selected-card', i === idx);
+      }
+      document.querySelector('#cvAppDetailBox .teacher-note-title').textContent = cvAppsData[idx].title;
+      document.getElementById('cvAppDetailText').textContent = cvAppsData[idx].text;
+    }
+
+    // 4. Section 3: Inspect Objects
+    const inspectData = [
+      '✅ <strong>Detected Object #1:</strong> Label = <span style="color: var(--accent-cyan);">"Person"</span> | Bounding Box = <span style="color: var(--accent-amber);">[x1: 80, y1: 60, x2: 240, y2: 410]</span> | Confidence = <span style="color: var(--accent-emerald);">0.95 (95%)</span>',
+      '✅ <strong>Detected Object #2:</strong> Label = <span style="color: var(--accent-cyan);">"Bottle"</span> | Bounding Box = <span style="color: var(--accent-amber);">[x1: 420, y1: 110, x2: 475, y2: 230]</span> | Confidence = <span style="color: var(--accent-emerald);">0.62 (62%)</span>',
+      '✅ <strong>Detected Object #3:</strong> Label = <span style="color: var(--accent-cyan);">"Chair"</span> | Bounding Box = <span style="color: var(--accent-amber);">[x1: 100, y1: 120, x2: 300, y2: 400]</span> | Confidence = <span style="color: var(--accent-emerald);">0.87 (87%)</span>'
+    ];
+
+    function inspectObject(idx) {
+      for (let i = 0; i < 3; i++) {
+        document.getElementById('objInspectBtn' + i).classList.toggle('active', i === idx);
+      }
+      document.getElementById('objInspectResult').innerHTML = inspectData[idx];
+    }
+
+    // 5. Section 4: Classification vs Detection Simulator
+    function setComparisonMode(mode) {
+      const isDetect = mode === 'detection';
+      document.getElementById('modeClassBtn').className = isDetect ? 'btn-secondary' : 'btn-primary';
+      document.getElementById('modeDetectBtn').className = isDetect ? 'btn-primary' : 'btn-secondary';
+
+      const ids = ['compPerson', 'compDog', 'compChair', 'compBottle'];
+      ids.forEach(id => {
+        document.getElementById(id).classList.toggle('detected', isDetect);
+      });
+
+      const title = document.getElementById('compResultTitle');
+      const desc = document.getElementById('compResultDesc');
+      const badges = document.getElementById('compResultBadges');
+
+      if (isDetect) {
+        title.textContent = '🎯 مخرجات Object Detection (اكتشاف الأشياء):';
+        desc.innerHTML = 'يكتشف كل عنصر داخل الصورة <strong>على حدة</strong>، ويرسم مستطيلاً حول كل واحد منها مع تحديد إحداثياته:';
+        badges.textContent = 'Detected: Person + Dog + Chair + Bottle (4 Bounding Boxes)';
+        badges.style.color = 'var(--accent-emerald)';
+      } else {
+        title.textContent = '🏷️ مخرجات Image Classification (تصنيف الصور):';
+        desc.innerHTML = 'ينظر إلى الصورة ككل ويعطي <strong>تصنيفاً واحداً فقط</strong> (مثلاً <code>Dog</code> أو <code>Person</code>) دون تحديد مكان أي عنصر أو اكتشاف بقية الأشياء!';
+        badges.textContent = 'Single Image Label: "Dog" (No Bounding Boxes, misses Chair & Bottle)';
+        badges.style.color = 'var(--accent-amber)';
+      }
+    }
+
+    // 6. Section 5: Bounding Box Coordinate Explorer (640 x 480)
+    function updateBboxFromSliders() {
+      let x1 = parseInt(document.getElementById('sliderX1').value, 10);
+      let y1 = parseInt(document.getElementById('sliderY1').value, 10);
+      let x2 = parseInt(document.getElementById('sliderX2').value, 10);
+      let y2 = parseInt(document.getElementById('sliderY2').value, 10);
+
+      // Ensure x2 > x1 + 40 and y2 > y1 + 40
+      if (x2 <= x1 + 40) {
+        x2 = Math.min(640, x1 + 40);
+        document.getElementById('sliderX2').value = x2;
+      }
+      if (y2 <= y1 + 40) {
+        y2 = Math.min(480, y1 + 40);
+        document.getElementById('sliderY2').value = y2;
+      }
+
+      document.getElementById('valX1').textContent = x1 + ' px';
+      document.getElementById('valY1').textContent = y1 + ' px';
+      document.getElementById('valX2').textContent = x2 + ' px';
+      document.getElementById('valY2').textContent = y2 + ' px';
+
+      const leftPct = (x1 / 640) * 100;
+      const topPct = (y1 / 480) * 100;
+      const widthPct = ((x2 - x1) / 640) * 100;
+      const heightPct = ((y2 - y1) / 480) * 100;
+
+      const box = document.getElementById('interactiveBbox');
+      box.style.left = leftPct + '%';
+      box.style.top = topPct + '%';
+      box.style.width = widthPct + '%';
+      box.style.height = heightPct + '%';
+
+      document.getElementById('pinTopLeft').textContent = `(${x1}, ${y1})`;
+      document.getElementById('pinBottomRight').textContent = `(${x2}, ${y2})`;
+
+      document.getElementById('bboxCodeSummary').textContent =
+`x1 = ${x1}, y1 = ${y1}
+x2 = ${x2}, y2 = ${y2}
+Start Point = (${x1}, ${y1})
+End Point   = (${x2}, ${y2})
+Box Width   = ${x2 - x1} px | Box Height = ${y2 - y1} px`;
+    }
+
+    function resetBboxLessonExample() {
+      document.getElementById('sliderX1').value = 100;
+      document.getElementById('sliderY1').value = 120;
+      document.getElementById('sliderX2').value = 300;
+      document.getElementById('sliderY2').value = 400;
+      updateBboxFromSliders();
+    }
+
+    // 7. Section 6: YOLO 5 Steps
+    let currentYoloStep = 1;
+    let yoloInterval = null;
+    const yoloExplanations = [
+      '<strong>الخطوة 1 (استقبال الصورة):</strong> يلتقط البرنامج الإطار من الكاميرا (مثلاً بحجم 640×480) ويمرره إلى نموذج YOLO في نظرة واحدة سريعة (ولهذا سمي You Only Look Once).',
+      '<strong>الخطوة 2 (تحليل الشبكة العصبية):</strong> تقوم الشبكة العصبية العميقة بتحليل الأنماط والأشكال والألوان داخل خلايا الصورة في نفس اللحظة.',
+      '<strong>الخطوة 3 (توقع الأشياء ومواقعها):</strong> يحدد النموذج الإحداثيات (x1, y1, x2, y2) لكل جسم مكتشف داخل الصورة.',
+      '<strong>الخطوة 4 (الاسم ودرجة الثقة):</strong> يمنح النموذج كل مربع اسماً (مثل Person أو Chair) ودرجة ثقة رقمية (مثل 0.95).',
+      '<strong>الخطوة 5 (عرض النتائج النهائية):</strong> يرسم المستطيلات والأسماء على الصورة ويعرضها للمستخدم أو يرسلها للمساعد الصوتي.'
+    ];
+
+    function setYoloStep(step) {
+      currentYoloStep = step;
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('yoloStepCard' + i).classList.toggle('active-step', i === step);
+      }
+      document.getElementById('yoloStepExplainBox').innerHTML = yoloExplanations[step - 1];
+    }
+
+    function nextYoloStep() {
+      const next = currentYoloStep >= 5 ? 1 : currentYoloStep + 1;
+      setYoloStep(next);
+    }
+
+    function autoPlayYoloSteps() {
+      if (yoloInterval) clearInterval(yoloInterval);
+      setYoloStep(1);
+      let s = 1;
+      yoloInterval = setInterval(() => {
+        s++;
+        if (s > 5) {
+          clearInterval(yoloInterval);
+          yoloInterval = null;
+        } else {
+          setYoloStep(s);
+        }
+      }, 1100);
+    }
+
+    // 8. Section 7: Confidence Score Filter
+    const confidenceItems = [
+      { name: 'Person (شخص)', score: 0.95 },
+      { name: 'Chair (كرسي)', score: 0.87 },
+      { name: 'Bottle (زجاجة)', score: 0.62 },
+      { name: 'Cup (كوب غير واضح - مثال إضافي)', score: 0.42 },
+      { name: 'Book (ظل كتاب بعيد - مثال إضافي)', score: 0.25 }
+    ];
+
+    function updateConfidenceFilter() {
+      const threshold = parseFloat(document.getElementById('thresholdSlider').value);
+      document.getElementById('thresholdReadout').textContent = `${threshold.toFixed(2)} (${Math.round(threshold * 100)}%)`;
+
+      const tbody = document.getElementById('confidenceTableBody');
+      tbody.innerHTML = '';
+
+      confidenceItems.forEach(item => {
+        const passed = item.score >= threshold;
+        const tr = document.createElement('tr');
+        tr.style.opacity = passed ? '1' : '0.45';
+        tr.innerHTML = `
+          <td><strong>${item.name}</strong></td>
+          <td style="direction: ltr; font-family: Consolas, monospace; font-weight: 700;">${item.score.toFixed(2)}</td>
+          <td>${Math.round(item.score * 100)}%</td>
+          <td>${passed
+            ? '<span style="color: var(--accent-emerald); font-weight: 800;">✅ مقبول (يظهر في النتائج)</span>'
+            : '<span style="color: var(--accent-rose); font-weight: 800;">❌ يتم تجاهله (أقل من الحد الأدنى)</span>'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setThresholdValue(val) {
+      document.getElementById('thresholdSlider').value = val;
+      updateConfidenceFilter();
+    }
+
+    // 9. Section 8: Practical Code Explorer & Virtual Webcam
+    const codeLineDetails = [
+      { title: 'import cv2', text: 'استدعاء مكتبة OpenCV المسؤولة عن التعامل مع الكاميرا، قراءة الصور، وعرض النوافذ.' },
+      { title: 'from ultralytics import YOLO', text: 'استيراد فئة YOLO من مكتبة ultralytics الرسمية لتشغيل نماذج اكتشاف الأشياء.' },
+      { title: 'model = YOLO("yolo26n.pt")', text: 'تحميل النموذج المدرب مسبقاً (حرف n يرمز إلى Nano أي النسخة الخفيفة والسريعة جداً للكمبيوتر والـ Raspberry Pi).' },
+      { title: 'camera = cv2.VideoCapture(0)', text: 'فتح كاميرا الويب الافتراضية في الجهاز (الرقم 0 يعني الكاميرا الأساسية الأولى).' },
+      { title: 'while True:', text: 'حلقة تكرار لا نهائية لقراءة إطارات الفيديو من الكاميرا إطاراً تلو الآخر بشكل مستمر.' },
+      { title: 'success, frame = camera.read()', text: 'قراءة صورة (frame) واحدة من الكاميرا، ومتغير success يكون True إذا نجحت القراءة.' },
+      { title: 'if not success: break', text: 'إجراء أمان: إذا فشل البرنامج في قراءة الكاميرا (أو فُصلت الكاميرا) يخرج من الحلقة بأمان.' },
+      { title: 'results = model(frame)', text: 'السطر السحري! تمرير صورة الكاميرا إلى نموذج YOLO ليكتشف الأشياء بداخلها ويرجع النتائج.' },
+      { title: 'output = results[0].plot()', text: 'رسم مستطيلات الـ Bounding Boxes وأسماء الأشياء ودرجات الثقة فوق الصورة تلقائياً.' },
+      { title: 'cv2.imshow("AI Vision Assistant", output)', text: 'عرض الصورة بعد رسم المربعات عليها في نافذة بعنوان AI Vision Assistant.' },
+      { title: 'if cv2.waitKey(1) == ord("q"): break', text: 'الانتظار لمدة 1 ملي ثانية، وإذا ضغطت المستخدمة على مفتاح الحرف q في لوحة المفاتيح يتوقف البرنامج.' },
+      { title: 'camera.release()', text: 'إغلاق الكاميرا وتحريرها بعد انتهاء البرنامج حتى لا تظل قيد التشغيل في الخلفية.' },
+      { title: 'cv2.destroyAllWindows()', text: 'إغلاق جميع النوافذ الرسومية التي فتحتها مكتبة OpenCV.' }
+    ];
+
+    function explainCodeLine(idx) {
+      const info = codeLineDetails[idx];
+      document.getElementById('codeExplainTitle').textContent = info.title;
+      document.getElementById('codeExplainText').textContent = info.text;
+    }
+
+    function copyText(txt) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).catch(() => fallbackCopy(txt));
+      } else {
+        fallbackCopy(txt);
+      }
+      showToast('تم النسخ بنجاح! ✅');
+    }
+
+    function fallbackCopy(txt) {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    function copyFullPythonCode() {
+      const fullCode = `import cv2
+from ultralytics import YOLO
+
+# Load the pretrained model
+model = YOLO("yolo26n.pt")
+
+# Open webcam
+camera = cv2.VideoCapture(0)
+
+while True:
+    success, frame = camera.read()
+    if not success:
+        break
+
+    # Detect objects
+    results = model(frame)
+
+    # Draw detection results
+    output = results[0].plot()
+
+    # Display the image
+    cv2.imshow("AI Vision Assistant", output)
+
+    # Exit when Q is pressed
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+camera.release()
+cv2.destroyAllWindows()`;
+      copyText(fullCode);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastMsg');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // Virtual Webcam Controls
+    let webcamRunning = true;
+    const webcamItemsState = { person: true, chair: true, bottle: true, laptop: false };
+
+    function toggleVirtualWebcam() {
+      webcamRunning = !webcamRunning;
+      const btn = document.getElementById('webcamToggleBtn');
+      const status = document.getElementById('webcamFpsStatus');
+      const container = document.getElementById('webcamObjectsContainer');
+      if (webcamRunning) {
+        btn.textContent = '🟢 الكاميرا تعمل (اضغطي للإيقاف)';
+        status.textContent = "● LIVE (30 FPS) - Press 'q' to exit";
+        status.style.color = '#34d399';
+        container.style.opacity = '1';
+      } else {
+        btn.textContent = '▶️ إعادة تشغيل الكاميرا الافتراضية';
+        status.textContent = '⏹️ Camera Released (cv2.destroyAllWindows)';
+        status.style.color = '#f43f5e';
+        container.style.opacity = '0.2';
+      }
+    }
+
+    function simulatePressQ() {
+      if (webcamRunning) {
+        toggleVirtualWebcam();
+        showToast('تم الضغط على حرف Q وإغلاق الكاميرا بنجاح!');
+      } else {
+        showToast('الكاميرا متوقفة بالفعل، اضغطي تشغيل لفتحها من جديد.');
+      }
+    }
+
+    function toggleWebcamItem(itemKey) {
+      webcamItemsState[itemKey] = !webcamItemsState[itemKey];
+      const mapIds = {
+        person: ['wcPerson', 'camItemPerson'],
+        chair: ['wcChair', 'camItemChair'],
+        bottle: ['wcBottle', 'camItemBottle'],
+        laptop: ['wcLaptop', 'camItemLaptop']
+      };
+      const [elId, btnId] = mapIds[itemKey];
+      document.getElementById(elId).style.display = webcamItemsState[itemKey] ? 'flex' : 'none';
+      document.getElementById(btnId).classList.toggle('active', webcamItemsState[itemKey]);
+    }
+
+    // 10. Section 9: Homework & Interactive Quiz (Deferred Feedback)
+    const allQuizQuestions = [
+      {
+        q: '1. What does Computer Vision do? (ما هي وظيفة الرؤية الحاسوبية؟)',
+        options: [
+          'Creates websites and styles web pages',
+          'Allows computers to analyze images and videos',
+          'Stores customer records inside tables'
+        ],
+        correct: 1,
+        explanation: 'Computer Vision يسمح للكمبيوتر بتحليل الصور والفيديوهات واستخراج معلومات مفيدة منها.'
+      },
+      {
+        q: '2. Which technique identifies objects and their locations? (أي تقنية تحدد الأشياء وأماكنها معاً؟)',
+        options: [
+          'Image Classification only',
+          'Object Detection',
+          'Database Normalization'
+        ],
+        correct: 1,
+        explanation: 'تقنية Object Detection تكتشف الأشياء الموجودة في الصورة وتحدد اسم ومكان كل شيء باستخدام Bounding Box.'
+      },
+      {
+        q: '3. What is a Bounding Box? (ما هو الـ Bounding Box؟)',
+        options: [
+          'A rectangle drawn around a detected object',
+          'A relational table stored inside SQLite',
+          'A built-in Python loop for sorting lists'
+        ],
+        correct: 0,
+        explanation: 'الـ Bounding Box هو المستطيل الذي يرسمه النموذج حول الشيء المكتشف وله 4 إحداثيات (x1, y1, x2, y2).'
+      },
+      {
+        q: '4. What does YOLO stand for? (إلى ماذا يرمز اختصار YOLO؟)',
+        options: [
+          'You Only Look Once',
+          'Your Object Learning Output',
+          'Young Online Learning Object'
+        ],
+        correct: 0,
+        explanation: 'YOLO هي اختصار لعبارة You Only Look Once لأنه يحلل الصورة في تمريرة واحدة سريعة.'
+      },
+      {
+        q: '5. What does Confidence Score represent? (ماذا تمثل درجة الثقة Confidence Score؟)',
+        options: [
+          'The resolution and pixel size of the frame',
+          'The model\'s confidence in a detection',
+          'The total number of webcams connected'
+        ],
+        correct: 1,
+        explanation: 'تمثل درجة ثقة النموذج في اكتشافه (مثل 0.95 أي 95%)، ويمكننا وضع حد أدنى مثل 0.50 لتجاهل التوقعات الضعيفة.'
+      },
+      {
+        q: '6. In Bounding Box coordinates (x1, y1, x2, y2), what does (x1, y1) represent?',
+        options: [
+          'The starting top-left corner of the rectangle',
+          'The ending bottom-right corner of the rectangle',
+          'The total frame rate of the video stream'
+        ],
+        correct: 0,
+        explanation: 'النقطة (x1, y1) تمثل نقطة البداية في الركن العلوي الأيسر للمستطيل، بينما (x2, y2) تمثل نقطة النهاية.'
+      },
+      {
+        q: '7. If a camera captures a frame with a Person, a Chair, and a Bottle, why is Object Detection better than Image Classification?',
+        options: [
+          'Because Object Detection detects each object separately with its location',
+          'Because Image Classification works only without a computer',
+          'Because Object Detection deletes background colors from disk'
+        ],
+        correct: 0,
+        explanation: 'لأن Object Detection يكتشف الشخص والكرسي والزجاجة كلاً على حدة مع تحديد موقع كل عنصر.'
+      },
+      {
+        q: '8. Which Python command opens the default webcam in OpenCV?',
+        options: [
+          'camera = cv2.VideoCapture(0)',
+          'camera = cv2.destroyAllWindows()',
+          'camera = YOLO("webcam.pt")'
+        ],
+        correct: 0,
+        explanation: 'الدالة cv2.VideoCapture(0) هي المسؤولة عن فتح الكاميرا الأساسية رقم 0 في مكتبة OpenCV.'
+      },
+      {
+        q: '9. What does output = results[0].plot() do in our webcam_test.py script?',
+        options: [
+          'Draws the detected bounding boxes and labels onto the image frame',
+          'Closes the webcam and exits the Python virtual environment',
+          'Installs the ultralytics package from the terminal'
+        ],
+        correct: 0,
+        explanation: 'الدالة results[0].plot() ترسم المربعات والأسماء ودرجات الثقة على الصورة لعرضها في النافذة.'
+      },
+      {
+        q: '10. If we set a minimum Confidence Threshold of 0.70, which of these detections will be ignored?',
+        options: [
+          'Person with confidence 0.95',
+          'Chair with confidence 0.87',
+          'Bottle with confidence 0.62'
+        ],
+        correct: 2,
+        explanation: 'الزجاجة (0.62) أقل من الحد الأدنى المطلوب (0.70)، ولذلك سيتم تجاهلها.'
+      }
+    ];
+
+    let activeQuizMode = 'core5';
+    let userSelections = {};
+    let quizSubmitted = false;
+
+    function getActiveQuestions() {
+      return activeQuizMode === 'core5' ? allQuizQuestions.slice(0, 5) : allQuizQuestions;
+    }
+
+    function switchQuizSet(mode) {
+      activeQuizMode = mode;
+      userSelections = {};
+      quizSubmitted = false;
+      document.getElementById('quizMode5Btn').classList.toggle('active', mode === 'core5');
+      document.getElementById('quizMode10Btn').classList.toggle('active', mode === 'full10');
+      document.getElementById('quizResultBox').style.display = 'none';
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const questions = getActiveQuestions();
+      const container = document.getElementById('quizQuestionsContainer');
+      container.innerHTML = '';
+
+      questions.forEach((item, qIdx) => {
+        const card = document.createElement('div');
+        card.style.background = 'var(--bg-card-alt)';
+        card.style.border = '1px solid var(--border-color)';
+        card.style.borderRadius = '14px';
+        card.style.padding = '1.2rem';
+        card.style.marginBottom = '1rem';
+
+        const title = document.createElement('h4');
+        title.style.marginBottom = '0.85rem';
+        title.style.direction = 'ltr';
+        title.style.textAlign = 'left';
+        title.textContent = item.q;
+        card.appendChild(title);
+
+        item.options.forEach((optText, oIdx) => {
+          const optDiv = document.createElement('div');
+          optDiv.className = 'quiz-option';
+          optDiv.style.direction = 'ltr';
+          optDiv.style.textAlign = 'left';
+
+          if (userSelections[qIdx] === oIdx) {
+            optDiv.classList.add('selected');
+          }
+
+          if (quizSubmitted) {
+            if (oIdx === item.correct) {
+              optDiv.classList.add('correct-ans');
+            } else if (userSelections[qIdx] === oIdx && oIdx !== item.correct) {
+              optDiv.classList.add('wrong-ans');
+            }
+          }
+
+          optDiv.onclick = () => {
+            if (quizSubmitted) return;
+            userSelections[qIdx] = oIdx;
+            renderQuiz();
+          };
+
+          const radioCircle = document.createElement('span');
+          radioCircle.textContent = userSelections[qIdx] === oIdx ? '🔘' : '⚪';
+          const spanText = document.createElement('span');
+          spanText.textContent = optText;
+
+          optDiv.appendChild(radioCircle);
+          optDiv.appendChild(spanText);
+          card.appendChild(optDiv);
+        });
+
+        if (quizSubmitted) {
+          const exp = document.createElement('div');
+          const isCorrect = userSelections[qIdx] === item.correct;
+          exp.style.marginTop = '0.65rem';
+          exp.style.padding = '0.7rem 1rem';
+          exp.style.borderRadius = '10px';
+          exp.style.fontSize = '0.88rem';
+          exp.style.background = isCorrect ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)';
+          exp.innerHTML = (isCorrect ? '✅ <strong>إجابة صحيحة!</strong> ' : '❌ <strong>تصحيح المعلومة:</strong> ') + item.explanation;
+          card.appendChild(exp);
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    function submitQuizAnswers() {
+      const questions = getActiveQuestions();
+      const answeredCount = Object.keys(userSelections).length;
+      if (answeredCount < questions.length) {
+        showToast(`يرجى الإجابة على جميع الأسئلة أولاً (${answeredCount} من ${questions.length})`);
+        return;
+      }
+
+      quizSubmitted = true;
+      renderQuiz();
+
+      let score = 0;
+      questions.forEach((q, idx) => {
+        if (userSelections[idx] === q.correct) score++;
+      });
+
+      const resBox = document.getElementById('quizResultBox');
+      resBox.style.display = 'block';
+      const pct = Math.round((score / questions.length) * 100);
+      resBox.innerHTML = `
+        <h3 style="color: var(--accent-emerald); margin-bottom: 0.4rem;">🎉 نتيجتك النهائية: ${score} من ${questions.length} (${pct}%)</h3>
+        <p>تم عرض الإجابات النموذجية والشرح التفصيلي أسفل كل سؤال في الأعلى للمراجعة.</p>
+      `;
+    }
+
+    function resetQuiz() {
+      userSelections = {};
+      quizSubmitted = false;
+      document.getElementById('quizResultBox').style.display = 'none';
+      renderQuiz();
+    }
+
+    // Initialize all interactive views on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPixelMatrix('human');
+      updateBboxFromSliders();
+      updateConfidenceFilter();
+      renderQuiz();
+    });
+  </script>
+</body>
+</html>
